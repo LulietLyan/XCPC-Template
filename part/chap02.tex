@@ -1,0 +1,266 @@
+\chapter{Basic Data Structures}\label{chap:BasicDaraStructures}
+\section{Linked List}
+\subsection{Singly Linked List}
+\begin{lstlisting}
+const int N = 100010;
+int n, h[N], e[N], ne[N], idx = 1;
+void init() { ne[0] = -1; }
+void insert(int k, int x) //  第 k 个节点后插入
+{ e[idx] = x, ne[idx] = ne[k], ne[k] = idx++; }
+void del(int k) // 第 k 个节点后删除
+{ ne[k] = ne[ne[k]]; }
+\end{lstlisting}
+\subsection{Bidirectional Linked List}
+\begin{lstlisting}
+const int N = 100010;
+int n, r[N], l[N], e[N], idx = 2;
+void init() { r[0] = 1; l[1] = 0; }
+void insert(int k, int x) // 第 k 个节点后插入
+{
+    e[idx] = x;
+    r[idx] = r[k];
+    l[idx] = k;
+    l[r[k]] = idx;
+    r[k] = idx++;
+}
+void remove(int k) // 删除 k 本身
+{ r[l[k]] = r[k]; l[r[k]] = l[k]; }
+\end{lstlisting}
+\section{Stack \& Queue}
+\subsection{Monotonic Stack}
+\begin{lstlisting}
+// 常见模型：找出每个数左边离它最近的比它大/小的数
+int tt = 0;
+for (int i = 1; i <= n; i ++ )
+{
+    while (tt && check(stk[tt], i)) tt -- ;
+    stk[++tt] = i;
+}
+\end{lstlisting}
+\subsection{Monotonic Queue}
+\begin{lstlisting}
+// 常见模型：找出滑动窗口中的最大值/最小值
+int hh = 0, tt = -1;
+for (int i = 0; i < n; i ++ )
+{
+    while (hh <= tt && check_out(q[hh]))
+        hh++; // 判断队头是否滑出窗口
+    while (hh <= tt && check(q[tt], i))
+        tt-- ;
+    q[++tt] = i;
+}
+\end{lstlisting}
+\section{KMP}
+\begin{lstlisting}
+const int N = 100010, M = 1000010;
+int n, m;
+char p[N], s[M];
+void getNext(int ne[])
+{
+    for (int i = 2, j = 0; i <= n; i++)
+    {
+        while (j && p[j + 1] != p[i])
+            j = ne[j];
+        if (p[j + 1] == p[i]) j++;
+        ne[i] = j;
+    }
+}
+int KMP()
+{
+    int *ne = new int[n + 1];
+    getNext(ne);
+    for (int i = 1, j = 0; i <= m; i++)
+    {
+        while (j && p[j + 1] != s[i])
+            j = ne[j];
+        if (p[j + 1] == s[i]) j++;
+        if (j == n) cout << i - n << ' ';
+    }
+    return -1;
+}
+\end{lstlisting}
+
+\section{Trie}
+\begin{lstlisting}
+const int N = 100010;
+int trie[N][26], cnt[N], idx = 0;
+void insert(string &str)    // 插入到 Trie 数组
+{
+    int p = 0;
+    for (auto c : str)
+    {
+        int u = c - 'a';
+        if (!trie[p][u])
+            trie[p][u] = ++idx;
+        p = trie[p][u];
+    }
+    cnt[p]++;
+}
+int query(string &str)      // 查询字符串出现的次数
+{
+    int p = 0;
+    for (auto c : str)
+    {
+        int u = c - 'a';
+        if (!trie[p][u]) return 0;
+        p = trie[p][u];
+    }
+    return cnt[p];
+}
+\end{lstlisting}
+\section{Disjoint-Set}
+\begin{lstlisting}
+const int N = 100010;
+int n, m, p[N], Size[N], D[N];
+void init()
+{
+    for (int i = 1; i <= n; i ++ )
+        p[i] = i, Size[i] = 1, D[i] = 0;
+}
+int find(int x)
+{
+    if (p[x] != x)
+    {
+        int u = find(p[x]);
+        D[x] += D[p[x]];  // 视具体情况计算
+        p[x] = u;
+    }
+    return p[x];
+}
+void merge(int a, int b, int distance)
+{
+    int x = find(a), y = find(b);
+    if(x != y)
+    {
+        p[x] = y; 
+        D[x] = distance;  // 视具体情况计算
+        Size[y] += Size[x];
+    }
+}
+\end{lstlisting}
+\section{Hash}
+\subsection{Simple Hash}
+\begin{lstlisting}
+// (1) 拉链法
+int h[N], e[N], ne[N], idx;
+void insert(int x)
+{
+    int k = (x % N + N) % N;
+    e[idx] = x, ne[idx] = h[k], h[k] = idx ++ ;
+}
+bool find(int x)
+{
+    for (int i = h[(x % N + N) % N]; i != -1; i = ne[i])
+        if (e[i] == x) return true;
+    return false;
+}
+// (2) 开放寻址法
+int find(int x)
+{
+    int t = (x % N + N) % N;
+    while (h[t] != null && h[t] != x)
+    { t ++ ; if (t == N) t = 0; }
+    return t;
+}
+\end{lstlisting}
+\subsection{String Hash}
+\begin{lstlisting}
+typedef unsigned long long ULL;
+ULL h[N], p[N];
+void init()
+{
+    p[0] = 1;
+    for (int i = 1; i <= n; i ++ ) { h[i] = h[i - 1] * P + str[i]; p[i] = p[i - 1] * P; }
+}
+ULL get(int l, int r) { return h[r] - h[l - 1] * p[r - l + 1]; }
+\end{lstlisting}
+\section{STL}
+\begin{lstlisting}
+// vector
+size()      返回元素个数
+empty()     返回是否为空
+clear()     清空
+front()/back()
+push_back()/pop_back()
+begin()/end()
+[]
+支持比较运算，按字典序
+// pair<int, int>
+first       第一个元素
+second      第二个元素
+支持比较运算，以first为第一关键字，以second为第二关键字（字典序）
+// string
+size()/length()  返回字符串长度
+empty()
+clear()
+substr(起始下标，(子串长度))  返回子串
+c_str()  返回字符串所在字符数组的起始地址
+// queue
+size()
+empty()
+push()      向队尾插入一个元素
+front()     返回队头元素
+back()      返回队尾元素
+pop()       弹出队头元素
+// priority_queue
+size()
+empty()
+push()      插入一个元素
+top()       返回堆顶元素
+pop()       弹出堆顶元素
+定义成小根堆的方式：priority_queue<int, vector<int>, greater<int>> q;
+// stack
+size()
+empty()
+push()      向栈顶插入一个元素
+top()       返回栈顶元素
+pop()       弹出栈顶元素
+// deque
+size()
+empty()
+clear()
+front()/back()
+push_back()/pop_back()
+push_front()/pop_front()
+begin()/end()
+[]
+// set, map, multiset, multimap：基于平衡二叉树（红黑树）动态维护有序序列
+size()
+empty()
+clear()
+begin()/end()
+++, -- 返回前驱和后继，时间复杂度 O(logn)
+// set/multiset
+    insert()  插入一个数
+    find()    查找一个数
+    count()   返回某一个数的个数
+    erase()
+        (1) 输入是一个数x，删除所有x，O(k + logn)
+        (2) 输入一个迭代器，删除这个迭代器
+    lower_bound()/upper_bound()
+        lower_bound(x)  返回大于等于x的最小的数的迭代器
+        upper_bound(x)  返回大于x的最小的数的迭代器
+// map/multimap
+    insert()  插入的数是一个pair
+    erase()   输入的参数是pair或者迭代器
+    find()
+    []        注意multimap不支持此操作。 时间复杂度是 O(logn)
+    lower_bound()/upper_bound()
+// unordered_set, unordered_map, unordered_multiset, unordered_multimap
+增删改查的时间复杂度是 O(1)
+不支持 lower_bound()/upper_bound()， 迭代器的++，--
+// bitset
+bitset<10000> s;
+~, &, |, ^
+>>, <<
+==, !=
+[]
+count()     返回有多少个1
+any()       判断是否至少有一个1
+none()      判断是否全为0
+set()       把所有位置成1
+set(k, v)   将第k位变成v
+reset()     把所有位变成0
+flip()      等价于~
+flip(k)     把第k位取反
+\end{lstlisting}

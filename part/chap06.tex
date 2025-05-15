@@ -1,0 +1,139 @@
+\chapter{Advanced Basic}\label{chap:AdvancedBasic}
+\section{Slow Multiplication}
+\begin{lstlisting}
+LL mul(LL a, LL b, LL p)
+{
+    LL ans = 0;
+    while (b)
+    {
+        if (b & 1) ans = (ans + a) % p;
+        a = a * 2 % p; b >>= 1;
+    }
+    return ans;
+}
+\end{lstlisting}
+\section{Sum of Geometric Series}
+\begin{lstlisting}
+const int mod = 9901;
+int a, b;
+int qmi(int a, int k)
+{
+    int res = 1;
+    a %= mod;
+    while (k)
+    {
+        if (k & 1)
+            res = res * a % mod;
+        a = a * a % mod;
+        k >>= 1;
+    }
+    return res;
+}
+int sum(int p, int k)
+{
+    if (k == 1) return 1;
+    if (k % 2 == 0)
+        return (1 + qmi(p, k / 2)) * sum(p, k / 2) % mod;
+    return (sum(p, k - 1) + qmi(p, k - 1)) % mod;
+}
+int main()
+{
+    // 以 a^b 约数之和为例求等比数列和
+    cin >> a >> b;
+    int res = 1;
+    for (int i = 2; i <= a / i; i++)
+        if (a % i == 0)
+        {
+            int s = 0;
+            while (a % i == 0) a /= i, s++;
+            res = res * sum(i, b * s + 1) % mod;
+        }
+    if (a > 1) res = res * sum(a, b + 1) % mod;
+}
+\end{lstlisting}
+\section{Sort}
+\subsection{Card Balancing Problem}
+\begin{lstlisting}
+cin >> n;
+for (int i = 1; i <= n; i++)
+    cin >> a[i], avg += a[i];
+avg /= n;
+for (int i = 1; i <= n; i++)
+    if (a[i] != avg)
+        a[i + 1] += a[i] - avg, ans++;
+cout << ans;
+\end{lstlisting}
+\subsection{2D Card Balancing Problem}
+\begin{lstlisting}
+const int N = 100010;
+int row[N], col[N], c[N], s[N];
+LL work(int n, int a[])
+{
+    for (int i = 1; i <= n; i++)
+        s[i] = s[i - 1] + a[i];
+    if (s[n] % n) return -1;
+    int avg = s[n] / n;
+    c[1] = 0;
+    for (int i = 2; i <= n; i++)
+        c[i] = s[i - 1] - (i - 1) * avg;
+    sort(c + 1, c + n + 1);
+    LL res = 0;
+    for (int i = 1; i <= n; i++)
+        res += abs(c[i] - c[(n + 1) / 2]);
+    return res;
+}
+int main()
+{
+    int n, m, cnt;
+    cin >> n >> m >> cnt;
+    while (cnt--)
+    {
+        int x, y;
+        cin >> x >> y;
+        row[x]++; col[y]++;
+    }
+    LL r = work(n, row);
+    LL c = work(m, col);
+    if (r != -1 && c != -1)
+        cout << "both " << r + c;
+    else if (r != -1)
+        cout << "row " << r;
+    else if (c != -1)
+        cout << "column " << c;
+    else cout << "impossible";
+}
+\end{lstlisting}
+\subsection{Dual Heaps}
+\begin{lstlisting}
+if (down.empty() || x <= down.top())
+            down.push(x);
+else up.push(x);
+if (down.size() > up.size() + 1)
+    up.push(down.top()), down.pop();
+if (up.size() > down.size())
+    down.push(up.top()), up.pop();
+if (i % 2)
+{
+    cout << down.top() << ' ';
+    if (++cnt % 10 == 0) cout << '\n';
+}
+\end{lstlisting}
+\section{RMQ}
+\begin{lstlisting}
+const int N = 200010, M = 18;
+int n, m, w[N], f[N][M];
+void init()
+{
+    for (int j = 0; j < M; j++)
+        for (int i = 1; i + (1 << j) - 1 <= n; i++)
+            if (!j) f[i][j] = w[i];
+            else    // 也可以是最小值
+                f[i][j] = max(f[i][j - 1], f[i + (1 << j - 1)][j - 1]);
+}
+int query(int l, int r)
+{
+    int len = r - l + 1;
+    int k = log(len) / log(2);
+    return max(f[l][k], f[r - (1 << k) + 1][k]);
+}
+\end{lstlisting}

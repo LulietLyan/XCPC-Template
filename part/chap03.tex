@@ -1,0 +1,337 @@
+\chapter{Search \& Graph Theory}\label{chap:Graph}
+\section{Representation of Tree \& Graph}
+\subsection{Adjacency Matrix}
+\begin{lstlisting}
+// g[a][b] = a->b
+\end{lstlisting}
+\subsection{Adjacency List}
+\begin{lstlisting}
+int h[N], e[N], ne[N], idx;
+void init() { memeset(h, -1, sizeof h); }
+void add(int a, int b) { e[idx] = b, ne[idx] = h[a], h[a] = idx++ ; }
+\end{lstlisting}
+\section{DFS \& BFS}
+\subsection{DFS}
+\begin{lstlisting}
+int dfs(int u)
+{
+    st[u] = true; // 表示点 u 已经被遍历过
+    for (int i = h[u]; i != -1; i = ne[i])
+    { int j = e[i]; if (!st[j]) dfs(j); }
+}
+\end{lstlisting}
+\subsection{BFS}
+\begin{lstlisting}
+queue<int> q;
+st[1] = true; q.push(1);
+while (q.size())
+{
+    int t = q.front(); q.pop();
+    for (int i = h[t]; i != -1; i = ne[i])
+        if (!st[e[i]]) { st[e[i]] = true; q.push(e[i]); }
+}
+\end{lstlisting}
+\section{Topological Sort}
+\begin{lstlisting}
+const int N = 100010;
+int e[2 * N], ne[2 * N], h[N], d[N], idx;
+int n, m, q[N];
+void init() { memset(h, -1, sizeof h); }
+void add(int a, int b) { e[idx] = b, ne[idx] = h[a], h[a] = idx++, d[b]++; }
+bool topSort()
+{
+    int hh = 0, tt = -1;
+    for (int i = 1; i <= n; i++)
+        if (!d[i]) q[++tt] = i;
+    while (hh <= tt)
+        for (int i = h[q[hh++]]; ~i; i = ne[i])
+            if (--d[e[i]] == 0) q[++tt] = e[i];
+    return tt == n - 1;
+}
+\end{lstlisting}
+\section{Shortest Path}
+\subsection{Dijkstra}
+\begin{lstlisting}
+const int N = 1010;
+int n, dist[N];
+int h[N], w[N], e[N], ne[N], idx;
+bool st[N];
+void add(int a, int b, int c) { e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++; }
+int dijkstra()      // 需要初始化 dist 与 h
+{
+    dist[1] = 0;
+    priority_queue<PII, vector<PII>, greater<PII>> heap;
+    heap.push({0, 1});
+    while (heap.size())
+    {
+        auto t = heap.top();
+        heap.pop();
+        int ver = t.second, distance = t.first;
+        if (st[ver]) continue;
+        st[ver] = true;
+        for (int i = h[ver]; i != -1; i = ne[i])
+            if (dist[e[i]] > distance + w[i])
+            {
+                dist[e[i]] = distance + w[i];
+                heap.push({dist[e[i]], e[i]});
+            }
+    }
+    if (dist[n] == 0x3f3f3f3f) return -1;
+    return dist[n];
+}
+\end{lstlisting}
+\subsection{Bellman-Ford}
+\begin{lstlisting}
+const int N = 100010;
+int n, m, dist[N], backup[N];
+struct Edge
+{
+    int a, b, w;
+}edges[N];
+int bellman_ford()
+{
+    memset(dist, 0x3f, sizeof dist);
+    dist[1] = 0;
+    for (int i = 0; i < n; i ++ )
+    {
+        memcpy(backup, dist, sizeof dist);
+        for (int j = 0; j < m; j++)
+        {
+            int a = edges[j].a, b = edges[j].b, w = edges[j].w;
+            dist[b] = min(dist[b], backup[a] + w);
+        }
+    }
+    if (dist[n] > 0x3f3f3f3f / 2) return -1;
+    return dist[n];
+}
+\end{lstlisting}
+\subsection{SPFA}
+\begin{lstlisting}
+const int N = 100010;
+int n, m, dist[N];
+int e[2 * N], ne[2 * N], w[2 * N], h[N], idx;
+bool vis[N];
+void spfa()     // 需要初始化 dist 与 h
+{
+    queue<int> q;
+    q.push(1); vis[1] = true;
+    while (q.size())
+    {
+        int t = q.front();
+        q.pop();
+        vis[t] = false;
+        for (int i = h[t]; ~i; i = ne[i])
+            if (dist[e[i]] > dist[t] + w[i])
+            {
+                dist[e[i]] = dist[t] + w[i];
+                if (!vis[e[i]]) vis[e[i]] = true, q.push(j);
+            }
+    }
+    dist[n] > INF / 2 ? cout << "impossible" : cout << dist[n];
+}
+\end{lstlisting}
+\subsection{Detecting Negative Circle in SPFA}
+\begin{lstlisting}
+void spfa()     // 只需要初始化 h
+{
+    queue<int> q;
+    // 基于虚拟原点假设，所有点放入队列
+    for (int i = 1; i <= n; i++) q.push(i), st[i] = true;
+    while (q.size())
+    {
+        int t = q.front();
+        q.pop();
+        vis[t] = false;
+        for (int i = h[t]; ~i; i = ne[i])
+            if (dist[e[i]] > dist[t] + w[i])
+            {
+                dist[e[i]] = dist[t] + w[i];
+                // 新增
+                cnt[j] = cnt[t] + 1;
+                if (cnt[j] >= n) return true
+                if (!st[j]) q.push(j)，st[j] = true;
+            }
+    }
+    return false;
+}
+\end{lstlisting}
+\subsection{Floyd}
+\begin{lstlisting}
+const int N = 210;
+int g[N][N], n, m, k;
+int main()
+{
+    cin >> n >> m >> k;
+    memset(g, 0x3f, sizeof g);
+    for (int i = 1; i <= n; i++) g[i][i] = 0;
+    while (m--)
+    {
+        int a, b, c;
+        cin >> a >> b >> c;
+        g[a][b] = min(g[a][b], c);
+    }
+    for (int k = 1; k <= n; k++)
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= n; j++)
+                g[i][j] = min(g[i][k] + g[k][j], g[i][j]);
+    // 后续代码略
+    return 0;
+}
+\end{lstlisting}
+\section{Minimum Spanning Tree}
+\subsection{Prim}
+\begin{lstlisting}
+const int N = 510;
+int n, m, g[N][N], dist[N];
+bool vis[N];
+void prim()
+{
+    int res = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int t = -1;
+        for (int j = 1; j <= n; j++)
+            if (!vis[j] && (t == -1 || dist[j] < dist[t])) t = j;
+        if (i && dist[t] == INF) { res = INF; break; }
+        if (i) res += dist[t];
+        vis[t] = true;
+        for (int j = 1; j <= n; j++) dist[j] = min(dist[j], g[t][j]);
+    }
+    res == INF ? cout << "impossible" : cout << res;
+}
+int main()
+{
+    memset(g, 0x3f, sizeof g);
+    memset(dist, 0x3f, sizeof dist);
+    cin >> n >> m;
+    while (m--)
+    {
+        int a, b, c;
+        cin >> a >> b >> c;
+        g[a][b] = min(g[a][b], c);
+        g[b][a] = min(g[b][a], c);
+    }
+    prim();
+    return 0;
+}
+\end{lstlisting}
+\subsection{Kruskal}
+\begin{lstlisting}
+const int N = 100010;
+int n, m;
+int p[N];
+struct Edge
+{
+    int a, b, w;
+    bool operator<(const Edge &e) const { return w < e.w; };
+} edge[2 * N];
+void init() { for (int i = 1; i <= n; i++) p[i] = i; }
+int find(int x)
+{
+    if (x != p[x]) p[x] = find(p[x]);
+    return p[x];
+}
+void merge(int x, int y) { p[find(x)] = find(y); }
+void kruskal()
+{
+    int res = 0, cnt = 0;
+    for (int i = 1; i <= m; i++)
+        if (find(edge[i].a) != find(edge[i].b))
+        {
+            merge(edge[i].a, edge[i].b);
+            res += edge[i].w;
+            cnt++;
+        }
+    if (cnt < n - 1) res = INF;
+    res == INF ? cout << "impossible" : cout << res;
+}
+int main()
+{
+    init();
+    cin >> n >> m;
+    for (int i = 1; i <= m; i++) cin >> edge[i].a >> edge[i].b >> edge[i].w;
+    sort(edge + 1, edge + m + 1);
+    kruskal();
+    return 0;
+}
+\end{lstlisting}
+\section{Bipartite Graph}
+\subsection{Coloring Method}
+To check if a given graph is bipartite.
+\begin{lstlisting}
+const int N = 100010, M = 200010;
+int n, m;
+int e[M], ne[M], h[N], color[N], idx;
+bool dfs(int u, int c)
+{
+color[u] = c;
+for (int i = h[u]; ~i; i = ne[i])
+    if (color[e[i]] == -1)
+    {
+        if (!dfs(e[i], !c)) return false;
+    }
+    else if (color[e[i]] == c) return false;
+return true;
+}
+bool check()
+{
+for (int i = 1; i <= n; i++)
+    if (color[i] == -1)
+        if (!dfs(i, 0)) return false;
+return true;
+}
+int main()
+{
+// 注意另外初始化 h 与 color
+cin >> n >> m;
+while (m--)
+{
+    int a, b;
+    cin >> a >> b;
+    add(a, b), add(b, a);
+}
+// 其余过程略
+}
+\end{lstlisting}
+\newpage
+\subsection{Hungarian Algorithm}
+To find the maximum matching for a given graph.
+\begin{lstlisting}
+const int N = 510, M = 100010;
+int n1, n2, m;
+int e[M], ne[M], h[N], match[N], idx;
+bool vis[N];
+bool find(int x)
+{
+for (int i = h[x]; ~i; i = ne[i])
+    if (!vis[e[i]])
+    {
+        vis[e[i]] = true;
+        if (match[e[i]] == 0 || find(match[e[i]]))
+        {
+            match[e[i]] = x;
+            return true;
+        }
+    }
+return false;
+}
+int main()
+{
+// 注意初始化 h
+cin >> n1 >> n2 >> m;
+while (m--)
+{
+    int a, b;
+    cin >> a >> b;
+    add(a, b);
+}
+int res = 0;
+for (int i = 1; i <= n1; i++)
+{
+    memset(vis, false, sizeof vis);
+    if (find(i)) res++;
+}
+cout << res;
+return 0;
+}
+\end{lstlisting}

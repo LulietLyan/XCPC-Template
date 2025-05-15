@@ -1,0 +1,309 @@
+\documentclass[8pt]{report}
+\usepackage[a4paper, tmargin=0.5in, lmargin=0.5in, rmargin=0.5in, bmargin=0.5in]{geometry}
+\usepackage{hyperref}
+\usepackage{xeCJK}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{amsmath, amsthm}
+\usepackage{listings,xcolor}
+\usepackage{fontspec}
+\usepackage{titlesec}
+\usepackage{datetime}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{dashrule}
+\usepackage{picture}
+\usepackage[inkscapelatex=false]{svg}
+\newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
+
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter \hspace{10pt}$\star$}{10pt}{\Large}
+\titlespacing*{\chapter}{0pt}{0pt}{5pt}  % 参数分别为：左缩进、前距、后距
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    citecolor=black,
+    linktoc=all
+}
+
+\usepackage[numbers,sort&compress]{natbib} % for a numerical citation list
+%\usepackage{natbib} % to cite references by surname and year
+
+\usepackage{graphicx}
+\graphicspath{ {figures/} }  % folder containing graphics
+
+\usepackage[font=small,labelfont=bf]{caption}
+
+\geometry{left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm}
+\lstset{
+    language    = c++,
+    breaklines  = true,
+    captionpos  = b,
+    tabsize     = 4,
+    numbers     = left,
+    columns     = fullflexible,
+    keepspaces  = true,
+    commentstyle = \color[RGB]{0,128,0},
+    keywordstyle = \color[RGB]{0,0,255},
+    basicstyle   = \small\ttfamily,
+    rulesepcolor = \color{red!20!green!20!blue!20},
+    showstringspaces = false,
+    xleftmargin=2em, xrightmargin=2em, aboveskip=1em, % 设置代码块的边距
+    frame=shadowbox, % 为代码块添加阴影框
+    rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色
+    framexleftmargin=2em % 阴影框左边距
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENTER SOME IMPORTANT INFORMATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%=%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\studentname}{Luliet Lyan \& Bleu Echo}
+\newcommand{\researchcentre}{NSCC-GZ}
+\newcommand{\projecttitle}{XCPC-Template}
+\newcommand{\partonetitle}{Part I: Basic Template}
+\newcommand{\parttwotitle}{Part II: Advanced Template}
+\newcommand{\supervisorA}{Dr Dan Huang}  % Primary
+\newcommand{\supervisorB}{Dr Zhiguang Chen}   % Secondary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\renewenvironment{titlepage}{%
+  \cleardoublepage
+  \if@twocolumn
+    \@restonecoltrue\onecolumn
+  \else
+    \@restonecolfalse\newpage
+  \fi
+  \thispagestyle{empty}% 设置本页样式为无页码
+  % 移除原定义中的 \setcounter{page}\@ne
+}{%
+  \if@restonecol\twocolumn \else \newpage \fi
+}
+\makeatother
+\setcounter{chapter}{-1}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    
+    \vspace{1cm}
+	\includegraphics[width=0.25\textwidth]{figures/SYSU.pdf}
+    \includegraphics[width=1.0\textwidth]{figures/NSCC-GZ.pdf}
+    \vspace{1cm}
+
+    \begin{minipage}{1.0\textwidth}
+        \centering
+
+		\rule{\textwidth}{3pt}
+		\vspace{0.5cm}
+
+        \fontsize{28}{30}\bfseries
+        \projecttitle
+
+		\vspace{0.5cm}
+		\rule{\textwidth}{3pt}
+    \end{minipage}
+
+	\vspace{0.8cm}
+    
+    % 作者信息区块
+	\setlength{\fboxrule}{2pt} % 加粗边框线至2pt
+	\setlength{\fboxsep}{1cm}  % 增加内边距至1cm
+	\begin{minipage}{0.75\textwidth} % 微调宽度增加留白
+		\centering
+		\vspace{1.3cm}
+
+		\fontsize{14}{16}\selectfont
+		\textsc{Created by} % 小大写字体
+		
+		\vspace{0.8cm}
+		\fontsize{20}{24}\selectfont
+		\textbf{\studentname}
+		
+		\vspace{0.8cm}
+		\fontsize{12}{14}\selectfont
+		\begin{tabular}{c}
+			\researchcentre \\
+			School of Computer Science \& Engineering \\
+			Sun Yat-Sen University
+		\end{tabular}
+	
+		\vspace{0.8cm}
+		
+		% 导师信息框
+		\begin{tabular}{rl}
+			\textbf{Supervisor:} & \supervisorA \\
+			\textbf{Co-Supervisor:} & \supervisorB
+		\end{tabular}
+
+	\end{minipage}
+    
+    \vfill
+    
+    % 日期
+    \underline{\textit{\today}}
+\end{titlepage}
+
+\begin{multicols}{2}
+
+\newpage
+\tableofcontents
+\newpage
+
+\end{multicols}
+% 基础部分
+
+\begin{titlepage}
+    \centering
+    
+    \vspace{1cm}
+	\includegraphics[width=0.25\textwidth]{figures/SYSU.pdf}
+    \includegraphics[width=1.0\textwidth]{figures/NSCC-GZ.pdf}
+    \vspace{1cm}
+
+    \begin{minipage}{1.0\textwidth}
+        \centering
+
+		\rule{\textwidth}{3pt}
+		\vspace{0.5cm}
+
+        \fontsize{28}{30}\bfseries
+        \partonetitle
+
+		\vspace{0.5cm}
+		\rule{\textwidth}{3pt}
+    \end{minipage}
+
+    \vspace{0.8cm}
+    
+    % 作者信息区块
+	\setlength{\fboxrule}{2pt} % 加粗边框线至2pt
+	\setlength{\fboxsep}{1cm}  % 增加内边距至1cm
+	\begin{minipage}{0.75\textwidth} % 微调宽度增加留白
+		\centering
+		\vspace{1.3cm}
+
+		\fontsize{14}{16}\selectfont
+		\textsc{Created by} % 小大写字体
+		
+		\vspace{0.8cm}
+		\fontsize{20}{24}\selectfont
+		\textbf{\studentname}
+		
+		\vspace{0.8cm}
+		\fontsize{12}{14}\selectfont
+		\begin{tabular}{c}
+			\researchcentre \\
+			School of Computer Science \& Engineering \\
+			Sun Yat-Sen University
+		\end{tabular}
+	
+		\vspace{0.8cm}
+		
+		% 导师信息框
+		\begin{tabular}{rl}
+			\textbf{Supervisor:} & \supervisorA \\
+			\textbf{Co-Supervisor:} & \supervisorB
+		\end{tabular}
+
+	\end{minipage}
+
+    \vfill
+\end{titlepage}
+
+\begin{multicols}{2}
+
+\input{part/chap00}
+\input{part/chap01}
+\input{part/chap02}
+\input{part/chap03}
+\input{part/chap04}
+\input{part/chap05}
+
+\end{multicols}
+
+% 进阶部分
+\begin{titlepage}
+    \centering
+    
+    \vspace{1cm}
+	\includegraphics[width=0.25\textwidth]{figures/SYSU.pdf}
+    \includegraphics[width=1.0\textwidth]{figures/NSCC-GZ.pdf}
+    \vspace{1cm}
+
+    \begin{minipage}{1.0\textwidth}
+        \centering
+
+		\rule{\textwidth}{3pt}
+		\vspace{0.5cm}
+
+        \fontsize{28}{30}\bfseries
+        \parttwotitle
+
+		\vspace{0.5cm}
+		\rule{\textwidth}{3pt}
+    \end{minipage}
+
+    \vspace{0.8cm}
+    
+    % 作者信息区块
+	\setlength{\fboxrule}{2pt} % 加粗边框线至2pt
+	\setlength{\fboxsep}{1cm}  % 增加内边距至1cm
+	\begin{minipage}{0.75\textwidth} % 微调宽度增加留白
+		\centering
+		\vspace{1.3cm}
+
+		\fontsize{14}{16}\selectfont
+		\textsc{Created by} % 小大写字体
+		
+		\vspace{0.8cm}
+		\fontsize{20}{24}\selectfont
+		\textbf{\studentname}
+		
+		\vspace{0.8cm}
+		\fontsize{12}{14}\selectfont
+		\begin{tabular}{c}
+			\researchcentre \\
+			School of Computer Science \& Engineering \\
+			Sun Yat-Sen University
+		\end{tabular}
+	
+		\vspace{0.8cm}
+		
+		% 导师信息框
+		\begin{tabular}{rl}
+			\textbf{Supervisor:} & \supervisorA \\
+			\textbf{Co-Supervisor:} & \supervisorB
+		\end{tabular}
+
+	\end{minipage}
+
+    \vfill
+\end{titlepage}
+
+\begin{multicols}{2}
+
+\input{part/chap06}
+\input{part/chap07}
+\input{part/chap08}
+\input{part/chap09}
+\input{part/chap10}
+\input{part/chap11}
+
+\end{multicols}
+
+\end{document}
