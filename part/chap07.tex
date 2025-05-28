@@ -50,41 +50,214 @@ int main()
 }
 \end{lstlisting}
 \section{Segment Tree}
+\subsection{Maintain the Maximum}
 \begin{lstlisting}
 struct Node
-{   // 可以维护任何满足区间加法的信息
-    int l, r; LL sum, add; // 区间和/懒标记
-} tr[N * 4];
-void pushup(int u)  // 从上至下传递
+{ int l, r, v; } tr[N * 4];
+void pushup(int u)
+{
+    tr[u].v = max(tr[u << 1].v, tr[u << 1 | 1].v);
+}
+void build(int u, int l, int r)
+{
+    tr[u] = {l, r};
+    if (l == r) return;
+    int mid = l + r >> 1;
+    build(u << 1, l, mid), 
+    build(u << 1 | 1, mid + 1, r);
+}
+int query(int u, int l, int r)
+{
+    if (tr[u].l >= l && tr[u].r <= r)
+        return tr[u].v;
+    int mid = tr[u].l + tr[u].r >> 1;
+    int v = 0;
+    if (l <= mid)
+        v = query(u << 1, l, r);
+    if (r > mid)
+        v = max(v, query(u << 1 | 1, l, r));
+    return v;
+}
+void modify(int u, int x, int v)
+{
+    if (tr[u].l == x && tr[u].r == x)
+        tr[u].v = v;
+    else
+    {
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (x <= mid)
+            modify(u << 1, x, v);
+        else
+            modify(u << 1 | 1, x, v);
+        pushup(u);
+    }
+}
+\end{lstlisting}
+\subsection{Maintain the Maximum Subarray Sum}
+\begin{lstlisting}
+struct Node
+{ int l, r, sum, lmax, rmax, tmax; } tr[N * 4];
+void pushup(Node &u, Node &l, Node &r)
+{
+    u.sum = l.sum + r.sum;
+    u.lmax = max(l.lmax, l.sum + r.lmax);
+    u.rmax = max(r.rmax, r.sum + l.rmax);
+    u.tmax = max(max(l.tmax, r.tmax), l.rmax + r.lmax);
+}
+void pushup(int u)
+{ pushup(tr[u], tr[u << 1], tr[u << 1 | 1]); }
+void build(int u, int l, int r)
+{
+    if (l == r)
+        tr[u] = {l, r, w[r], w[r], w[r], w[r]};
+    else
+    {
+        tr[u] = {l, r};
+        int mid = l + r >> 1;
+        build(u << 1, l, mid), 
+        build(u << 1 | 1, mid + 1, r);
+        pushup(u);
+    }
+}
+void modify(int u, int x, int v)
+{
+    if (tr[u].l == x && tr[u].r == x)
+        tr[u] = {x, x, v, v, v, v};
+    else
+    {
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (x <= mid)
+            modify(u << 1, x, v);
+        else
+            modify(u << 1 | 1, x, v);
+        pushup(u);
+    }
+}
+Node query(int u, int l, int r)
+{
+    if (tr[u].l >= l && tr[u].r <= r)
+        return tr[u];
+    else
+    {
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (r <= mid)
+            return query(u << 1, l, r);
+        else if (l > mid)
+            return query(u << 1 | 1, l, r);
+        else
+        {
+            auto left = query(u << 1, l, r);
+            auto right = query(u << 1 | 1, l, r);
+            Node res;
+            pushup(res, left, right);
+            return res;
+        }
+    }
+}
+\end{lstlisting}
+\subsection{Maintain the GCD}
+\begin{lstlisting}
+struct Node
+{ int l, r; LL sum, d; } tr[N * 4];
+LL gcd(LL a, LL b)
+{ return b ? gcd(b, a % b) : a; }
+void pushup(Node &u, Node &l, Node &r)
+{
+    u.sum = l.sum + r.sum;
+    u.d = gcd(l.d, r.d);
+}
+void pushup(int u)
+{ pushup(tr[u], tr[u << 1], tr[u << 1 | 1]); }
+void build(int u, int l, int r)
+{
+    if (l == r)
+    {
+        LL b = w[r] - w[r - 1];
+        tr[u] = {l, r, b, b};
+    }
+    else
+    {
+        tr[u].l = l, tr[u].r = r;
+        int mid = l + r >> 1;
+        build(u << 1, l, mid),
+        build(u << 1 | 1, mid + 1, r);
+        pushup(u);
+    }
+}
+void modify(int u, int x, LL v)
+{
+    if (tr[u].l == x && tr[u].r == x)
+    {
+        LL b = tr[u].sum + v;
+        tr[u] = {x, x, b, b};
+    }
+    else
+    {
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (x <= mid)
+            modify(u << 1, x, v);
+        else
+            modify(u << 1 | 1, x, v);
+        pushup(u);
+    }
+}
+Node query(int u, int l, int r)
+{
+    if (tr[u].l >= l && tr[u].r <= r)
+        return tr[u];
+    else
+    {
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (r <= mid)
+            return query(u << 1, l, r);
+        else if (l > mid)
+            return query(u << 1 | 1, l, r);
+        else
+        {
+            auto left = query(u << 1, l, r);
+            auto right = query(u << 1 | 1, l, r);
+            Node res;
+            pushup(res, left, right);
+            return res;
+        }
+    }
+}
+\end{lstlisting}
+\subsection{Optimize Range Updates}
+Use this when you need to get summary of a specific range of an array but you also need to modify a specific range of an array:
+\begin{lstlisting}
+struct Node
+{ int l, r; LL sum, add; } tr[N * 4];
+void pushup(int u)
 { tr[u].sum = tr[u << 1].sum + tr[u << 1 | 1].sum; }
 void pushdown(int u)
-{   // 从下至上传递
+{
     auto &root = tr[u],
          &left = tr[u << 1],
          &right = tr[u << 1 | 1];
     if (root.add)
     {
         left.add += root.add,
-            left.sum += (LL)(left.r - left.l + 1) * root.add;
+        left.sum += (LL)(left.r - left.l + 1) * root.add;
         right.add += root.add,
-            right.sum += (LL)(right.r - right.l + 1) * root.add;
+        right.sum += (LL)(right.r - right.l + 1) * root.add;
         root.add = 0;
     }
 }
 void build(int u, int l, int r)
-{   // 建树
+{
     if (l == r) tr[u] = {l, r, w[r], 0};
     else
     {
         tr[u] = {l, r};
         int mid = l + r >> 1;
-        build(u << 1, l, mid); // 左儿子
-        build(u << 1 | 1, mid + 1, r); // 右儿子
-        pushup(u); // 从下往上传递区间值
+        build(u << 1, l, mid);
+        build(u << 1 | 1, mid + 1, r);
+        pushup(u);
     }
 }
 void modify(int u, int l, int r, int d)
-{   // 区间修改
+{
     if (tr[u].l >= l && tr[u].r <= r)
     {
         tr[u].sum += (LL)(tr[u].r - tr[u].l + 1) * d;
@@ -102,7 +275,7 @@ void modify(int u, int l, int r, int d)
     }
 }
 LL query(int u, int l, int r)
-{   // 区间查询
+{
     if (tr[u].l >= l && tr[u].r <= r)
         return tr[u].sum;
     pushdown(u);
@@ -114,4 +287,96 @@ LL query(int u, int l, int r)
         sum += query(u << 1 | 1, l, r);
     return sum;
 }
+\end{lstlisting}
+\section{Persistent Data Structure}
+\subsection{Persistent Trie}
+\begin{lstlisting}
+const int N = 600010, M = N * 25;
+int n, m, s[N], root[N], idx;
+int trie[M][2], max_id[M];
+void insert(int i, int k, int p, int q)
+{
+    if (k < 0)
+    {
+        max_id[q] = i;
+        return;
+    }
+    int v = s[i] >> k & 1;
+    if (p)
+        trie[q][v ^ 1] = trie[p][v ^ 1];
+    trie[q][v] = ++idx;
+    insert(i, k - 1, trie[p][v], trie[q][v]);
+    max_id[q] = max(max_id[trie[q][0]], max_id[trie[q][1]]);
+}
+int query(int root, int C, int L)
+{
+    int p = root;
+    for (int i = 23; i >= 0; i--)
+    {
+        int v = C >> i & 1;
+        if (max_id[trie[p][v ^ 1]] >= L)
+            p = trie[p][v ^ 1];
+        else
+            p = trie[p][v];
+    }
+    return C ^ s[max_id[p]];
+}
+// insert(i, 23, root[i - 1], root[i]);
+// query(root[r - 1], l - 1, x ^ s[n]);
+\end{lstlisting}
+\subsection{Persistent Segment Tree}
+\begin{lstlisting}
+const int N = 100010, M = 10010;
+int n, m, a[N], root[N], idx;
+vector<int> nums;
+struct Node
+{
+    int l, r;
+    int cnt;
+} tr[N * 4 + N * 17];
+int find(int x)
+{
+    return lower_bound(nums.begin(), nums.end(), x) - nums.begin();
+}
+int build(int l, int r)
+{
+    int p = ++idx;
+    if (l == r)
+        return p;
+    int mid = l + r >> 1;
+    tr[p].l = build(l, mid), tr[p].r = build(mid + 1, r);
+    return p;
+}
+int insert(int p, int l, int r, int x)
+{
+    int q = ++idx;
+    tr[q] = tr[p];
+    if (l == r)
+    {
+        tr[q].cnt++;
+        return q;
+    }
+    int mid = l + r >> 1;
+    if (x <= mid)
+        tr[q].l = insert(tr[p].l, l, mid, x);
+    else
+        tr[q].r = insert(tr[p].r, mid + 1, r, x);
+    tr[q].cnt = tr[tr[q].l].cnt + tr[tr[q].r].cnt;
+    return q;
+}
+int query(int q, int p, int l, int r, int k)
+{
+    if (l == r)
+        return r;
+    int cnt = tr[tr[q].l].cnt - tr[tr[p].l].cnt;
+    int mid = l + r >> 1;
+    if (k <= cnt)
+        return query(tr[q].l, tr[p].l, l, mid, k);
+    else
+        return query(tr[q].r, tr[p].r, mid + 1, r, k - cnt);
+}
+\end{lstlisting}
+\section{Treap}
+\begin{lstlisting}
+
 \end{lstlisting}
