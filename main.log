@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.4.26)  29 MAY 2025 02:12
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.4.26)  30 MAY 2025 03:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1019,28 +1019,25 @@ File: figures/NSCC-GZ.pdf Graphic file (type pdf)
 Chapter 6.
 [27]) (./part/chap07.tex [28]
 Chapter 7.
-[29] [30] [31]) (./part/chap08.tex [32]
+[29] [30] [31] [32]) (./part/chap08.tex [33]
 Chapter 8.
-) (./part/chap09.tex [33]
+) (./part/chap09.tex [34]
 Chapter 9.
-) (./part/chap10.tex [34]
+) (./part/chap10.tex [35]
 Chapter 10.
-) (./part/chap11.tex [35]
+) (./part/chap11.tex [36]
 Chapter 11.
-) [36] (./main.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
+) [37] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 86051EBBD84580177BC2224E305EC3A9;16328.
+(rerunfilecheck)             Checksum: B528F5B8EC5BA70981715CE2A9AD9BD6;16409.
  ) 
 Here is how much of TeX's memory you used:
- 30888 strings out of 478630
- 632101 string characters out of 5847730
- 2962012 words of memory out of 5000000
- 50448 multiletter control sequences out of 15000+600000
+ 30912 strings out of 478630
+ 632373 string characters out of 5847730
+ 2972012 words of memory out of 5000000
+ 50472 multiletter control sequences out of 15000+600000
  518494 words of font info for 89 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 100i,8n,117p,999b,2341s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 100i,8n,117p,999b,2337s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (36 pages).
+Output written on main.pdf (37 pages).
