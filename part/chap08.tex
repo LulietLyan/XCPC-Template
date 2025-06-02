@@ -1,1 +1,314 @@
 \chapter{Advanced Search}\label{chap:AdvancedSearch}
+\section{Flood-Fill}
+\begin{lstlisting}
+const int N = 1010, M = N * N;
+int n, m;
+char g[N][N];
+PII q[M];
+bool st[N][N];
+void bfs(int sx, int sy)
+{
+    int hh = 0, tt = 0;
+    q[0] = {sx, sy}; st[sx][sy] = true;
+    while (hh <= tt)
+    {
+        PII t = q[hh++];
+        for (int i = t.first - 1; i <= t.first + 1; i++)
+            for (int j = t.second - 1; j <= t.second + 1; j++)
+            {
+                if (i == t.first && j == t.second)
+                    continue;
+                if (i < 0 || i >= n || j < 0 || j >= m)
+                    continue;
+                if (g[i][j] == '.' || st[i][j])
+                    continue;
+                q[++tt] = {i, j};
+                st[i][j] = true;
+            }
+    }
+}
+int main()
+{
+    int cnt = 0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            if (g[i][j] == 'W' && !st[i][j])
+            { bfs(i, j); cnt++; }
+}
+\end{lstlisting}
+\section{Multi-source BFS}
+\begin{lstlisting}
+const int N = 1010, M = N * N;
+int n, m, dist[N][N];
+char g[N][N];
+PII q[M];
+int dx[4] = {-1, 0, 1, 0}, 
+    dy[4] = {0, 1, 0, -1};
+void bfs()
+{
+    memset(dist, -1, sizeof dist);
+    int hh = 0, tt = -1;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= m; j++)
+            if (g[i][j] == '1')
+            {
+                dist[i][j] = 0;
+                q[++tt] = {i, j};
+            }
+    while (hh <= tt)
+    {
+        auto t = q[hh++];
+        for (int i = 0; i < 4; i++)
+        {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 1 || a > n | b < 1 || b > m) continue;
+            if (dist[a][b] != -1) continue;
+            dist[a][b] = dist[t.x][t.y] + 1;
+            q[++tt] = {a, b};
+        }
+    }
+}
+\end{lstlisting}
+\section{BFS with Deque}
+\begin{lstlisting}
+const int N = 510, M = N * N;
+int n, m, dist[N][N];
+char g[N][N];
+bool st[N][N];
+int dx[4] = {-1, -1, 1, 1}, 
+    dy[4] = {-1, 1, 1, -1}, 
+    ix[4] = {-1, -1, 0, 0}, 
+    iy[4] = {-1, 0, 0, -1};
+int bfs()
+{
+    memset(dist, 0x3f, sizeof dist);
+    memset(st, 0, sizeof st);
+    dist[0][0] = 0;
+    deque<PII> q;
+    q.push_back({0, 0});
+    char cs[] = "\\/\\/";
+    while (q.size())
+    {
+        PII t = q.front();
+        q.pop_front();
+        if (st[t.x][t.y]) continue;
+        st[t.x][t.y] = true;
+        for (int i = 0; i < 4; i++)
+        {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 0 || a > n || b < 0 || b > m) continue;
+            int ca = t.x + ix[i], cb = t.y + iy[i];
+            int d = dist[t.x][t.y] + 
+            (g[ca][cb] != cs[i]);
+            if (d < dist[a][b])
+            {
+                dist[a][b] = d;
+                if (g[ca][cb] != cs[i])
+                    q.push_back({a, b});
+                else
+                    q.push_front({a, b});
+            }
+        }
+    }
+    return dist[n][m];
+}
+\end{lstlisting}
+\section{Bidirectional BFS}
+\begin{lstlisting}
+int bfs()
+{
+    if (A == B) return 0;
+    queue<string> qa, qb;
+    unordered_map<string, int> da, db;
+    qa.push(A), qb.push(B);
+    da[A] = db[B] = 0;
+    int step = 0;
+    while (qa.size() && qb.size())
+    {
+        int t;
+        if (qa.size() < qb.size())
+            // PROCESS
+        else 
+            // PROCESS
+        if (t <= 10) return t;
+        if (++step == 10) return -1;
+    }
+    return -1;
+}
+\end{lstlisting}
+\section{A*}
+\begin{lstlisting}
+const int N = 1010, M = 200010;
+int n, m, S, T, K;
+int h[N], rh[N], e[M], w[M], ne[M], idx;
+int dist[N], cnt[N];
+bool st[N];
+void dijkstra()
+{
+    priority_queue<PII, vector<PII>, greater<PII>> heap;
+    heap.push({0, T});
+    memset(dist, 0x3f, sizeof dist);
+    dist[T] = 0;
+    while (heap.size())
+    {
+        auto t = heap.top();
+        heap.pop();
+        int ver = t.y;
+        if (st[ver]) continue;
+        st[ver] = true;
+        for (int i = rh[ver]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (dist[j] > dist[ver] + w[i])
+            {
+                dist[j] = dist[ver] + w[i];
+                heap.push({dist[j], j});
+            }
+        }
+    }
+}
+
+int astar()
+{
+    priority_queue<PIII, vector<PIII>, greater<PIII>> heap;
+    heap.push({dist[S], {0, S}});
+    while (heap.size())
+    {
+        auto t = heap.top();
+        heap.pop();
+        int ver = t.y.y, distance = t.y.x;
+        cnt[ver]++;
+        if (cnt[T] == K) return distance;
+        for (int i = h[ver]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (cnt[j] < K)
+                heap.push({distance + w[i] + dist[j], {distance + w[i], j}});
+        }
+    }
+    return -1;
+}
+int main()
+{
+    // PROCESS
+    dijkstra(); cout << astar();
+    // PROCESS
+}
+\end{lstlisting}
+\section{DFS Connectivity Model}
+\begin{lstlisting}
+char g[N][N];
+int xa, ya, xb, yb;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+bool st[N][N];
+bool dfs(int x, int y)
+{
+    if (g[x][y] == '#') return false;
+    if (x == xb && y == yb) return true;
+    st[x][y] = true;
+    for (int i = 0; i < 4; i++)
+    {
+        int a = x + dx[i], b = y + dy[i];
+        if (a < 0 || a >= n || b < 0 || b >= n) continue;
+        if (st[a][b]) continue;
+        if (dfs(a, b)) return true;
+    }
+    return false;
+}
+\end{lstlisting}
+\section{Iterative Deepening}
+\begin{lstlisting}
+const int N = 110;
+int n, path[N];
+bool dfs(int u, int k)
+{
+    if (u == k)
+        return path[u - 1] == n;
+    bool st[N] = {0};
+    for (int i = u - 1; i >= 0; i--)
+        for (int j = i; j >= 0; j--)
+        {
+            int s = path[i] + path[j];
+            if (s > n || s <= path[u - 1] || st[s]) continue;
+            st[s] = true;
+            path[u] = s;
+            if (dfs(u + 1, k)) return true;
+        }
+
+    return false;
+}
+\end{lstlisting}
+\section{Bidirectional DFS}
+\begin{lstlisting}
+const int N = 1 << 24;
+int n, m, k, cnt = 0, ans;
+int g[50], weights[N];
+void dfs(int u, int s)
+{
+    if (u == k)
+    {
+        weights[cnt++] = s;
+        return;
+    }
+    if ((LL)s + g[u] <= m)
+        dfs(u + 1, s + g[u]);
+    dfs(u + 1, s);
+}
+void dfs2(int u, int s)
+{
+    if (u == n)
+    {
+        int l = 0, r = cnt - 1;
+        while (l < r)
+        {
+            int mid = l + r + 1 >> 1;
+            if (weights[mid] + (LL)s <= m)
+                l = mid;
+            else r = mid - 1;
+        }
+        if (weights[l] + (LL)s <= m)
+            ans = max(ans, weights[l] + s);
+        return;
+    }
+    if ((LL)s + g[u] <= m)
+        dfs2(u + 1, s + g[u]);
+    dfs2(u + 1, s);
+}
+\end{lstlisting}
+\section{IDA*}
+\begin{lstlisting}
+const int N = 1e2;
+int n, a[N];
+string t;
+int f()
+{
+    int tot = 0;
+    for (int i = 1; i < n; i++)
+        if (t[i - 1] != t[i] - 1)
+            tot++;
+    return (tot + 2) / 3;
+}
+bool IDAstar(int u, int maxn)
+{
+    if (f() > maxn - u) return false;
+    if (u == maxn) return true;
+    string temp = t;
+    for (int len = 1; len <= n - 1; len++)
+    {
+        for (int l = 0; l <= n - len; l++)
+        {
+            int r = l + len - 1;
+            string substr = temp.substr(l, r - l + 1);
+            for (int k = r + 1; k < n; k++)
+            {
+                t.insert(k + 1, substr);
+                t.erase(l, r - l + 1);
+                if (IDAstar(u + 1, maxn))
+                    return true;
+                t = temp;
+            }
+        }
+    }
+    return false;
+}
+\end{lstlisting}

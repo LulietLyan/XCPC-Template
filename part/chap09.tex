@@ -1,1 +1,531 @@
 \chapter{Advanced Graph Theory}\label{chap:AdvancedGrap}
+\section{Detecting Negative Cycles}
+\begin{lstlisting}
+int n, m1, m2;
+int h[N], e[M], w[M], ne[M], idx;
+int dist[N], q[N], cnt[N];
+bool st[N];
+bool spfa()
+{
+    memset(dist, 0, sizeof dist);
+    memset(cnt, 0, sizeof cnt);
+    memset(st, 0, sizeof st);
+    int hh = 0, tt = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        q[tt++] = i;
+        st[i] = true;
+    }
+    while (hh != tt)
+    {
+        int t = q[hh++];
+        if (hh == N) hh = 0;
+        st[t] = false;
+        for (int i = h[t]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (dist[j] > dist[t] + w[i])
+            {
+                dist[j] = dist[t] + w[i];
+                cnt[j] = cnt[t] + 1;
+                if (cnt[j] >= n)
+                    return true;
+                if (!st[j])
+                {
+                    q[tt++] = j;
+                    if (tt == N) tt = 0;
+                    st[j] = true;
+                }
+            }
+        }
+    }
+    return false;
+}
+\end{lstlisting}
+\section{Difference Constraints}
+\begin{lstlisting}
+const int N = 100010, M = 300010;
+int n, m;
+int h[N], e[M], w[M], ne[M], idx;
+LL dist[N];
+int q[N], cnt[N];
+bool st[N];
+void add(int a, int b, int c)
+{
+    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+}
+bool spfa()
+{
+    int hh = 0, tt = 1;
+    memset(dist, -0x3f, sizeof dist);
+    dist[0] = 0; q[0] = 0;
+    st[0] = true;
+    while (hh != tt)
+    {
+        int t = q[--tt];
+        st[t] = false;
+        for (int i = h[t]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (dist[j] < dist[t] + w[i])
+            {
+                dist[j] = dist[t] + w[i];
+                cnt[j] = cnt[t] + 1;
+                if (cnt[j] >= n + 1)
+                    return false;
+                if (!st[j])
+                {
+                    q[tt++] = j;
+                    st[j] = true;
+                }
+            }
+        }
+    }
+    return true;
+}
+int main()
+{
+    memset(h, -1, sizeof h);
+    // add(a, b, k) means b ≥ a + k
+    // PROCESS
+}
+\end{lstlisting}
+\section{LCA}
+\begin{lstlisting}
+int n, m, h[N], e[M], ne[M], idx;
+int depth[N], fa[N][16], q[N];
+void bfs(int root)
+{
+    memset(depth, 0x3f, sizeof depth);
+    depth[0] = 0;
+    depth[root] = 1;
+    int hh = 0, tt = 0;
+    q[0] = root;
+    while (hh <= tt)
+    {
+        int t = q[hh++];
+        for (int i = h[t]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (depth[j] > depth[t] + 1)
+            {
+                depth[j] = depth[t] + 1;
+                q[++tt] = j;
+                fa[j][0] = t;
+                for (int k = 1; k <= 15; k++)
+                    fa[j][k] = fa[fa[j][k - 1]][k - 1];
+            }
+        }
+    }
+}
+int lca(int a, int b)
+{
+    if (depth[a] < depth[b])
+        swap(a, b);
+    for (int k = 15; k >= 0; k--)
+        if (depth[fa[a][k]] >= depth[b])
+            a = fa[a][k];
+    if (a == b)
+        return a;
+    for (int k = 15; k >= 0; k--)
+        if (fa[a][k] != fa[b][k])
+        {
+            a = fa[a][k];
+            b = fa[b][k];
+        }
+    return fa[a][0];
+}
+\end{lstlisting}
+\section{SCC}
+\begin{lstlisting}
+void tarjan(int u)
+{
+    dfn[u] = low[u] = ++timestap;
+    stack[++top] = u, in_stk[u] = true;
+    for(int i = h[u]; ~i; i = ne[i])
+    {
+        int j = e[i];
+        if(!dfn[j])
+        {
+            tarjan(j);
+            low[u] = min(low[u], low[j]);
+        }
+        else if(in_stk[j])
+            low[u] = min(low[u], dfn[j]);
+    }
+    if(dfn[u] == low[u])
+    {
+        int y;
+        ++scc_cnt;
+        do
+        {
+            y = stk[top--];
+            in_stk[y] = false;
+            id[y] = scc_cnt;
+        } while(y != u);
+    }
+} 
+\end{lstlisting}
+\section{DCC}
+\subsection{e-DCC}
+\begin{lstlisting}
+void tarjan(int u, int from)
+{
+    dfn[u] = low[u] = ++timestamp;
+    stk[++top] = u;
+    for (int i = h[u]; ~i; i = ne[i])
+    {
+        int j = e[i];
+        if (!dfn[j])
+        {
+            tarjan(j, i);
+            low[u] = min(low[u], low[j]);
+            if (dfn[u] < low[j])
+                is_bridge[i] = is_bridge[i ^ 1] = true;
+        }
+        else if (i != (from ^ 1))
+            low[u] = min(low[u], dfn[j]);
+    }
+    if (dfn[u] == low[u])
+    {
+        ++dcc_cnt;
+        int y;
+        do
+        {
+            y = stk[top--];
+            id[y] = dcc_cnt;
+        } while (y != u);
+    }
+}
+\end{lstlisting}
+\subsection{v-DCC}
+\begin{lstlisting}
+void tarjan(int u)
+{
+    dfn[u] = low[u] = ++timestamp;
+    int cnt = 0;
+    for (int i = h[u]; ~i; i = ne[i])
+    {
+        int j = e[i];
+        if (!dfn[j])
+        {
+            tarjan(j);
+            low[u] = min(low[u], low[j]);
+            if (low[j] >= dfn[u])
+                cnt++;
+        }
+        else
+            low[u] = min(low[u], dfn[j]);
+    }
+    if (u != root) cnt++;
+    ans = max(ans, cnt);
+}
+\end{lstlisting}
+\subsection{Articulation Point}
+\begin{lstlisting}
+void tarjan(int u)
+{
+    dfn[u] = low[u] = ++timestamp;
+    stk[++top] = u;
+    if (u == root && h[u] == -1)
+    {
+        dcc_cnt++;
+        dcc[dcc_cnt].push_back(u);
+        return;
+    }
+    int cnt = 0;
+    for (int i = h[u]; ~i; i = ne[i])
+    {
+        int j = e[i];
+        if (!dfn[j])
+        {
+            tarjan(j);
+            low[u] = min(low[u], low[j]);
+            if (dfn[u] <= low[j])
+            {
+                cnt++;
+                if (u != root || cnt > 1)
+                    cut[u] = true;
+                ++dcc_cnt;
+                int y;
+                do
+                {
+                    y = stk[top--];
+                    dcc[dcc_cnt].push_back(y);
+                } while (y != j);
+                dcc[dcc_cnt].push_back(u);
+            }
+        }
+        else
+            low[u] = min(low[u], dfn[j]);
+    }
+}
+\end{lstlisting}
+\section{Bipartite Graph}
+The maximum matching \\
+(by the Hungarian algorithm) = \\
+the minimum vertex cover = \\
+total number of vertices - \\
+maximum independent set = \\
+total number of vertices - \\
+minimum path cover.
+\subsection{maximum matching}
+\begin{lstlisting}
+const int N = 110;
+int n, m;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+PII match[N][N];
+bool g[N][N], st[N][N];
+bool find(int x, int y)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        int a = x + dx[i], b = y + dy[i];
+        if (a && a <= n && b && b <= n && !g[a][b] && !st[a][b])
+        {
+            st[a][b] = true;
+            PII t = match[a][b];
+            if (t.x == -1 || find(t.x, t.y))
+            {
+                match[a][b] = {x, y};
+                return true;
+            }
+        }
+    }
+    return false;
+}
+int main()
+{
+    // PROCESS
+    memset(match, -1, sizeof match);
+    int res = 0;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+            if ((i + j) % 2 && !g[i][j])
+            {
+                memset(st, 0, sizeof st);
+                if (find(i, j)) res++;
+            }
+    // PROCESS
+}
+\end{lstlisting}
+\subsection{minimum vertex cover}
+\begin{lstlisting}
+const int N = 110;
+int n, m, k, match[N];
+bool g[N][N], st[N];
+bool find(int x)
+{
+    for (int i = 0; i < m; i++)
+        if (!st[i] && g[x][i])
+        {
+            st[i] = true;
+            if (match[i] == -1 || find(match[i]))
+            {
+                match[i] = x;
+                return true;
+            }
+        }
+    return false;
+}
+int main()
+{
+    while (cin >> n, n)
+    {
+        cin >> m >> k;
+        memset(g, 0, sizeof g);
+        memset(match, -1, sizeof match);
+        while (k--)
+        {
+            int t, a, b;
+            cin >> t >> a >> b;
+            if (!a || !b) continue;
+            g[a][b] = true;
+        }
+        int res = 0;
+        for (int i = 0; i < n; i++)
+        {
+            memset(st, 0, sizeof st);
+            if (find(i)) res++;
+        }
+        cout << res << '\n';
+    }
+}
+\end{lstlisting}
+\subsection{maximum independent set}
+\begin{lstlisting}
+const int N = 110;
+int n, m, k;
+PII match[N][N];
+bool g[N][N], st[N][N];
+int dx[8] = {-2, -1, 1, 2, 2, 1, -1, -2};
+int dy[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+bool find(int x, int y)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        int a = x + dx[i], b = y + dy[i];
+        if (a < 1 || a > n || b < 1 || b > m)
+            continue;
+        if (g[a][b]) continue;
+        if (st[a][b]) continue;
+        st[a][b] = true;
+        PII t = match[a][b];
+        if (t.x == 0 || find(t.x, t.y))
+        {
+            match[a][b] = {x, y};
+            return true;
+        }
+    }
+    return false;
+}
+int main()
+{
+    // PROCESS
+    int res = 0;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= m; j++)
+        {
+            if (g[i][j] || (i + j) % 2)
+                continue;
+            memset(st, 0, sizeof st);
+            if (find(i, j)) res++;
+        }
+    cout << n * m - k - res << '\n';
+}
+\end{lstlisting}
+\subsection{minimum path cover}
+\begin{lstlisting}
+const int N = 210, M = 30010;
+int n, m, match[N];
+bool d[N][N], st[N];
+bool find(int x)
+{
+    for (int i = 1; i <= n; i++)
+        if (d[x][i] && !st[i])
+        {
+            st[i] = true;
+            int t = match[i];
+            if (t == 0 || find(t))
+            {
+                match[i] = x;
+                return true;
+            }
+        }
+    return false;
+}
+int main()
+{
+    // 传递闭包
+    for (int k = 1; k <= n; k++)
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= n; j++)
+                d[i][j] |= d[i][k] & d[k][j];
+    int res = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        memset(st, 0, sizeof st);
+        if (find(i)) res++;
+    }
+    cout << n - res;
+}
+\end{lstlisting}
+\section{Eulerian Circuit \& Eulerian Path}
+\subsection{Eulerian Circuit}
+\begin{lstlisting}
+int type, n, m;
+int h[N], e[M], ne[M], idx;
+bool used[M];
+int ans[M], cn, din[N], dout[N];
+void add(int a, int b)
+{
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+void dfs(int u)
+{
+    for (int &i = h[u]; ~i;)
+    {
+        if (used[i])
+        { i = ne[i]; continue; }
+        used[i] = true;
+        if (type == 1) used[i ^ 1] = true;
+        int t;
+        if (type == 1)
+        {
+            t = i / 2 + 1;
+            if (i & 1) t = -t;
+        }
+        else t = i + 1;
+        int j = e[i];
+        i = ne[i];
+        dfs(j);
+        ans[++cnt] = t;
+    }
+}
+int main()
+{
+    cin >> type >> n >> m;
+    memset(h, -1, sizeof h);
+    for (int i = 0; i < m; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        add(a, b);
+        if (type == 1) add(b, a);
+        din[b]++, dout[a]++;
+    }
+    if (type == 1)
+    {
+        for (int i = 1; i <= n; i++)
+            if (din[i] + dout[i] & 1)
+            {
+                cout << "NO\n";
+                return 0;
+            }
+    }
+    else
+    {
+        for (int i = 1; i <= n; i++)
+            if (din[i] != dout[i])
+            {
+                cout << "NO\n";
+                return 0;
+            }
+    }
+    for (int i = 1; i <= n; i++)
+        if (h[i] != -1) { dfs(i); break; }
+}
+\end{lstlisting}
+\subsection{Eulerian Path}
+\begin{lstlisting}
+const int N = 510;
+int n = 500, m, g[N][N];
+int ans[1100], cnt, d[N];
+void dfs(int u)
+{
+    for (int i = 1; i <= n; i++)
+        if (g[u][i])
+        {
+            g[u][i]--, g[i][u]--;
+            dfs(i);
+        }
+    ans[++cnt] = u;
+}
+int main()
+{
+    cin >> m;
+    while (m--)
+    {
+        int a, b;
+        cin >> a >> b;
+        g[a][b]++, g[b][a]++;
+        d[a]++, d[b]++;
+    }
+    int start = 1;
+    while (!d[start]) ++start;
+    for (int i = 1; i <= 500; i++)
+        if (d[i] % 2)
+        { start = i; break; }
+    dfs(start);
+}
+\end{lstlisting}

@@ -1,1 +1,73 @@
 \chapter{Advanced Math}\label{chap:AdvancedMath}
+\section{Euler's Totient Function}
+\subsection{GCD}
+\begin{lstlisting}
+const int N = 1e7 + 10;
+int primes[N], cnt, phi[N];
+bool st[N];
+LL s[N];
+void init(int n)
+{
+    for (int i = 2; i <= n; i++)
+    {
+        if (!st[i])
+        {
+            primes[cnt++] = i;
+            phi[i] = i - 1;
+        }
+        for (int j = 0; primes[j] * i <= n; j++)
+        {
+            st[primes[j] * i] = true;
+            if (i % primes[j] == 0)
+            {
+                phi[i * primes[j]] = phi[i] * primes[j];
+                break;
+            }
+            phi[i * primes[j]] = phi[i] * (primes[j] - 1);
+        }
+    }
+    for (int i = 1; i <= n; i++)
+        s[i] = s[i - 1] + phi[i];
+}
+int main()
+{
+    int n; cin >> n;
+    init(n);
+    LL res = 0;
+    for (int i = 0; i < cnt; i++)
+    {
+        int p = primes[i];
+        res += s[n / p] * 2 + 1;
+    }
+}
+\end{lstlisting}
+\section{Matrix Multiplication}
+\begin{lstlisting}
+const int N = 3;
+int n, m;
+void mul(int c[], int a[], int b[][N])
+{
+    int temp[N] = {0};
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            temp[i] = (temp[i] + (LL)a[j] * b[j][i]) % m;
+    memcpy(c, temp, sizeof temp);
+}
+void mul(int c[][N], int a[][N], int b[][N])
+{
+    int temp[N][N] = {0};
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            for (int k = 0; k < N; k++)
+                temp[i][j] = (temp[i][j] + (LL)a[i][k] * b[k][j]) % m;
+    memcpy(c, temp, sizeof temp);
+}
+int main()
+{
+    while (n)
+    {
+        if (n & 1) mul(f1, f1, a);
+        mul(a, a, a); n >>= 1;
+    }
+}
+\end{lstlisting}

@@ -381,14 +381,11 @@ int query(int q, int p, int l, int r, int k)
 const int N = 100010, INF = 1e8;
 int n, root, idx;
 struct Node
-{
-    int l, r;
-    int key, val;
-    int cnt, size;
-} tr[N];
+{ int l, r, key, val, cnt, size; } tr[N];
 void pushup(int p)
 {
-    tr[p].size = tr[tr[p].l].size + tr[tr[p].r].size + tr[p].cnt;
+    tr[p].size = tr[tr[p].l].size +
+                 tr[tr[p].r].size + tr[p].cnt;
 }
 int get_node(int key)
 {
@@ -414,14 +411,12 @@ void build()
     get_node(-INF), get_node(INF);
     root = 1, tr[1].r = 2;
     pushup(root);
-    if (tr[1].val < tr[2].val)
-        zag(root);
+    if (tr[1].val < tr[2].val) zag(root);
 }
 void insert(int &p, int key)
 {
     if (!p) p = get_node(key);
-    else if (tr[p].key == key)
-        tr[p].cnt++;
+    else if (tr[p].key == key) tr[p].cnt++;
     else if (tr[p].key > key)
     {
         insert(tr[p].l, key);
@@ -441,8 +436,7 @@ void remove(int &p, int key)
     if (!p) return;
     if (tr[p].key == key)
     {
-        if (tr[p].cnt > 1)
-            tr[p].cnt--;
+        if (tr[p].cnt > 1) tr[p].cnt--;
         else if (tr[p].l || tr[p].r)
         {
             if (!tr[p].r || tr[tr[p].l].val > tr[tr[p].r].val)
@@ -456,13 +450,11 @@ void remove(int &p, int key)
                 remove(tr[p].l, key);
             }
         }
-        else
-            p = 0;
+        else p = 0;
     }
     else if (tr[p].key > key)
         remove(tr[p].l, key);
-    else
-        remove(tr[p].r, key);
+    else remove(tr[p].r, key);
     pushup(p);
 }
 int get_rank_by_key(int p, int key)
@@ -496,5 +488,43 @@ int get_next(int p, int key)
     if (tr[p].key <= key)
         return get_next(tr[p].r, key);
     return min(tr[p].key, get_next(tr[p].l, key));
+}
+\end{lstlisting}
+\section{AC Automaton}
+\begin{lstlisting}
+const int N = 10010, M = 1000010, S = 55;
+int n, tr[N * S][26], cnt[N * S], idx;
+int q[N * S], ne[N * S];
+char str[M];
+void insert()
+{
+    int p = 0;
+    for (int i = 0; str[i]; i++)
+    {
+        int t = str[i] - 'a';
+        if (!tr[p][t]) tr[p][t] = ++idx;
+        p = tr[p][t];
+    }
+    cnt[p]++;
+}
+void build()
+{
+    int hh = 0, tt = -1;
+    for (int i = 0; i < 26; i++)
+        if (tr[0][i]) q[++tt] = tr[0][i];
+    while (hh <= tt)
+    {
+        int t = q[hh++];
+        for (int i = 0; i < 26; i++)
+        {
+            int p = tr[t][i];
+            if (!p) tr[t][i] = tr[ne[t]][i];
+            else
+            {
+                ne[p] = tr[ne[t]][i];
+                q[++tt] = p;
+            }
+        }
+    }
 }
 \end{lstlisting}
