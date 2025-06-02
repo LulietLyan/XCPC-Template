@@ -157,4 +157,5 @@
 \contentsline {subsection}{\numberline {11.2.6}Dependent Knapsack Problem}{44}{subsection.11.2.6}%
 \contentsline {subsection}{\numberline {11.2.7}Number of Solutions}{45}{subsection.11.2.7}%
 \contentsline {section}{\numberline {11.3}FSM}{45}{section.11.3}%
-\contentsline {section}{\numberline {11.4}Digit Dynamic Programming}{45}{section.11.4}%
+\contentsline {section}{\numberline {11.4}Digit DP}{45}{section.11.4}%
+\contentsline {section}{\numberline {11.5}Queue Optimization for DP}{45}{section.11.5}%

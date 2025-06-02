@@ -281,7 +281,7 @@ int main()
     }
 }
 \end{lstlisting}
-\section{Digit Dynamic Programming}
+\section{Digit DP}
 \begin{lstlisting}
 const int N = 35;
 int l, r, k, b, a[N], al, f[N][N];
@@ -309,5 +309,23 @@ int main()
 {
     cin >> l >> r >> k >> b;
     cout << calc(r) - calc(l - 1) << '\n';
+}
+\end{lstlisting}
+\section{Queue Optimization for DP}
+\begin{lstlisting}
+int n, m, s[300010], q[300010];
+int main()
+{
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++)
+        cin >> s[i], s[i] += s[i - 1];
+    int res = INT_MIN, hh = 0, tt = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        if (q[hh] < i - m) hh++;
+        res = max(res, s[i] - s[q[hh]]);
+        while (hh <= tt && s[q[tt]] >= s[i]) tt--;
+        q[++tt] = i;
+    }
 }
 \end{lstlisting}
