@@ -1,4 +1,4 @@
-\chapter{Advanced Graph Theory}\label{chap:AdvancedGrap}
+\chapter{Advanced Graph Theory}\label{chap:AdvancedGraph}
 \section{Detecting Negative Cycles}
 \begin{lstlisting}
 int n, m1, m2;
@@ -12,10 +12,7 @@ bool spfa()
     memset(st, 0, sizeof st);
     int hh = 0, tt = 0;
     for (int i = 1; i <= n; i++)
-    {
-        q[tt++] = i;
-        st[i] = true;
-    }
+    { q[tt++] = i; st[i] = true; }
     while (hh != tt)
     {
         int t = q[hh++];
@@ -40,6 +37,139 @@ bool spfa()
         }
     }
     return false;
+}
+\end{lstlisting}
+\section{SPFA-SLF}
+Using deque to solve SPFA question.
+\begin{lstlisting}
+void spfa()
+{
+    memset(dist, 0x3f, sizeof dist);
+    memset(st, 0, sizeof st);
+    deque<int> q;
+    q.push_back(s);
+    st[s] = 1, dist[s] = 0;
+    while (q.size())
+    {
+        int t = q.front();
+        q.pop_front();
+        st[t] = 0;
+        for (int i = h[t]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (dist[j] > dist[t] + w[i])
+            {
+                dist[j] = dist[t] + w[i];
+                if (!st[j])
+                {
+                    st[j] = true;
+                    if (q.size() && dist[j] < dist[q.front()])
+                        q.push_front(j);
+                    else q.push_back(j);
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+\section{SPFA \& MIN \& MAX}
+Using SPFA to maintain the minimum and maximum.
+In this case we need \textbf{Original Graph} and \textbf{Reverse Graph}, in which we can use \textbf{type == 0} or \textbf{type == 1} to describe.
+\begin{lstlisting}
+void spfa(int h[], int dist[], int type)
+{
+    int hh = 0, tt = 1;
+    if (type == 0)
+    {
+        memset(dist, 0x3f, sizeof dmin);
+        dist[1] = w[1]; q[0] = 1;
+    }
+    else
+    {
+        memset(dist, -0x3f, sizeof dmax);
+        dist[n] = w[n]; q[0] = n;
+    }
+    while (hh != tt)
+    {
+        int t = q[hh++];
+        if (hh == N) hh = 0;
+        st[t] = false;
+        for (int i = h[t]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (type == 0 && dist[j] > min(dist[t], w[j]) || type == 1 && dist[j] < max(dist[t], w[j]))
+            {
+                if (type == 0)
+                    dist[j] = min(dist[t], w[j]);
+                else
+                    dist[j] = max(dist[t], w[j]);
+                if (!st[j])
+                {
+                    q[tt++] = j;
+                    if (tt == N) tt = 0;
+                    st[j] = true;
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+\section{Second Shortest Path}
+\begin{lstlisting}
+const int N = 1010, M = 20010;
+struct Ver
+{
+    int id, type, dist;
+    bool operator>(const Ver &W) const 
+    { return dist > W.dist; }
+};
+int n, m, S, T, dist[N][2], cnt[N][2];
+int h[N], e[M], w[M], ne[M], idx;
+bool st[N][2];
+void add(int a, int b, int c)
+{
+    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+}
+int dijkstra()
+{
+    memset(st, 0, sizeof st);
+    memset(dist, 0x3f, sizeof dist);
+    memset(cnt, 0, sizeof cnt);
+    dist[S][0] = 0, cnt[S][0] = 1;
+    priority_queue<Ver, vector<Ver>, greater<Ver>> heap;
+    heap.push({S, 0, 0});
+    while (heap.size())
+    {
+        Ver t = heap.top();
+        heap.pop();
+        int ver = t.id, type = t.type, distance = t.dist, count = cnt[ver][type];
+        if (st[ver][type]) continue;
+        st[ver][type] = true;
+        for (int i = h[ver]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if (dist[j][0] > distance + w[i])
+            {
+                dist[j][1] = dist[j][0], cnt[j][1] = cnt[j][0];
+                heap.push({j, 1, dist[j][1]});
+                dist[j][0] = distance + w[i], cnt[j][0] = count;
+                heap.push({j, 0, dist[j][0]});
+            }
+            else if (dist[j][0] == distance + w[i])
+                cnt[j][0] += count;
+            else if (dist[j][1] > distance + w[i])
+            {
+                dist[j][1] = distance + w[i], cnt[j][1] = count;
+                heap.push({j, 1, dist[j][1]});
+            }
+            else if (dist[j][1] == distance + w[i])
+                cnt[j][1] += count;
+        }
+    }
+    int res = cnt[T][0];
+    if (dist[T][0] + 1 == dist[T][1])
+        res += cnt[T][1];
+    return res;
 }
 \end{lstlisting}
 \section{Difference Constraints}
