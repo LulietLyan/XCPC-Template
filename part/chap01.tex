@@ -20,9 +20,7 @@ void quick_sort(int l, int r)
     return;
 }
 \end{lstlisting}
-
 \section{Binary Search}
-
 \begin{lstlisting}
 // 区间 [l, r] 被划分成 [l, mid] 和 [mid + 1, r] 时使用
 // 大于等于区间的最小值，check 应为 target <= a[mid]
@@ -64,7 +62,43 @@ double bsearch_3(double l, double r)
     return l;
 }
 \end{lstlisting}
-
+\section{Ternary Search}
+\begin{lstlisting}
+// 整数三分
+void tsearch_1(int l, int r)
+{
+    while (l < r)
+    {
+        int lmid = l + (r - l) / 3, rmid = r - (r - l) / 3;
+        lans = cal(lmid), rans = cal(rmid);
+        if (lans <= rans) r = rmid - 1;
+        else l = lmid + 1;
+        if (lans <= rans) l = lmid + 1;
+        else r = rmid - 1;
+    }
+    // 求凹函数的极小值
+    cout << min(lans, rans) << endl;
+    // 求凸函数的极大值
+    cout << max(lans, rans) << endl;
+}
+// 浮点数三分
+void tsearch_2(int l, int r)
+{
+    const double eps = 1e-6;
+    while (r - l < eps)
+    {
+        double lmid = l + (r - l) / 3;
+        double rmid = r - (r - l) / 3;
+        lans = cal(lmid), rans = cal(rmid);
+        // 求凹函数的极小值
+        if (lans <= rans) r = rmid;
+        else l = lmid;
+        // 求凸函数的极大值
+        if (lans <= rans) l = lmid;
+        else r = rmid;
+    }
+}
+\end{lstlisting}
 \section{High Precision}
 \subsection{High Precision Add}
 \begin{lstlisting}
