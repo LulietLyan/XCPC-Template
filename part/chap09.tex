@@ -202,76 +202,228 @@ int dijkstra()
 }
 \end{lstlisting}
 \section{Second Minimum Spanning Tree}
+\subsection{brute-force}
 \begin{lstlisting}
 const int N = 510, M = 10010;
 int n, m, p[N], dist1[N][N], dist2[N][N];
+int h[N], e[N * 2], w[N * 2], ne[N * 2], idx;
 struct Edge
 {
-    int a, b, w;
-    bool f;
-    bool operator<(const Edge &e) const 
-    { return w < e.w; }
+  int a, b, w;
+  bool f;
+  bool operator<(const Edge &e) const
+  { return w < e.w; }
 } edge[M];
-int h[N], e[N * 2], w[N * 2], ne[N * 2], idx;
 void add(int a, int b, int c)
-{ e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++; }
+{
+  e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+}
 int find(int x)
 {
-    if (p[x] != x) p[x] = find(p[x]);
-    return p[x];
+  if (p[x] != x) p[x] = find(p[x]);
+  return p[x];
 }
 void dfs(int u, int fa, int maxd1, int maxd2, int d1[], int d2[])
 {
-    d1[u] = maxd1, d2[u] = maxd2;
-    for (int i = h[u]; ~i; i = ne[i])
+  d1[u] = maxd1, d2[u] = maxd2;
+  for (int i = h[u]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (j != fa)
     {
-        int j = e[i];
-        if (j != fa)
-        {
-            int td1 = maxd1, td2 = maxd2;
-            if (w[i] > td1)
-                td2 = td1, td1 = w[i];
-            else if (w[i] < td1 && w[i] > td2)
-                td2 = w[i];
-            dfs(j, u, td1, td2, d1, d2);
-        }
+      int td1 = maxd1, td2 = maxd2;
+      if (w[i] > td1)
+        td2 = td1, td1 = w[i];
+      else if (w[i] < td1 && w[i] > td2)
+        td2 = w[i];
+      dfs(j, u, td1, td2, d1, d2);
     }
+  }
 }
 int main()
 {
-    cin >> n >> m;
-    memset(h, -1, sizeof h);
-    for (int i = 0; i < m; i++)
-        cin >> edge[i].a >> edge[i].b >> edge[i].w;
-    sort(edge, edge + m);
-    for (int i = 1; i <= n; i++) p[i] = i;
-    LL sum = 0;
-    for (int i = 0; i < m; i++)
+  cin >> n >> m;
+  memset(h, -1, sizeof h);
+  for (int i = 0; i < m; i++)
+    cin >> edge[i].a >> edge[i].b >> edge[i].w;
+  sort(edge, edge + m);
+  for (int i = 1; i <= n; i++) p[i] = i;
+  LL sum = 0;
+  for (int i = 0; i < m; i++)
+  {
+    int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+    int pa = find(a), pb = find(b);
+    if (pa != pb)
     {
-        int a = edge[i].a, b = edge[i].b, w = edge[i].w;
-        int pa = find(a), pb = find(b);
-        if (pa != pb)
-        {
-            p[pa] = pb;
-            sum += w;
-            add(a, b, w), add(b, a, w);
-            edge[i].f = true;
-        }
+      p[pa] = pb;
+      sum += w;
+      add(a, b, w), add(b, a, w);
+      edge[i].f = true;
     }
-    for (int i = 1; i <= n; i++)
-        dfs(i, -1, -1e9, -1e9, dist1[i], dist2[i]);
-    LL res = 1e18;
-    for (int i = 0; i < m; i++)
-        if (!edge[i].f)
+  }
+  for (int i = 1; i <= n; i++)
+    dfs(i, -1, -1e9, -1e9, dist1[i], dist2[i]);
+  LL res = 1e18;
+  for (int i = 0; i < m; i++)
+    if (!edge[i].f)
+    {
+      int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+      LL t;
+      if (w > dist1[a][b])
+        t = sum + w - dist1[a][b];
+      else if (w > dist2[a][b])
+        t = sum + w - dist2[a][b];
+      res = min(res, t);
+    }
+}
+\end{lstlisting}
+\subsection{LCA}
+\begin{lstlisting}
+const int N = 100010, M = 300010;
+int n, m, p[N], q[N];
+int h[N], e[M], w[M], ne[M], idx;
+int depth[N], fa[N][17], d1[N][17], d2[N][17];
+struct Edge
+{
+  int a, b, w;
+  bool used;
+  bool operator<(const Edge &t) const
+  { return w < t.w; }
+} edge[M];
+void add(int a, int b, int c)
+{
+  e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+}
+int find(int x)
+{
+  if (p[x] != x) p[x] = find(p[x]);
+  return p[x];
+}
+LL kruskal()
+{
+  for (int i = 1; i <= n; i++) p[i] = i;
+  sort(edge, edge + m);
+  LL res = 0;
+  for (int i = 0; i < m; i++)
+  {
+    int a = find(edge[i].a), b = find(edge[i].b), w = edge[i].w;
+    if (a != b)
+    {
+      p[a] = b; res += w;
+      edge[i].used = true;
+    }
+  }
+  return res;
+}
+void build()
+{
+  memset(h, -1, sizeof h);
+  for (int i = 0; i < m; i++)
+    if (edge[i].used)
+    {
+      int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+      add(a, b, w), add(b, a, w);
+    }
+}
+void bfs()
+{
+  memset(depth, 0x3f, sizeof depth);
+  depth[0] = 0, depth[1] = 1, q[0] = 1;
+  int hh = 0, tt = 0;
+  while (hh <= tt)
+  {
+    int t = q[hh++];
+    for (int i = h[t]; ~i; i = ne[i])
+    {
+      int j = e[i];
+      if (depth[j] > depth[t] + 1)
+      {
+        depth[j] = depth[t] + 1;
+        q[++tt] = j;
+        fa[j][0] = t;
+        d1[j][0] = w[i], d2[j][0] = -INF;
+        for (int k = 1; k <= 16; k++)
         {
-            int a = edge[i].a, b = edge[i].b, w = edge[i].w;
-            LL t;
-            if (w > dist1[a][b])
-                t = sum + w - dist1[a][b];
-            else if (w > dist2[a][b])
-                t = sum + w - dist2[a][b];
-            res = min(res, t);
+          int anc = fa[j][k - 1];
+          fa[j][k] = fa[anc][k - 1];
+          int distance[4] = {d1[j][k - 1],
+                             d2[j][k - 1],
+                             d1[anc][k - 1],
+                             d2[anc][k - 1]};
+          d1[j][k] = d2[j][k] = -INF;
+          for (int u = 0; u < 4; u++)
+          {
+            int d = distance[u];
+            if (d > d1[j][k])
+              d2[j][k] = d1[j][k], d1[j][k] = d;
+            else if (d != d1[j][k] && d > d2[j][k])
+              d2[j][k] = d;
+          }
         }
+      }
+    }
+  }
+}
+int lca(int a, int b, int w)
+{
+  static int distance[N * 2];
+  int cnt = 0;
+  if (depth[a] < depth[b])
+    swap(a, b);
+  for (int k = 16; k >= 0; k--)
+    if (depth[fa[a][k]] >= depth[b])
+    {
+      distance[cnt++] = d1[a][k];
+      distance[cnt++] = d2[a][k];
+      a = fa[a][k];
+    }
+  if (a != b)
+  {
+    for (int k = 16; k >= 0; k--)
+      if (fa[a][k] != fa[b][k])
+      {
+        distance[cnt++] = d1[a][k];
+        distance[cnt++] = d2[a][k];
+        distance[cnt++] = d1[b][k];
+        distance[cnt++] = d2[b][k];
+        a = fa[a][k], b = fa[b][k];
+      }
+    distance[cnt++] = d1[a][0];
+    distance[cnt++] = d1[b][0];
+  }
+  int dist1 = -INF, dist2 = -INF;
+  for (int i = 0; i < cnt; i++)
+  {
+    int d = distance[i];
+    if (d > dist1)
+      dist2 = dist1, dist1 = d;
+    else if (d != dist1 && d > dist2)
+      dist2 = d;
+  }
+  if (w > dist1) return w - dist1;
+  if (w > dist2) return w - dist2;
+  return INF;
+}
+int main()
+{
+  cin >> n >> m;
+  for (int i = 0; i < m; i++)
+  {
+    int a, b, c;
+    cin >> a >> b >> c;
+    edge[i] = {a, b, c};
+  }
+  LL sum = kruskal();
+  build();
+  bfs();
+  LL res = 1e18;
+  for (int i = 0; i < m; i++)
+    if (!edge[i].used)
+    {
+      int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+      res = min(res, sum + lca(a, b, w));
+    }
+  cout << res;
 }
 \end{lstlisting}
 \section{Difference Constraints}
@@ -450,96 +602,93 @@ void tarjan(int u)
 \section{DCC}
 \subsection{e-DCC}
 \begin{lstlisting}
+const int N = 5010, M = 20010;
+int n, m, h[N], e[M], ne[M], idx;
+int dfn[N], low[N], timestamp;
+int stk[N], top, id[N], dcc_cnt, d[N];
+bool is_bridge[M];
 void tarjan(int u, int from)
 {
-    dfn[u] = low[u] = ++timestamp;
-    stk[++top] = u;
-    for (int i = h[u]; ~i; i = ne[i])
+  dfn[u] = low[u] = ++timestamp;
+  stk[++top] = u;
+  for (int i = h[u]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (!dfn[j])
     {
-        int j = e[i];
-        if (!dfn[j])
-        {
-            tarjan(j, i);
-            low[u] = min(low[u], low[j]);
-            if (dfn[u] < low[j])
-                is_bridge[i] = is_bridge[i ^ 1] = true;
-        }
-        else if (i != (from ^ 1))
-            low[u] = min(low[u], dfn[j]);
+      tarjan(j, i);
+      low[u] = min(low[u], low[j]);
+      if (dfn[u] < low[j])
+        is_bridge[i] = is_bridge[i ^ 1] = true;
     }
-    if (dfn[u] == low[u])
+    else if (i != (from ^ 1))
+      low[u] = min(low[u], dfn[j]);
+  }
+  if (dfn[u] == low[u])
+  {
+    ++dcc_cnt;
+    int y;
+    do
     {
-        ++dcc_cnt;
-        int y;
-        do
-        {
-            y = stk[top--];
-            id[y] = dcc_cnt;
-        } while (y != u);
-    }
+      y = stk[top--];
+      id[y] = dcc_cnt;
+    } while (y != u);
+  }
 }
 \end{lstlisting}
 \subsection{v-DCC}
 \begin{lstlisting}
-void tarjan(int u)
+const int N = 1010, M = 1010;
+int n, m, h[N], e[M], ne[M], idx;
+int dfn[N], low[N], timestamp;
+int stk[N], top, dcc_cnt, root;
+vector<int> dcc[N];
+bool cut[N];
+void init()
 {
-    dfn[u] = low[u] = ++timestamp;
-    int cnt = 0;
-    for (int i = h[u]; ~i; i = ne[i])
-    {
-        int j = e[i];
-        if (!dfn[j])
-        {
-            tarjan(j);
-            low[u] = min(low[u], low[j]);
-            if (low[j] >= dfn[u])
-                cnt++;
-        }
-        else
-            low[u] = min(low[u], dfn[j]);
-    }
-    if (u != root) cnt++;
-    ans = max(ans, cnt);
+  for (int i = 1; i <= dcc_cnt; i++)
+    dcc[i].clear();
+  idx = n = timestamp = top = dcc_cnt = 0;
+  memset(h, -1, sizeof h);
+  memset(dfn, 0, sizeof dfn);
+  memset(cut, 0, sizeof cut);
 }
-\end{lstlisting}
-\subsection{Articulation Point}
-\begin{lstlisting}
 void tarjan(int u)
 {
-    dfn[u] = low[u] = ++timestamp;
-    stk[++top] = u;
-    if (u == root && h[u] == -1)
+  dfn[u] = low[u] = ++timestamp;
+  stk[++top] = u;
+  if (u == root && h[u] == -1)
+  {
+    dcc_cnt++;
+    dcc[dcc_cnt].push_back(u);
+    return;
+  }
+  int cnt = 0;
+  for (int i = h[u]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (!dfn[j])
     {
-        dcc_cnt++;
-        dcc[dcc_cnt].push_back(u);
-        return;
-    }
-    int cnt = 0;
-    for (int i = h[u]; ~i; i = ne[i])
-    {
-        int j = e[i];
-        if (!dfn[j])
+      tarjan(j);
+      low[u] = min(low[u], low[j]);
+      if (dfn[u] <= low[j])
+      {
+        cnt++;
+        if (u != root || cnt > 1)
+          cut[u] = true;
+        ++dcc_cnt;
+        int y;
+        do
         {
-            tarjan(j);
-            low[u] = min(low[u], low[j]);
-            if (dfn[u] <= low[j])
-            {
-                cnt++;
-                if (u != root || cnt > 1)
-                    cut[u] = true;
-                ++dcc_cnt;
-                int y;
-                do
-                {
-                    y = stk[top--];
-                    dcc[dcc_cnt].push_back(y);
-                } while (y != j);
-                dcc[dcc_cnt].push_back(u);
-            }
-        }
-        else
-            low[u] = min(low[u], dfn[j]);
+          y = stk[top--];
+          dcc[dcc_cnt].push_back(y);
+        } while (y != j);
+        dcc[dcc_cnt].push_back(u);
+      }
     }
+    else
+      low[u] = min(low[u], dfn[j]);
+  }
 }
 \end{lstlisting}
 \section{Bipartite Graph}

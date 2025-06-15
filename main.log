@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.6)  10 JUN 2025 04:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.6)  16 JUN 2025 03:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1022,27 +1022,27 @@ Chapter 7.
 Chapter 8.
 [34] [35]) (./part/chap09.tex [36]
 Chapter 9.
-[37] [38] [39] [40] [41] [42]) (./part/chap10.tex [43]
+[37] [38] [39] [40] [41] [42] [43] [44]) (./part/chap10.tex [45]
 Chapter 10.
-) (./part/chap11.tex [44]
+) (./part/chap11.tex [46]
 Chapter 11.
-[45] [46])
+[47] [48])
 
-[47] (./main.aux)
+[49] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: AB80808A17A2DF7A0333B124A417A33E;23784.
+(rerunfilecheck)             Checksum: 54E1264C236926C4562309CC8D797ACA;23822.
  ) 
 Here is how much of TeX's memory you used:
- 30732 strings out of 473832
- 629414 string characters out of 5722597
+ 30736 strings out of 473832
+ 629454 string characters out of 5722597
  2652664 words of memory out of 5000000
- 53252 multiletter control sequences out of 15000+600000
+ 53256 multiletter control sequences out of 15000+600000
  565044 words of font info for 93 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  102i,8n,117p,999b,2434s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (47 pages).
+Output written on main.pdf (49 pages).
