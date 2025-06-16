@@ -825,6 +825,10 @@ int main()
 }
 \end{lstlisting}
 \subsection{minimum path cover}
+\begin{itemize}
+    \item \textbf{Only for DAG.}
+    \item If you need to compute the \textbf{minimum path cover with repeated nodes}, you need to perform transitive closure as shown in the following code.
+\end{itemize}
 \begin{lstlisting}
 const int N = 210, M = 30010;
 int n, m, match[N];
