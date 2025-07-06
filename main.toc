@@ -156,17 +156,19 @@
 \contentsline {subsection}{\numberline {10.1.1}GCD}{46}{subsection.10.1.1}%
 \contentsline {section}{\numberline {10.2}Matrix Multiplication}{46}{section.10.2}%
 \contentsline {chapter}{\numberline {11}Advanced DP}{47}{chapter.11}%
-\contentsline {section}{\numberline {11.1}Advanced LIS}{47}{section.11.1}%
-\contentsline {subsection}{\numberline {11.1.1}MSIS}{47}{subsection.11.1.1}%
-\contentsline {subsection}{\numberline {11.1.2}LCIS}{47}{subsection.11.1.2}%
-\contentsline {section}{\numberline {11.2}Knapsack Problem}{47}{section.11.2}%
-\contentsline {subsection}{\numberline {11.2.1}Multiple Knapsack Problem}{47}{subsection.11.2.1}%
-\contentsline {subsection}{\numberline {11.2.2}Two-Dimensional Cost Knapsack Problem}{47}{subsection.11.2.2}%
-\contentsline {subsection}{\numberline {11.2.3}Finding the Actual Solution Set}{47}{subsection.11.2.3}%
-\contentsline {subsection}{\numberline {11.2.4}Maximum Linearly Independent Subset}{48}{subsection.11.2.4}%
-\contentsline {subsection}{\numberline {11.2.5}Mixed Knapsack Problem}{48}{subsection.11.2.5}%
-\contentsline {subsection}{\numberline {11.2.6}Dependent Knapsack Problem}{48}{subsection.11.2.6}%
-\contentsline {subsection}{\numberline {11.2.7}Number of Solutions}{49}{subsection.11.2.7}%
-\contentsline {section}{\numberline {11.3}FSM}{49}{section.11.3}%
-\contentsline {section}{\numberline {11.4}Digit DP}{49}{section.11.4}%
-\contentsline {section}{\numberline {11.5}Queue Optimization for DP}{49}{section.11.5}%
+\contentsline {section}{\numberline {11.1}Advanced Linear DP}{47}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}Two-pass grid collection problem}{47}{subsection.11.1.1}%
+\contentsline {section}{\numberline {11.2}Advanced LIS}{47}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}MSIS}{47}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}LCIS}{47}{subsection.11.2.2}%
+\contentsline {section}{\numberline {11.3}Knapsack Problem}{47}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}Multiple Knapsack Problem}{47}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Two-Dimensional Cost Knapsack Problem}{48}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}Finding the Actual Solution Set}{48}{subsection.11.3.3}%
+\contentsline {subsection}{\numberline {11.3.4}Maximum Linearly Independent Subset}{48}{subsection.11.3.4}%
+\contentsline {subsection}{\numberline {11.3.5}Mixed Knapsack Problem}{48}{subsection.11.3.5}%
+\contentsline {subsection}{\numberline {11.3.6}Dependent Knapsack Problem}{49}{subsection.11.3.6}%
+\contentsline {subsection}{\numberline {11.3.7}Number of Solutions}{49}{subsection.11.3.7}%
+\contentsline {section}{\numberline {11.4}FSM}{49}{section.11.4}%
+\contentsline {section}{\numberline {11.5}Digit DP}{49}{section.11.5}%
+\contentsline {section}{\numberline {11.6}Queue Optimization for DP}{50}{section.11.6}%
