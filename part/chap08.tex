@@ -216,7 +216,7 @@ bool dfs(int x, int y)
     return false;
 }
 \end{lstlisting}
-\section{Iterative Deepening}
+\section{IDDFS}
 \begin{lstlisting}
 const int N = 110;
 int n, path[N];
@@ -282,32 +282,18 @@ int n, a[N];
 string t;
 int f()
 {
-    int tot = 0;
-    for (int i = 1; i < n; i++)
-        if (t[i - 1] != t[i] - 1)
-            tot++;
-    return (tot + 2) / 3;
+    // YOUR_F_FUNCTION
 }
-bool IDAstar(int u, int maxn)
+bool IDAstar(int depth, int maxn)
 {
-    if (f() > maxn - u) return false;
-    if (u == maxn) return true;
-    string temp = t;
-    for (int len = 1; len <= n - 1; len++)
+    if (f() > maxn - depth) return false;
+    if (depth == maxn) return true;
+    for (int i = 0; i <= n; i++)
     {
-        for (int l = 0; l <= n - len; l++)
-        {
-            int r = l + len - 1;
-            string substr = temp.substr(l, r - l + 1);
-            for (int k = r + 1; k < n; k++)
-            {
-                t.insert(k + 1, substr);
-                t.erase(l, r - l + 1);
-                if (IDAstar(u + 1, maxn))
-                    return true;
-                t = temp;
-            }
-        }
+        // OPERATION
+        if (IDAstar(depth + 1, maxn))
+            return true;
+        // OPERATION
     }
     return false;
 }

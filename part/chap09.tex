@@ -7,36 +7,38 @@ int dist[N], q[N], cnt[N];
 bool st[N];
 bool spfa()
 {
-    memset(dist, 0, sizeof dist);
-    memset(cnt, 0, sizeof cnt);
-    memset(st, 0, sizeof st);
-    int hh = 0, tt = 0;
-    for (int i = 1; i <= n; i++)
-    { q[tt++] = i; st[i] = true; }
-    while (hh != tt)
+  memset(dist, 0, sizeof dist);
+  memset(cnt, 0, sizeof cnt);
+  memset(st, 0, sizeof st);
+  int hh = 0, tt = 0;
+  for (int i = 1; i <= n; i++)
+  {
+    q[tt++] = i;
+    st[i] = true;
+  }
+  while (hh != tt)
+  {
+    int t = q[hh++];
+    if (hh == N) hh = 0;
+    st[t] = false;
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        int t = q[hh++];
-        if (hh == N) hh = 0;
-        st[t] = false;
-        for (int i = h[t]; ~i; i = ne[i])
+      int j = e[i];
+      if (dist[j] > dist[t] + w[i])
+      {
+        dist[j] = dist[t] + w[i];
+        cnt[j] = cnt[t] + 1;
+        if (cnt[j] >= n) return true;
+        if (!st[j])
         {
-            int j = e[i];
-            if (dist[j] > dist[t] + w[i])
-            {
-                dist[j] = dist[t] + w[i];
-                cnt[j] = cnt[t] + 1;
-                if (cnt[j] >= n)
-                    return true;
-                if (!st[j])
-                {
-                    q[tt++] = j;
-                    if (tt == N) tt = 0;
-                    st[j] = true;
-                }
-            }
+          q[tt++] = j;
+          if (tt == N) tt = 0;
+          st[j] = true;
         }
+      }
     }
-    return false;
+  }
+  return false;
 }
 \end{lstlisting}
 \section{SPFA-SLF}
@@ -44,61 +46,64 @@ Using deque to solve SPFA question.
 \begin{lstlisting}
 void spfa()
 {
-    memset(dist, 0x3f, sizeof dist);
-    memset(st, 0, sizeof st);
-    deque<int> q;
-    q.push_back(s);
-    st[s] = 1, dist[s] = 0;
-    while (q.size())
+  memset(dist, 0x3f, sizeof dist);
+  memset(st, 0, sizeof st);
+  deque<int> q;
+  q.push_back(s);
+  st[s] = 1, dist[s] = 0;
+  while (q.size())
+  {
+    int t = q.front();
+    q.pop_front();
+    st[t] = 0;
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        int t = q.front();
-        q.pop_front();
-        st[t] = 0;
-        for (int i = h[t]; ~i; i = ne[i])
+      int j = e[i];
+      if (dist[j] > dist[t] + w[i])
+      {
+        dist[j] = dist[t] + w[i];
+        if (!st[j])
         {
-            int j = e[i];
-            if (dist[j] > dist[t] + w[i])
-            {
-                dist[j] = dist[t] + w[i];
-                if (!st[j])
-                {
-                    st[j] = true;
-                    if (q.size() && dist[j] < dist[q.front()])
-                        q.push_front(j);
-                    else q.push_back(j);
-                }
-            }
+          st[j] = true;
+          if (q.size() && dist[j] < dist[q.front()])
+            q.push_front(j);
+          else
+            q.push_back(j);
         }
+      }
     }
+  }
 }
 \end{lstlisting}
 \section{SPFA-Stack}
 \begin{lstlisting}
-bool spfa() 
+bool spfa()
 {
-    int hh = 0, tt = 1;
-    memset(dist, -0x3f, sizeof dist);
-    dist[0] = 0; q[0] = 0;
-    while (hh != tt) 
+  int hh = 0, tt = 1;
+  memset(dist, -0x3f, sizeof dist);
+  dist[0] = 0;
+  q[0] = 0;
+  while (hh != tt)
+  {
+    int t = q[--tt];
+    st[t] = false;
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        int t = q[--tt];
-        st[t] = false;
-        for(int i = h[t]; ~i; i = ne[i])
+      int j = e[i];
+      if (dist[j] < dist[t] + w[i])
+      {
+        dist[j] = dist[t] + w[i];
+        cnt[j] = cnt[t] + 1;
+        if (cnt[j] >= n + 1) return true;
+        if (!st[j])
         {
-            int j = e[i];
-            if (dist[j] < dist[t] + w[i]) 
-            {
-                dist[j] = dist[t] + w[i];
-                cnt[j] = cnt[t] + 1;
-                if (cnt[j] >= n + 1) return true;
-                if (!st[j]) 
-                {
-                    st[j] = true; q[tt++] = j;
-                }
-            }
+          st[j] = true;
+          q[tt++] = j;
         }
+      }
     }
-    return false;
+  }
+  return false;
 }
 \end{lstlisting}
 \section{SPFA \& MIN \& MAX}
@@ -107,40 +112,42 @@ In this case we need \textbf{Original Graph} and \textbf{Reverse Graph}, in whic
 \begin{lstlisting}
 void spfa(int h[], int dist[], int type)
 {
-    int hh = 0, tt = 1;
-    if (type == 0)
+  int hh = 0, tt = 1;
+  if (type == 0)
+  {
+    memset(dist, 0x3f, sizeof dmin);
+    dist[1] = w[1];
+    q[0] = 1;
+  }
+  else
+  {
+    memset(dist, -0x3f, sizeof dmax);
+    dist[n] = w[n];
+    q[0] = n;
+  }
+  while (hh != tt)
+  {
+    int t = q[hh++];
+    if (hh == N) hh = 0;
+    st[t] = false;
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        memset(dist, 0x3f, sizeof dmin);
-        dist[1] = w[1]; q[0] = 1;
-    }
-    else
-    {
-        memset(dist, -0x3f, sizeof dmax);
-        dist[n] = w[n]; q[0] = n;
-    }
-    while (hh != tt)
-    {
-        int t = q[hh++];
-        if (hh == N) hh = 0;
-        st[t] = false;
-        for (int i = h[t]; ~i; i = ne[i])
+      int j = e[i];
+      if (type == 0 && dist[j] > min(dist[t], w[j]) || type == 1 && dist[j] < max(dist[t], w[j]))
+      {
+        if (type == 0)
+          dist[j] = min(dist[t], w[j]);
+        else
+          dist[j] = max(dist[t], w[j]);
+        if (!st[j])
         {
-            int j = e[i];
-            if (type == 0 && dist[j] > min(dist[t], w[j]) || type == 1 && dist[j] < max(dist[t], w[j]))
-            {
-                if (type == 0)
-                    dist[j] = min(dist[t], w[j]);
-                else
-                    dist[j] = max(dist[t], w[j]);
-                if (!st[j])
-                {
-                    q[tt++] = j;
-                    if (tt == N) tt = 0;
-                    st[j] = true;
-                }
-            }
+          q[tt++] = j;
+          if (tt == N) tt = 0;
+          st[j] = true;
         }
+      }
     }
+  }
 }
 \end{lstlisting}
 \section{Second Shortest Path}
@@ -148,57 +155,60 @@ void spfa(int h[], int dist[], int type)
 const int N = 1010, M = 20010;
 struct Ver
 {
-    int id, type, dist;
-    bool operator>(const Ver &W) const 
-    { return dist > W.dist; }
+  int id, type, dist;
+  bool operator>(const Ver &W) const
+  {
+    return dist > W.dist;
+  }
 };
 int n, m, S, T, dist[N][2], cnt[N][2];
 int h[N], e[M], w[M], ne[M], idx;
 bool st[N][2];
 void add(int a, int b, int c)
 {
-    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+  e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
 }
 int dijkstra()
 {
-    memset(st, 0, sizeof st);
-    memset(dist, 0x3f, sizeof dist);
-    memset(cnt, 0, sizeof cnt);
-    dist[S][0] = 0, cnt[S][0] = 1;
-    priority_queue<Ver, vector<Ver>, greater<Ver>> heap;
-    heap.push({S, 0, 0});
-    while (heap.size())
+  memset(st, 0, sizeof st);
+  memset(dist, 0x3f, sizeof dist);
+  memset(cnt, 0, sizeof cnt);
+  dist[S][0] = 0, cnt[S][0] = 1;
+  priority_queue<Ver, vector<Ver>, greater<Ver>> heap;
+  heap.push({S, 0, 0});
+  while (heap.size())
+  {
+    Ver t = heap.top();
+    heap.pop();
+    int ver = t.id, type = t.type, distance = t.dist, count = cnt[ver][type];
+    if (st[ver][type])
+      continue;
+    st[ver][type] = true;
+    for (int i = h[ver]; ~i; i = ne[i])
     {
-        Ver t = heap.top();
-        heap.pop();
-        int ver = t.id, type = t.type, distance = t.dist, count = cnt[ver][type];
-        if (st[ver][type]) continue;
-        st[ver][type] = true;
-        for (int i = h[ver]; ~i; i = ne[i])
-        {
-            int j = e[i];
-            if (dist[j][0] > distance + w[i])
-            {
-                dist[j][1] = dist[j][0], cnt[j][1] = cnt[j][0];
-                heap.push({j, 1, dist[j][1]});
-                dist[j][0] = distance + w[i], cnt[j][0] = count;
-                heap.push({j, 0, dist[j][0]});
-            }
-            else if (dist[j][0] == distance + w[i])
-                cnt[j][0] += count;
-            else if (dist[j][1] > distance + w[i])
-            {
-                dist[j][1] = distance + w[i], cnt[j][1] = count;
-                heap.push({j, 1, dist[j][1]});
-            }
-            else if (dist[j][1] == distance + w[i])
-                cnt[j][1] += count;
-        }
+      int j = e[i];
+      if (dist[j][0] > distance + w[i])
+      {
+        dist[j][1] = dist[j][0], cnt[j][1] = cnt[j][0];
+        heap.push({j, 1, dist[j][1]});
+        dist[j][0] = distance + w[i], cnt[j][0] = count;
+        heap.push({j, 0, dist[j][0]});
+      }
+      else if (dist[j][0] == distance + w[i])
+        cnt[j][0] += count;
+      else if (dist[j][1] > distance + w[i])
+      {
+        dist[j][1] = distance + w[i], cnt[j][1] = count;
+        heap.push({j, 1, dist[j][1]});
+      }
+      else if (dist[j][1] == distance + w[i])
+        cnt[j][1] += count;
     }
-    int res = cnt[T][0];
-    if (dist[T][0] + 1 == dist[T][1])
-        res += cnt[T][1];
-    return res;
+  }
+  int res = cnt[T][0];
+  if (dist[T][0] + 1 == dist[T][1])
+    res += cnt[T][1];
+  return res;
 }
 \end{lstlisting}
 \section{Second Minimum Spanning Tree}
@@ -291,9 +301,7 @@ struct Edge
   { return w < t.w; }
 } edge[M];
 void add(int a, int b, int c)
-{
-  e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
-}
+{ e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++; }
 int find(int x)
 {
   if (p[x] != x) p[x] = find(p[x]);
@@ -437,90 +445,88 @@ int main()
 \begin{lstlisting}
 bool spfa(int size)
 {
-    int hh = 0, tt = 0;
-    memset(dist, 0x3f, sizeof dist);
-    memset(st, 0, sizeof st);
-    memset(cnt, 0, sizeof cnt);
-    for (int i = 1; i <= size; i++)
+  int hh = 0, tt = 0;
+  memset(dist, 0x3f, sizeof dist);
+  memset(st, 0, sizeof st);
+  memset(cnt, 0, sizeof cnt);
+  for (int i = 1; i <= size; i++)
+  {
+    q[tt++] = i;
+    dist[i] = 0;
+    st[i] = true;
+  }
+  while (hh != tt)
+  {
+    int t = q[hh++];
+    if (hh == N) hh = 0;
+    st[t] = false;
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        q[tt++] = i;
-        dist[i] = 0;
-        st[i] = true;
-    }
-    while (hh != tt)
-    {
-        int t = q[hh++];
-        if (hh == N) hh = 0;
-        st[t] = false;
-        for (int i = h[t]; ~i; i = ne[i])
+      int j = e[i];
+      if (dist[j] > dist[t] + w[i])
+      {
+        dist[j] = dist[t] + w[i];
+        cnt[j] = cnt[t] + 1;
+        if (cnt[j] >= n) return true;
+        if (!st[j])
         {
-            int j = e[i];
-            if (dist[j] > dist[t] + w[i])
-            {
-                dist[j] = dist[t] + w[i];
-                cnt[j] = cnt[t] + 1;
-                if (cnt[j] >= n)
-                    return true;
-                if (!st[j])
-                {
-                    st[j] = true;
-                    q[tt++] = j;
-                    if (tt == N) tt = 0;
-                }
-            }
+          st[j] = true;
+          q[tt++] = j;
+          if (tt == N) tt = 0;
         }
+      }
     }
-    return false;
+  }
+  return false;
 }
 int main()
 {
-    // add(a, b, k) means x_b <= x_a + k
-    // PROCESS
+  // add(a, b, k) means x_b <= x_a + k
+  // PROCESS
 }
 \end{lstlisting}
 \subsection{Minimum-Longest Path}
 \begin{lstlisting}
 bool spfa(int size)
 {
-    int hh = 0, tt = 0;
-    memset(dist, -0x3f, sizeof dist);
-    memset(st, 0, sizeof st);
-    memset(cnt, 0, sizeof cnt);
-    for (int i = 1; i <= size; i++)
+  int hh = 0, tt = 0;
+  memset(dist, -0x3f, sizeof dist);
+  memset(st, 0, sizeof st);
+  memset(cnt, 0, sizeof cnt);
+  for (int i = 1; i <= size; i++)
+  {
+    q[tt++] = i;
+    dist[i] = 0;
+    st[i] = true;
+  }
+  while (hh != tt)
+  {
+    int t = q[hh++];
+    if (hh == N) hh = 0;
+    st[t] = false;
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        q[tt++] = i;
-        dist[i] = 0;
-        st[i] = true;
-    }
-    while (hh != tt)
-    {
-        int t = q[hh++];
-        if (hh == N) hh = 0;
-        st[t] = false;
-        for (int i = h[t]; ~i; i = ne[i])
+      int j = e[i];
+      if (dist[j] < dist[t] + w[i])
+      {
+        dist[j] = dist[t] + w[i];
+        cnt[j] = cnt[t] + 1;
+        if (cnt[j] >= n) return false;
+        if (!st[j])
         {
-            int j = e[i];
-            if (dist[j] < dist[t] + w[i])
-            {
-                dist[j] = dist[t] + w[i];
-                cnt[j] = cnt[t] + 1;
-                if (cnt[j] >= n)
-                    return false;
-                if (!st[j])
-                {
-                    st[j] = true;
-                    q[tt++] = j;
-                    if (tt == N) tt = 0;
-                }
-            }
+          st[j] = true;
+          q[tt++] = j;
+          if (tt == N) tt = 0;
         }
+      }
     }
-    return ture;
+  }
+  return ture;
 }
 int main()
 {
-    // add(a, b, k) means x_a + k <= x_b
-    // PROCESS
+  // add(a, b, k) means x_a + k <= x_b
+  // PROCESS
 }
 \end{lstlisting}
 \section{LCA}
@@ -529,75 +535,73 @@ int n, m, h[N], e[M], ne[M], idx;
 int depth[N], fa[N][16], q[N];
 void bfs(int root)
 {
-    memset(depth, 0x3f, sizeof depth);
-    depth[0] = 0;
-    depth[root] = 1;
-    int hh = 0, tt = 0;
-    q[0] = root;
-    while (hh <= tt)
+  memset(depth, 0x3f, sizeof depth);
+  depth[0] = 0;
+  depth[root] = 1;
+  int hh = 0, tt = 0;
+  q[0] = root;
+  while (hh <= tt)
+  {
+    int t = q[hh++];
+    for (int i = h[t]; ~i; i = ne[i])
     {
-        int t = q[hh++];
-        for (int i = h[t]; ~i; i = ne[i])
-        {
-            int j = e[i];
-            if (depth[j] > depth[t] + 1)
-            {
-                depth[j] = depth[t] + 1;
-                q[++tt] = j;
-                fa[j][0] = t;
-                for (int k = 1; k <= 15; k++)
-                    fa[j][k] = fa[fa[j][k - 1]][k - 1];
-            }
-        }
+      int j = e[i];
+      if (depth[j] > depth[t] + 1)
+      {
+        depth[j] = depth[t] + 1;
+        q[++tt] = j;
+        fa[j][0] = t;
+        for (int k = 1; k <= 15; k++)
+          fa[j][k] = fa[fa[j][k - 1]][k - 1];
+      }
     }
+  }
 }
 int lca(int a, int b)
 {
-    if (depth[a] < depth[b])
-        swap(a, b);
-    for (int k = 15; k >= 0; k--)
-        if (depth[fa[a][k]] >= depth[b])
-            a = fa[a][k];
-    if (a == b)
-        return a;
-    for (int k = 15; k >= 0; k--)
-        if (fa[a][k] != fa[b][k])
-        {
-            a = fa[a][k];
-            b = fa[b][k];
-        }
-    return fa[a][0];
+  if (depth[a] < depth[b]) swap(a, b);
+  for (int k = 15; k >= 0; k--)
+    if (depth[fa[a][k]] >= depth[b])
+      a = fa[a][k];
+  if (a == b) return a;
+  for (int k = 15; k >= 0; k--)
+    if (fa[a][k] != fa[b][k])
+    {
+      a = fa[a][k];
+      b = fa[b][k];
+    }
+  return fa[a][0];
 }
 \end{lstlisting}
 \section{SCC}
 \begin{lstlisting}
 void tarjan(int u)
 {
-    dfn[u] = low[u] = ++timestap;
-    stack[++top] = u, in_stk[u] = true;
-    for(int i = h[u]; ~i; i = ne[i])
+  dfn[u] = low[u] = ++timestap;
+  stack[++top] = u, in_stk[u] = true;
+  for (int i = h[u]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (!dfn[j])
     {
-        int j = e[i];
-        if(!dfn[j])
-        {
-            tarjan(j);
-            low[u] = min(low[u], low[j]);
-        }
-        else if(in_stk[j])
-            low[u] = min(low[u], dfn[j]);
+      tarjan(j);
+      low[u] = min(low[u], low[j]);
     }
-    if(dfn[u] == low[u])
+    else if (in_stk[j])
+      low[u] = min(low[u], dfn[j]);
+  }
+  if (dfn[u] == low[u])
+  {
+    int y;
+    ++scc_cnt;
+    do
     {
-        int y;
-        ++scc_cnt;
-        do
-        {
-            y = stk[top--];
-            in_stk[y] = false;
-            id[y] = scc_cnt;
-        } while(y != u);
-    }
-} 
+      y = stk[top--];
+      in_stk[y] = false;
+      id[y] = scc_cnt;
+    } while (y != u);
+  }
+}
 \end{lstlisting}
 \section{DCC}
 \subsection{e-DCC}
@@ -708,35 +712,36 @@ PII match[N][N];
 bool g[N][N], st[N][N];
 bool find(int x, int y)
 {
-    for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++)
+  {
+    int a = x + dx[i], b = y + dy[i];
+    if (a && a <= n && b && b <= n && !g[a][b] && !st[a][b])
     {
-        int a = x + dx[i], b = y + dy[i];
-        if (a && a <= n && b && b <= n && !g[a][b] && !st[a][b])
-        {
-            st[a][b] = true;
-            PII t = match[a][b];
-            if (t.x == -1 || find(t.x, t.y))
-            {
-                match[a][b] = {x, y};
-                return true;
-            }
-        }
+      st[a][b] = true;
+      PII t = match[a][b];
+      if (t.x == -1 || find(t.x, t.y))
+      {
+        match[a][b] = {x, y};
+        return true;
+      }
     }
-    return false;
+  }
+  return false;
 }
 int main()
 {
-    // PROCESS
-    memset(match, -1, sizeof match);
-    int res = 0;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            if ((i + j) % 2 && !g[i][j])
-            {
-                memset(st, 0, sizeof st);
-                if (find(i, j)) res++;
-            }
-    // PROCESS
+  // PROCESS
+  memset(match, -1, sizeof match);
+  int res = 0;
+  for (int i = 1; i <= n; i++)
+    for (int j = 1; j <= n; j++)
+      if ((i + j) % 2 && !g[i][j])
+      {
+        memset(st, 0, sizeof st);
+        if (find(i, j))
+          res++;
+      }
+  // PROCESS
 }
 \end{lstlisting}
 \subsection{minimum vertex cover}
@@ -746,40 +751,40 @@ int n, m, k, match[N];
 bool g[N][N], st[N];
 bool find(int x)
 {
-    for (int i = 0; i < m; i++)
-        if (!st[i] && g[x][i])
-        {
-            st[i] = true;
-            if (match[i] == -1 || find(match[i]))
-            {
-                match[i] = x;
-                return true;
-            }
-        }
-    return false;
+  for (int i = 0; i < m; i++)
+    if (!st[i] && g[x][i])
+    {
+      st[i] = true;
+      if (match[i] == -1 || find(match[i]))
+      {
+        match[i] = x;
+        return true;
+      }
+    }
+  return false;
 }
 int main()
 {
-    while (cin >> n, n)
+  while (cin >> n, n)
+  {
+    cin >> m >> k;
+    memset(g, 0, sizeof g);
+    memset(match, -1, sizeof match);
+    while (k--)
     {
-        cin >> m >> k;
-        memset(g, 0, sizeof g);
-        memset(match, -1, sizeof match);
-        while (k--)
-        {
-            int t, a, b;
-            cin >> t >> a >> b;
-            if (!a || !b) continue;
-            g[a][b] = true;
-        }
-        int res = 0;
-        for (int i = 0; i < n; i++)
-        {
-            memset(st, 0, sizeof st);
-            if (find(i)) res++;
-        }
-        cout << res << '\n';
+      int t, a, b;
+      cin >> t >> a >> b;
+      if (!a || !b) continue;
+      g[a][b] = true;
     }
+    int res = 0;
+    for (int i = 0; i < n; i++)
+    {
+      memset(st, 0, sizeof st);
+      if (find(i)) res++;
+    }
+    cout << res << '\n';
+  }
 }
 \end{lstlisting}
 \subsection{maximum independent set}
@@ -835,131 +840,214 @@ int n, m, match[N];
 bool d[N][N], st[N];
 bool find(int x)
 {
-    for (int i = 1; i <= n; i++)
-        if (d[x][i] && !st[i])
-        {
-            st[i] = true;
-            int t = match[i];
-            if (t == 0 || find(t))
-            {
-                match[i] = x;
-                return true;
-            }
-        }
-    return false;
+  for (int i = 1; i <= n; i++)
+    if (d[x][i] && !st[i])
+    {
+      st[i] = true;
+      int t = match[i];
+      if (t == 0 || find(t))
+      {
+        match[i] = x;
+        return true;
+      }
+    }
+  return false;
 }
 int main()
 {
-    // 传递闭包
-    for (int k = 1; k <= n; k++)
-        for (int i = 1; i <= n; i++)
-            for (int j = 1; j <= n; j++)
-                d[i][j] |= d[i][k] & d[k][j];
-    int res = 0;
+  // 传递闭包
+  for (int k = 1; k <= n; k++)
     for (int i = 1; i <= n; i++)
-    {
-        memset(st, 0, sizeof st);
-        if (find(i)) res++;
-    }
-    cout << n - res;
+      for (int j = 1; j <= n; j++)
+        d[i][j] |= d[i][k] & d[k][j];
+  int res = 0;
+  for (int i = 1; i <= n; i++)
+  {
+    memset(st, 0, sizeof st);
+    if (find(i)) res++;
+  }
+  cout << n - res;
 }
 \end{lstlisting}
 \section{Eulerian Circuit \& Eulerian Path}
 \subsection{Eulerian Circuit}
+\begin{itemize}
+  \item \textbf{Undirected Graph}: If and only if it is connected and every vertex has even degree.
+  \item \textbf{Directed Graph}: If and only if it is strongly connected and each vertex has equal in-degree and out-degree.
+\end{itemize}
 \begin{lstlisting}
 int type, n, m;
 int h[N], e[M], ne[M], idx;
 bool used[M];
 int ans[M], cn, din[N], dout[N];
 void add(int a, int b)
-{
-    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
-}
+{ e[idx] = b, ne[idx] = h[a], h[a] = idx++; }
 void dfs(int u)
 {
-    for (int &i = h[u]; ~i;)
+  for (int &i = h[u]; ~i;)
+  {
+    if (used[i])
     {
-        if (used[i])
-        { i = ne[i]; continue; }
-        used[i] = true;
-        if (type == 1) used[i ^ 1] = true;
-        int t;
-        if (type == 1)
-        {
-            t = i / 2 + 1;
-            if (i & 1) t = -t;
-        }
-        else t = i + 1;
-        int j = e[i];
-        i = ne[i];
-        dfs(j);
-        ans[++cnt] = t;
+      i = ne[i];
+      continue;
     }
+    used[i] = true;
+    if (type == 1) used[i ^ 1] = true;
+    int t;
+    if (type == 1)
+    {
+      t = i / 2 + 1;
+      if (i & 1) t = -t;
+    }
+    else t = i + 1;
+    int j = e[i];
+    i = ne[i];
+    dfs(j);
+    ans[++cnt] = t;
+  }
 }
 int main()
 {
-    cin >> type >> n >> m;
-    memset(h, -1, sizeof h);
-    for (int i = 0; i < m; i++)
-    {
-        int a, b;
-        cin >> a >> b;
-        add(a, b);
-        if (type == 1) add(b, a);
-        din[b]++, dout[a]++;
-    }
-    if (type == 1)
-    {
-        for (int i = 1; i <= n; i++)
-            if (din[i] + dout[i] & 1)
-            {
-                cout << "NO\n";
-                return 0;
-            }
-    }
-    else
-    {
-        for (int i = 1; i <= n; i++)
-            if (din[i] != dout[i])
-            {
-                cout << "NO\n";
-                return 0;
-            }
-    }
+  cin >> type >> n >> m;
+  memset(h, -1, sizeof h);
+  for (int i = 0; i < m; i++)
+  {
+    int a, b;
+    cin >> a >> b;
+    add(a, b);
+    if (type == 1) add(b, a);
+    din[b]++, dout[a]++;
+  }
+  if (type == 1)
+  {
     for (int i = 1; i <= n; i++)
-        if (h[i] != -1) { dfs(i); break; }
+      if (din[i] + dout[i] & 1)
+      {
+        cout << "NO\n";
+        return 0;
+      }
+  }
+  else
+  {
+    for (int i = 1; i <= n; i++)
+      if (din[i] != dout[i])
+      {
+        cout << "NO\n";
+        return 0;
+      }
+  }
+  for (int i = 1; i <= n; i++)
+    if (h[i] != -1)
+    {
+      dfs(i);
+      break;
+    }
 }
 \end{lstlisting}
 \subsection{Eulerian Path}
+\subsubsection{Undirected Graph}
+If and only if it is connected (ignoring isolated vertices) and has exactly 0 or 2 vertices with odd degree.
 \begin{lstlisting}
 const int N = 510;
 int n = 500, m, g[N][N];
 int ans[1100], cnt, d[N];
 void dfs(int u)
 {
-    for (int i = 1; i <= n; i++)
-        if (g[u][i])
-        {
-            g[u][i]--, g[i][u]--;
-            dfs(i);
-        }
-    ans[++cnt] = u;
+  for (int i = 1; i <= n; i++)
+    if (g[u][i])
+    {
+      g[u][i]--, g[i][u]--;
+      dfs(i);
+    }
+  ans[++cnt] = u;
 }
 int main()
 {
-    cin >> m;
-    while (m--)
+  cin >> m;
+  while (m--)
+  {
+    int a, b;
+    cin >> a >> b;
+    g[a][b]++, g[b][a]++;
+    d[a]++, d[b]++;
+  }
+  int start = 1;
+  while (!d[start])
+    ++start;
+  for (int i = 1; i <= 500; i++)
+    if (d[i] % 2)
     {
-        int a, b;
-        cin >> a >> b;
-        g[a][b]++, g[b][a]++;
-        d[a]++, d[b]++;
+      start = i;
+      break;
     }
-    int start = 1;
-    while (!d[start]) ++start;
-    for (int i = 1; i <= 500; i++)
-        if (d[i] % 2)
-        { start = i; break; }
-    dfs(start);
+  dfs(start);
+}
+\end{lstlisting}
+\subsubsection{Directed Graph}
+If and only if it is connected in terms of non-zero degree vertices, and
+\begin{itemize}
+  \item At most one vertex has (out-degree) − (in-degree) = 1
+  \item At most one vertex has (in-degree) − (out-degree) = 1
+  \item All other vertices have equal in-degree and out-degree
+\end{itemize}
+\begin{lstlisting}
+const int N = 30;
+int n, p[N], din[N], dout[N];
+bool st[N];
+int find(int x)
+{
+  if (x != p[x]) p[x] = find(p[x]);
+  return p[x];
+}
+int main()
+{
+  char str[1010];
+  int T;
+  cin >> T;
+  while (T--)
+  {
+    cin >> n;
+    memset(din, 0, sizeof din);
+    memset(dout, 0, sizeof dout);
+    memset(st, 0, sizeof st);
+    for (int i = 0; i < 26; i++) p[i] = i;
+    for (int i = 0; i < n; i++)
+    {
+      cin >> str;
+      int a = str[0] - 'a', 
+          b = str[strlen(str) - 1] - 'a';
+      st[a] = st[b] = true;
+      dout[a]++, din[b]++;
+      p[find(a)] = find(b);
+    }
+    int start = 0, end = 0;
+    bool success = true;
+    for (int i = 0; i < 26; i++)
+      if (din[i] != dout[i])
+      {
+        if (din[i] == dout[i] + 1) end++;
+        else if (din[i] + 1 == dout[i])
+          start++;
+        else
+        {
+          success = false;
+          break;
+        }
+      }
+    if (success && !(!start && !end || start == 1 && end == 1))
+      success = false;
+    int rep = -1;
+    for (int i = 0; i < 26; i++)
+      if (st[i])
+      {
+        if (rep == -1) rep = find(i);
+        else if (rep != find(i))
+        {
+          success = false;
+          break;
+        }
+      }
+  }
+  return 0;
 }
 \end{lstlisting}

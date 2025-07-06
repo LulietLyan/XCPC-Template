@@ -121,7 +121,7 @@
 \contentsline {section}{\numberline {8.4}Bidirectional BFS}{35}{section.8.4}%
 \contentsline {section}{\numberline {8.5}A*}{35}{section.8.5}%
 \contentsline {section}{\numberline {8.6}DFS Connectivity Model}{35}{section.8.6}%
-\contentsline {section}{\numberline {8.7}Iterative Deepening}{35}{section.8.7}%
+\contentsline {section}{\numberline {8.7}IDDFS}{35}{section.8.7}%
 \contentsline {section}{\numberline {8.8}Bidirectional DFS}{36}{section.8.8}%
 \contentsline {section}{\numberline {8.9}IDA*}{36}{section.8.9}%
 \contentsline {chapter}{\numberline {9}Advanced Graph Theory}{37}{chapter.9}%
@@ -145,10 +145,12 @@
 \contentsline {subsection}{\numberline {9.11.1}maximum matching}{42}{subsection.9.11.1}%
 \contentsline {subsection}{\numberline {9.11.2}minimum vertex cover}{43}{subsection.9.11.2}%
 \contentsline {subsection}{\numberline {9.11.3}maximum independent set}{43}{subsection.9.11.3}%
-\contentsline {subsection}{\numberline {9.11.4}minimum path cover}{44}{subsection.9.11.4}%
+\contentsline {subsection}{\numberline {9.11.4}minimum path cover}{43}{subsection.9.11.4}%
 \contentsline {section}{\numberline {9.12}Eulerian Circuit \& Eulerian Path}{44}{section.9.12}%
 \contentsline {subsection}{\numberline {9.12.1}Eulerian Circuit}{44}{subsection.9.12.1}%
 \contentsline {subsection}{\numberline {9.12.2}Eulerian Path}{44}{subsection.9.12.2}%
+\contentsline {subsubsection}{Undirected Graph}{44}{subsection.9.12.2}%
+\contentsline {subsubsection}{Directed Graph}{45}{lstnumber.-114.34}%
 \contentsline {chapter}{\numberline {10}Advanced Math}{46}{chapter.10}%
 \contentsline {section}{\numberline {10.1}Euler's Totient Function}{46}{section.10.1}%
 \contentsline {subsection}{\numberline {10.1.1}GCD}{46}{subsection.10.1.1}%
