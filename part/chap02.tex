@@ -17,11 +17,11 @@ int n, r[N], l[N], e[N], idx = 2;
 void init() { r[0] = 1; l[1] = 0; }
 void insert(int k, int x) // 第 k 个节点后插入
 {
-    e[idx] = x;
-    r[idx] = r[k];
-    l[idx] = k;
-    l[r[k]] = idx;
-    r[k] = idx++;
+  e[idx] = x;
+  r[idx] = r[k];
+  l[idx] = k;
+  l[r[k]] = idx;
+  r[k] = idx++;
 }
 void remove(int k) // 删除 k 本身
 { r[l[k]] = r[k]; l[r[k]] = l[k]; }
@@ -33,8 +33,8 @@ void remove(int k) // 删除 k 本身
 int tt = 0;
 for (int i = 1; i <= n; i ++ )
 {
-    while (tt && check(stk[tt], i)) tt -- ;
-    stk[++tt] = i;
+  while (tt && check(stk[tt], i)) tt -- ;
+  stk[++tt] = i;
 }
 \end{lstlisting}
 \subsection{Monotonic Queue}
@@ -43,11 +43,11 @@ for (int i = 1; i <= n; i ++ )
 int hh = 0, tt = -1;
 for (int i = 0; i < n; i ++ )
 {
-    while (hh <= tt && check_out(q[hh]))
-        hh++; // 判断队头是否滑出窗口
-    while (hh <= tt && check(q[tt], i))
-        tt-- ;
-    q[++tt] = i;
+  while (hh <= tt && check_out(q[hh]))
+      hh++; // 判断队头是否滑出窗口
+  while (hh <= tt && check(q[tt], i))
+      tt-- ;
+  q[++tt] = i;
 }
 \end{lstlisting}
 \section{KMP}
@@ -57,26 +57,26 @@ int n, m;
 char p[N], s[M];
 void getNext(int ne[])
 {
-    for (int i = 2, j = 0; i <= n; i++)
-    {
-        while (j && p[j + 1] != p[i])
-            j = ne[j];
-        if (p[j + 1] == p[i]) j++;
-        ne[i] = j;
-    }
+  for (int i = 2, j = 0; i <= n; i++)
+  {
+      while (j && p[j + 1] != p[i])
+          j = ne[j];
+      if (p[j + 1] == p[i]) j++;
+      ne[i] = j;
+  }
 }
 int KMP()
 {
-    int *ne = new int[n + 1];
-    getNext(ne);
-    for (int i = 1, j = 0; i <= m; i++)
-    {
-        while (j && p[j + 1] != s[i])
-            j = ne[j];
-        if (p[j + 1] == s[i]) j++;
-        if (j == n) cout << i - n << ' ';
-    }
-    return -1;
+  int *ne = new int[n + 1];
+  getNext(ne);
+  for (int i = 1, j = 0; i <= m; i++)
+  {
+      while (j && p[j + 1] != s[i])
+          j = ne[j];
+      if (p[j + 1] == s[i]) j++;
+      if (j == n) cout << i - n << ' ';
+  }
+  return -1;
 }
 \end{lstlisting}
 
@@ -86,26 +86,26 @@ const int N = 100010;
 int trie[N][26], cnt[N], idx = 0;
 void insert(string &str)    // 插入到 Trie 数组
 {
-    int p = 0;
-    for (auto c : str)
-    {
-        int u = c - 'a';
-        if (!trie[p][u])
-            trie[p][u] = ++idx;
-        p = trie[p][u];
-    }
-    cnt[p]++;
+  int p = 0;
+  for (auto c : str)
+  {
+      int u = c - 'a';
+      if (!trie[p][u])
+          trie[p][u] = ++idx;
+      p = trie[p][u];
+  }
+  cnt[p]++;
 }
 int query(string &str)      // 查询字符串出现的次数
 {
-    int p = 0;
-    for (auto c : str)
-    {
-        int u = c - 'a';
-        if (!trie[p][u]) return 0;
-        p = trie[p][u];
-    }
-    return cnt[p];
+  int p = 0;
+  for (auto c : str)
+  {
+      int u = c - 'a';
+      if (!trie[p][u]) return 0;
+      p = trie[p][u];
+  }
+  return cnt[p];
 }
 \end{lstlisting}
 \section{Disjoint-Set}
@@ -114,28 +114,28 @@ const int N = 100010;
 int n, m, p[N], Size[N], D[N];
 void init()
 {
-    for (int i = 1; i <= n; i ++ )
-        p[i] = i, Size[i] = 1, D[i] = 0;
+  for (int i = 1; i <= n; i ++ )
+      p[i] = i, Size[i] = 1, D[i] = 0;
 }
 int find(int x)
 {
-    if (p[x] != x)
-    {
-        int u = find(p[x]);
-        D[x] += D[p[x]];  // 视具体情况计算
-        p[x] = u;
-    }
-    return p[x];
+  if (p[x] != x)
+  {
+      int u = find(p[x]);
+      D[x] += D[p[x]];  // 视具体情况计算
+      p[x] = u;
+  }
+  return p[x];
 }
 void merge(int a, int b, int distance)
 {
-    int x = find(a), y = find(b);
-    if(x != y)
-    {
-        p[x] = y; 
-        D[x] = distance;  // 视具体情况计算
-        Size[y] += Size[x];
-    }
+  int x = find(a), y = find(b);
+  if(x != y)
+  {
+      p[x] = y; 
+      D[x] = distance;  // 视具体情况计算
+      Size[y] += Size[x];
+  }
 }
 \end{lstlisting}
 \section{Hash}
@@ -145,22 +145,22 @@ void merge(int a, int b, int distance)
 int h[N], e[N], ne[N], idx;
 void insert(int x)
 {
-    int k = (x % N + N) % N;
-    e[idx] = x, ne[idx] = h[k], h[k] = idx ++ ;
+  int k = (x % N + N) % N;
+  e[idx] = x, ne[idx] = h[k], h[k] = idx ++ ;
 }
 bool find(int x)
 {
-    for (int i = h[(x % N + N) % N]; i != -1; i = ne[i])
-        if (e[i] == x) return true;
-    return false;
+  for (int i = h[(x % N + N) % N]; i != -1; i = ne[i])
+      if (e[i] == x) return true;
+  return false;
 }
 // (2) 开放寻址法
 int find(int x)
 {
-    int t = (x % N + N) % N;
-    while (h[t] != null && h[t] != x)
-    { t ++ ; if (t == N) t = 0; }
-    return t;
+  int t = (x % N + N) % N;
+  while (h[t] != null && h[t] != x)
+  { t ++ ; if (t == N) t = 0; }
+  return t;
 }
 \end{lstlisting}
 \subsection{String Hash}
@@ -169,8 +169,8 @@ typedef unsigned long long ULL;
 ULL h[N], p[N];
 void init()
 {
-    p[0] = 1;
-    for (int i = 1; i <= n; i ++ ) { h[i] = h[i - 1] * P + str[i]; p[i] = p[i - 1] * P; }
+  p[0] = 1;
+  for (int i = 1; i <= n; i ++ ) { h[i] = h[i - 1] * P + str[i]; p[i] = p[i - 1] * P; }
 }
 ULL get(int l, int r) { return h[r] - h[l - 1] * p[r - l + 1]; }
 \end{lstlisting}
@@ -231,21 +231,21 @@ clear()
 begin()/end()
 ++, -- 返回前驱和后继，时间复杂度 O(logn)
 // set/multiset
-    insert()  插入一个数
-    find()    查找一个数
-    count()   返回某一个数的个数
-    erase()
-        (1) 输入是一个数x，删除所有x，O(k + logn)
-        (2) 输入一个迭代器，删除这个迭代器
-    lower_bound()/upper_bound()
-        lower_bound(x)  返回大于等于x的最小的数的迭代器
-        upper_bound(x)  返回大于x的最小的数的迭代器
+  insert()  插入一个数
+  find()    查找一个数
+  count()   返回某一个数的个数
+  erase()
+      (1) 输入是一个数x，删除所有x，O(k + logn)
+      (2) 输入一个迭代器，删除这个迭代器
+  lower_bound()/upper_bound()
+      lower_bound(x)  返回大于等于x的最小的数的迭代器
+      upper_bound(x)  返回大于x的最小的数的迭代器
 // map/multimap
-    insert()  插入的数是一个pair
-    erase()   输入的参数是pair或者迭代器
-    find()
-    []        注意multimap不支持此操作。 时间复杂度是 O(logn)
-    lower_bound()/upper_bound()
+  insert()  插入的数是一个pair
+  erase()   输入的参数是pair或者迭代器
+  find()
+  []        注意multimap不支持此操作。 时间复杂度是 O(logn)
+  lower_bound()/upper_bound()
 // unordered_set, unordered_map, unordered_multiset, unordered_multimap
 增删改查的时间复杂度是 O(1)
 不支持 lower_bound()/upper_bound()， 迭代器的++，--

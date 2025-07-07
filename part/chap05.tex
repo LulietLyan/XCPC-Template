@@ -6,13 +6,13 @@ const int N = 1010;
 int n, m, v[N], w[N], f[N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++)
-        cin >> v[i] >> w[i];
-    for (int i = 1; i <= n; i++)
-        for (int j = m; j >= v[i]; j++)
-            f[j] = max(f[j], f[j - v[i]] + w[i]);
-    cout << f[m];
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+      cin >> v[i] >> w[i];
+  for (int i = 1; i <= n; i++)
+      for (int j = m; j >= v[i]; j++)
+          f[j] = max(f[j], f[j - v[i]] + w[i]);
+  cout << f[m];
 }
 \end{lstlisting}
 \subsection{Complete Knapsack}
@@ -21,13 +21,13 @@ const int N = 1010;
 int n, m, v[N], w[N], f[N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++)
-        cin >> v[i] >> w[i];
-    for (int i = 1; i <= n; i++)
-        for (int j = v[i]; j <= m; j++)
-            f[j] = max(f[j], f[j - v[i]] + w[i]);
-    cout << f[m];
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+      cin >> v[i] >> w[i];
+  for (int i = 1; i <= n; i++)
+      for (int j = v[i]; j <= m; j++)
+          f[j] = max(f[j], f[j - v[i]] + w[i]);
+  cout << f[m];
 }
 \end{lstlisting}
 \subsection{Mutiple Knapsack}
@@ -36,30 +36,30 @@ const int N = 25000;
 int n, m, v[N], w[N], f[N];
 int main()
 {
-    cin >> n >> m;
-    int cnt = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        int a, b, s;
-        cin >> a >> b >> s;
-        int k = 1;
-        while (k <= s)
-        {
-            cnt++;
-            v[cnt] = a * k, w[cnt] = b * k;
-            s -= k, k *= 2;
-        }
-        if (s > 0)
-        {
-            cnt++;
-            v[cnt] = a * s, w[cnt] = b * s;
-        }
-    }
-    n = cnt;
-    for (int i = 1; i <= n; i++)
-        for (int j = m; j >= v[i]; j--)
-            f[j] = max(f[j], f[j - v[i]] + w[i]);
-    cout << f[m];
+  cin >> n >> m;
+  int cnt = 0;
+  for (int i = 1; i <= n; i++)
+  {
+      int a, b, s;
+      cin >> a >> b >> s;
+      int k = 1;
+      while (k <= s)
+      {
+          cnt++;
+          v[cnt] = a * k, w[cnt] = b * k;
+          s -= k, k *= 2;
+      }
+      if (s > 0)
+      {
+          cnt++;
+          v[cnt] = a * s, w[cnt] = b * s;
+      }
+  }
+  n = cnt;
+  for (int i = 1; i <= n; i++)
+      for (int j = m; j >= v[i]; j--)
+          f[j] = max(f[j], f[j - v[i]] + w[i]);
+  cout << f[m];
 }
 \end{lstlisting}
 \subsection{Grouped Knapsack}
@@ -68,19 +68,19 @@ const int N = 120;
 int n, m, s[N], v[N][N], w[N][N], f[N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> s[i];
-        for (int j = 1; j <= s[i]; j++)
-            cin >> v[i][j] >> w[i][j];
-    }
-    for (int i = 1; i <= n; i++)
-        for (int j = m; j >= 0; j--)
-            for (int k = 1; k <= s[i]; k++)
-                if (v[i][k] <= j)
-                    f[j] = max(f[j], f[j - v[i][k]] + w[i][k]);
-    cout << f[m];
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+  {
+      cin >> s[i];
+      for (int j = 1; j <= s[i]; j++)
+          cin >> v[i][j] >> w[i][j];
+  }
+  for (int i = 1; i <= n; i++)
+      for (int j = m; j >= 0; j--)
+          for (int k = 1; k <= s[i]; k++)
+              if (v[i][k] <= j)
+                  f[j] = max(f[j], f[j - v[i][k]] + w[i][k]);
+  cout << f[m];
 }
 \end{lstlisting}
 \section{Linear DP}
@@ -91,20 +91,20 @@ const int N = 1010;
 int n, a[N], f[N];
 int main()
 {
-    cin >> n;
-    for (int i = 1; i <= n; i++)
-        cin >> a[i];
-    for (int i = 1; i <= n; i++)
-    {
-        f[i] = 1;
-        for (int j = 1; j < i; j++)
-            if (a[j] < a[i])
-                f[i] = max(f[i], f[j] + 1);
-    }
-    int res = 0;
-    for (int i = 1; i <= n; i++)
-        res = max(res, f[i]);
-    cout << res;
+  cin >> n;
+  for (int i = 1; i <= n; i++)
+      cin >> a[i];
+  for (int i = 1; i <= n; i++)
+  {
+      f[i] = 1;
+      for (int j = 1; j < i; j++)
+          if (a[j] < a[i])
+              f[i] = max(f[i], f[j] + 1);
+  }
+  int res = 0;
+  for (int i = 1; i <= n; i++)
+      res = max(res, f[i]);
+  cout << res;
 }
 \end{lstlisting}
 Another is an $O(nlogn)$ solution:
@@ -113,23 +113,23 @@ const int N = 100010;
 int n, a[N], q[N];
 int main()
 {
-    cin >> n;
-    for (int i = 1; i <= n; i++) cin >> a[i];
-    int len = 0;
-    q[len] = -INF;
-    for (int i = 1; i <= n; i++)
-    {
-        int l = 0, r = len;
-        while (l < r)
-        {
-            int mid = l + r + 1 >> 1;
-            if (q[mid] < a[i]) l = mid;
-            else r = mid - 1;
-        }
-        len = max(r + 1, len);
-        q[r + 1] = a[i];
-    }
-    cout << len;
+  cin >> n;
+  for (int i = 1; i <= n; i++) cin >> a[i];
+  int len = 0;
+  q[len] = -INF;
+  for (int i = 1; i <= n; i++)
+  {
+      int l = 0, r = len;
+      while (l < r)
+      {
+          int mid = l + r + 1 >> 1;
+          if (q[mid] < a[i]) l = mid;
+          else r = mid - 1;
+      }
+      len = max(r + 1, len);
+      q[r + 1] = a[i];
+  }
+  cout << len;
 }
 \end{lstlisting}
 \subsection{LCS}
@@ -139,15 +139,15 @@ int n, m, f[N][N];
 char a[N], b[N];
 int main()
 {
-    cin >> n >> m >> (a + 1) >> (b + 1);
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= m; j++)
-        {
-            f[i][j] = max(f[i - 1][j], f[i][j - 1]);
-            if (a[i] == b[j])
-                f[i][j] = max(f[i][j], f[i - 1][j - 1] + 1);
-        }
-    cout << f[n][m];
+  cin >> n >> m >> (a + 1) >> (b + 1);
+  for (int i = 1; i <= n; i++)
+      for (int j = 1; j <= m; j++)
+      {
+          f[i][j] = max(f[i - 1][j], f[i][j - 1]);
+          if (a[i] == b[j])
+              f[i][j] = max(f[i][j], f[i - 1][j - 1] + 1);
+      }
+  cout << f[n][m];
 }
 \end{lstlisting}
 \section{Interval DP}
@@ -157,18 +157,18 @@ const int N = 310;
 int n, s[N], f[N][N];
 int main()
 {
-    cin >> n;
-    for (int i = 1; i <= n; i++)
-        cin >> s[i], s[i] += s[i - 1];
-    for (int len = 2; len <= n; len++)
-        for (int i = 1; i + len - 1 <= n; i++)
-        {
-            int l = i, r = i + len - 1;
-            f[l][r] = INF;
-            for (int k = l; k < r; k++)
-                f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);
-        }
-    cout << f[1][n];
+  cin >> n;
+  for (int i = 1; i <= n; i++)
+      cin >> s[i], s[i] += s[i - 1];
+  for (int len = 2; len <= n; len++)
+      for (int i = 1; i + len - 1 <= n; i++)
+      {
+          int l = i, r = i + len - 1;
+          f[l][r] = INF;
+          for (int k = l; k < r; k++)
+              f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);
+      }
+  cout << f[1][n];
 }
 \end{lstlisting}
 \section{Counting DP}
@@ -177,15 +177,15 @@ const int N = 1010, M = 1e9 + 7;
 int n, f[N][N];
 int main()
 {
-    cin >> n;
-    f[0][0] = 1;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= i; j++)
-            f[i][j] = (f[i - 1][j - 1] + f[i - j][j]) % M;
-    int ans = 0;
-    for (int i = 1; i <= n; i++)
-        ans = (ans + f[n][i]) % M;
-    cout << ans;
+  cin >> n;
+  f[0][0] = 1;
+  for (int i = 1; i <= n; i++)
+      for (int j = 1; j <= i; j++)
+          f[i][j] = (f[i - 1][j - 1] + f[i - j][j]) % M;
+  int ans = 0;
+  for (int i = 1; i <= n; i++)
+      ans = (ans + f[n][i]) % M;
+  cout << ans;
 }
 \end{lstlisting}
 \section{Digit DP}
@@ -193,43 +193,43 @@ int main()
 // 求数 n 的位数
 int get(int n)
 {
-    int res = 0;
-    while (n) n /= 10, res++;
-    return res;
+  int res = 0;
+  while (n) n /= 10, res++;
+  return res;
 }
 int count(int n, int i)
 {
-    int res = 0, dgt = get(n);
-    for (int j = 1; j <= dgt; j++)
-    {
-        // p 为当前遍历位次(第 j 位)的数大小 <10^(右边的数的位数)>, Ps: 从左往右(从高位到低位)
-        // l 为第 j 位的左边的数，r 为右边的数，dj 为第 j 位上的数
-        int p = pow(10, dgt - j), l = n / p / 10, r = n % p, dj = n / p % 10;
-        // 求要选的数在 i 的左边的数小于 l 的情况：
-        //      1)、当 i 不为 0 时 xxx : 0...0 ~ l - 1, 即 l * (右边的数的位数) == l * p 种选法
-        //      2)、当 i 为 0 时 由于不能有前导零 故 xxx: 0....1 ~ l - 1, 即 (l - 1) * (右边的数的位数) == (l - 1) * p 种选法
-        if (i) res += l * p;
-        else res += (l - 1) * p;
-        // 求要选的数在 i 的左边的数等于 l 的情况：(即视频中的xxx == l 时)
-        //      1)、i > dj 时 0 种选法
-        //      2)、i == dj 时 yyy : 0...0 ~ r 即 r + 1 种选法
-        //      3)、i < dj 时 yyy : 0...0 ~ 9...9 即 10^(右边的数的位数) == p 种选法 */
-        if (i == dj) res += r + 1;
-        if (i < dj) res += p;
-    }
-    return res;
+  int res = 0, dgt = get(n);
+  for (int j = 1; j <= dgt; j++)
+  {
+      // p 为当前遍历位次(第 j 位)的数大小 <10^(右边的数的位数)>, Ps: 从左往右(从高位到低位)
+      // l 为第 j 位的左边的数，r 为右边的数，dj 为第 j 位上的数
+      int p = pow(10, dgt - j), l = n / p / 10, r = n % p, dj = n / p % 10;
+      // 求要选的数在 i 的左边的数小于 l 的情况：
+      //      1)、当 i 不为 0 时 xxx : 0...0 ~ l - 1, 即 l * (右边的数的位数) == l * p 种选法
+      //      2)、当 i 为 0 时 由于不能有前导零 故 xxx: 0....1 ~ l - 1, 即 (l - 1) * (右边的数的位数) == (l - 1) * p 种选法
+      if (i) res += l * p;
+      else res += (l - 1) * p;
+      // 求要选的数在 i 的左边的数等于 l 的情况：(即视频中的xxx == l 时)
+      //      1)、i > dj 时 0 种选法
+      //      2)、i == dj 时 yyy : 0...0 ~ r 即 r + 1 种选法
+      //      3)、i < dj 时 yyy : 0...0 ~ 9...9 即 10^(右边的数的位数) == p 种选法 */
+      if (i == dj) res += r + 1;
+      if (i < dj) res += p;
+  }
+  return res;
 }
 int main()
 {
-    int a, b;
-    while (cin >> a >> b, a)
-    {
-        if (a > b) swap(a, b);
-        for (int i = 0; i <= 9; ++i)
-            cout << count(b, i) - count(a - 1, i) << ' ';
-        // 利用前缀和思想：[l, r] 的和 = s[r] - s[l - 1]
-        cout << '\n';
-    }
+  int a, b;
+  while (cin >> a >> b, a)
+  {
+      if (a > b) swap(a, b);
+      for (int i = 0; i <= 9; ++i)
+          cout << count(b, i) - count(a - 1, i) << ' ';
+      // 利用前缀和思想：[l, r] 的和 = s[r] - s[l - 1]
+      cout << '\n';
+  }
 }
 \end{lstlisting}
 \section{State Compression DP}
@@ -240,43 +240,43 @@ LL f[N][M];
 bool st[M];
 int main()
 {
-    while (cin >> n >> m, n || m)
-    {
-        memset(f, 0, sizeof f);
-        for (int i = 0; i < 1 << n; i++)
-        {
-            st[i] = true;
-            // 统计连续 0 的个数，若连续 0 为奇数个就不能正好放得下竖放的方格
-            int cnt = 0;
-            for (int j = 0; j < n && st[i]; j++)
-                if (i >> j & 1)
-                {
-                    // 当前格子被使用
-                    // 如果连续 0 的数量为奇数个，当前格子被使用的后果就是导致格子重合，所以不可取
-                    if (cnt & 1)
-                        st[i] = false;
-                    // 刷新状态
-                    cnt = 0;
-                }
-                else cnt++;
-            // 最后再判断一次，防止漏判
-            if (cnt & 1)
-                st[i] = false;
-        }
-        // 没有摆放任何棋子的状态默认只有 1 种取法
-        f[0][0] = 1;
-        // 遍历每一列
-        for (int i = 1; i <= m; i++)
-            // 遍历当前列的每一种用二进制数字表示的摆放状态：1 指横向摆放，0 指空位
-            for (int j = 0; j < 1 << n; j++)
-                // 遍历上一列的每一种用二进制数字表示的摆放状态：1 指横向摆放，0 指空位
-                for (int k = 0; k < 1 << n; k++)
-                    // 满足两个条件：两列的摆放互不冲突；两列摆放状态的结合状态是一个可取的状态则累加情况数
-                    if (!(j & k) && st[j | k])
-                        f[i][j] += f[i - 1][k];
-        // 输出摆放好第 m 列且第 (m + 1) 列没有任何方格的状态数
-        cout << f[m][0] << '\n';
-    }
+  while (cin >> n >> m, n || m)
+  {
+      memset(f, 0, sizeof f);
+      for (int i = 0; i < 1 << n; i++)
+      {
+          st[i] = true;
+          // 统计连续 0 的个数，若连续 0 为奇数个就不能正好放得下竖放的方格
+          int cnt = 0;
+          for (int j = 0; j < n && st[i]; j++)
+              if (i >> j & 1)
+              {
+                  // 当前格子被使用
+                  // 如果连续 0 的数量为奇数个，当前格子被使用的后果就是导致格子重合，所以不可取
+                  if (cnt & 1)
+                      st[i] = false;
+                  // 刷新状态
+                  cnt = 0;
+              }
+              else cnt++;
+          // 最后再判断一次，防止漏判
+          if (cnt & 1)
+              st[i] = false;
+      }
+      // 没有摆放任何棋子的状态默认只有 1 种取法
+      f[0][0] = 1;
+      // 遍历每一列
+      for (int i = 1; i <= m; i++)
+          // 遍历当前列的每一种用二进制数字表示的摆放状态：1 指横向摆放，0 指空位
+          for (int j = 0; j < 1 << n; j++)
+              // 遍历上一列的每一种用二进制数字表示的摆放状态：1 指横向摆放，0 指空位
+              for (int k = 0; k < 1 << n; k++)
+                  // 满足两个条件：两列的摆放互不冲突；两列摆放状态的结合状态是一个可取的状态则累加情况数
+                  if (!(j & k) && st[j | k])
+                      f[i][j] += f[i - 1][k];
+      // 输出摆放好第 m 列且第 (m + 1) 列没有任何方格的状态数
+      cout << f[m][0] << '\n';
+  }
 }
 \end{lstlisting}
 \section{Tree DP}
@@ -306,30 +306,30 @@ void add(int a, int b)
 { e[idx] = b, ne[idx] = h[a], h[a] = idx++; }
 void dfs(int u)
 {
-    f[u][1] = happy[u];
-    for (int i = h[u]; ~i; i = ne[i])
-    
-        dfs(e[i]);
-        f[u][0] += max(f[e[i]][0], f[e[i]][1]);
-        f[u][1] += f[e[i]][0];
-    }
+  f[u][1] = happy[u];
+  for (int i = h[u]; ~i; i = ne[i])
+  
+      dfs(e[i]);
+      f[u][0] += max(f[e[i]][0], f[e[i]][1]);
+      f[u][1] += f[e[i]][0];
+  }
 }
 int main()
 {
-    memset(h, -1, sizeof h);
-    cin >> n;
-    for (int i = 1; i <= n; i++) cin >> happy[i];
-    for (int i = 0; i < n - 1; i++)
-    {
-        int a, b;
-        cin >> a >> b;
-        has_father[a] = true;
-        add(b, a);
-    }
-    int root = 1;
-    while (has_father[root]) root++;
-    dfs(root);
-    cout << max(f[root][0], f[root][1]);
+  memset(h, -1, sizeof h);
+  cin >> n;
+  for (int i = 1; i <= n; i++) cin >> happy[i];
+  for (int i = 0; i < n - 1; i++)
+  {
+      int a, b;
+      cin >> a >> b;
+      has_father[a] = true;
+      add(b, a);
+  }
+  int root = 1;
+  while (has_father[root]) root++;
+  dfs(root);
+  cout << max(f[root][0], f[root][1]);
 }
 \end{lstlisting}
 \section{Memoized Search}
@@ -340,28 +340,28 @@ h[N][N], f[N][N],
 dx[4] = {0, 1, 0, -1}, dy[4] = {1, 0, -1, 0};
 int dp(int x, int y)
 {
-    int &v = f[x][y];
-    if (v != -1) return v;
-    v = 1;
-    for (int i = 0; i < 4; i++)
-    {
-        int a = x + dx[i], b = y + dy[i];
-        if (a >= 1 && a <= n && b >= 1 && b <= m && h[a][b] < h[x][y])
-            v = max(v, dp(a, b) + 1);
-    }
-    return v;
+  int &v = f[x][y];
+  if (v != -1) return v;
+  v = 1;
+  for (int i = 0; i < 4; i++)
+  {
+      int a = x + dx[i], b = y + dy[i];
+      if (a >= 1 && a <= n && b >= 1 && b <= m && h[a][b] < h[x][y])
+          v = max(v, dp(a, b) + 1);
+  }
+  return v;
 }
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= m; j++)
-            cin >> h[i][j];
-    memset(f, -1, sizeof f);
-    int res = 0;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= m; j++)
-            res = max(res, dp(i, j));
-    cout << res;
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+      for (int j = 1; j <= m; j++)
+          cin >> h[i][j];
+  memset(f, -1, sizeof f);
+  int res = 0;
+  for (int i = 1; i <= n; i++)
+      for (int j = 1; j <= m; j++)
+          res = max(res, dp(i, j));
+  cout << res;
 }
 \end{lstlisting}

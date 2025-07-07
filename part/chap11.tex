@@ -8,30 +8,55 @@ int n, w[N][N], f[N * 2][N][N];
 int main()
 {
   cin >> n;
-  int a, b, c;
-  while (cin >> a >> b >> c, a || b || c)
-    w[a][b] = c;
+  // INPUT w[N][N]
   for (int k = 2; k <= n * 2; k++)
-    for (int i1 = 1; i1 <= n; i1++)
-      for (int i2 = 1; i2 <= n; i2++)
-      {
-        int j1 = k - i1, j2 = k - i2;
-        if (j1 >= 1 && j1 <= n && j2 >= 1 && j2 <= n)
-        {
-          int t = w[i1][j1];
-          if (i1 != i2) t += w[i2][j2];
-          int &x = f[k][i1][i2];
-          x = max(x, f[k - 1][i1 - 1][i2 - 1] + t);
-          x = max(x, f[k - 1][i1 - 1][i2] + t);
-          x = max(x, f[k - 1][i1][i2 - 1] + t);
-          x = max(x, f[k - 1][i1][i2] + t);
-        }
-      }
+  for (int i1 = 1; i1 <= k; i1++)
+    for (int i2 = 1; i2 <= k; i2++)
+    {
+      int j1 = k - i1, j2 = k - i2;
+      int t = w[i1][j1];
+      if (i1 != i2) t += w[i2][j2];
+      int &x = f[k][i1][i2];
+      x = max(x, f[k - 1][i1 - 1][i2 - 1] + t);
+      x = max(x, f[k - 1][i1 - 1][i2] + t);
+      x = max(x, f[k - 1][i1][i2 - 1] + t);
+      x = max(x, f[k - 1][i1][i2] + t);
+    }
   cout << f[n * 2][n][n] << '\n';
   return 0;
 }
 \end{lstlisting}
 \section{Advanced LIS}
+\subsection{Longest Bitonic Subsequence}
+\begin{lstlisting}
+const int N = 1010;
+int n, a[N], f[N], g[N];
+int main()
+{
+  cin >> n;
+  for (int i = 1; i <= n; i++)
+  cin >> a[i];
+  for (int i = 1; i <= n; i++)
+  {
+  f[i] = 1;
+  for (int j = 1; j < i; j++)
+    if (a[i] > a[j])
+      f[i] = max(f[i], f[j] + 1);
+  }
+  for (int i = n; i >= 1; i--)
+  {
+  g[i] = 1;
+  for (int j = n; j > i; j--)
+    if (a[i] > a[j])
+      g[i] = max(g[i], g[j] + 1);
+  }
+  int ans = 0;
+  for (int i = 1; i <= n; i++)
+  ans = max(ans, g[i] + f[i] - 1);
+  cout << ans << '\n';
+  return 0;
+}
+\end{lstlisting}
 \subsection{MSIS}
 MSIS means Maximum Sum Increasing Subsequence
 \begin{lstlisting}
@@ -39,18 +64,18 @@ const int N = 1010;
 int n, w[N], f[N];
 int main()
 {
-    cin >> n;
-    for (int i = 0; i < n; i++) cin >> w[i];
-    int res = 0;
-    for (int i = 0; i < n; i++)
-    {
-        f[i] = w[i];
-        for (int j = 0; j < i; j++)
-            if (w[i] > w[j])
-                f[i] = max(f[i], f[j] + w[i]);
-        res = max(res, f[i]);
-    }
-    cout << res;
+  cin >> n;
+  for (int i = 0; i < n; i++) cin >> w[i];
+  int res = 0;
+  for (int i = 0; i < n; i++)
+  {
+      f[i] = w[i];
+      for (int j = 0; j < i; j++)
+          if (w[i] > w[j])
+              f[i] = max(f[i], f[j] + w[i]);
+      res = max(res, f[i]);
+  }
+  cout << res;
 }
 \end{lstlisting}
 \subsection{LCIS}
@@ -60,27 +85,27 @@ const int N = 3010;
 int n, a[N], b[N], f[N][N];
 int main()
 {
-    cin >> n;
-    for (int i = 1; i <= n; i++)
-        cin >> a[i];
-    for (int i = 1; i <= n; i++)
-        cin >> b[i];
-    for (int i = 1; i <= n; i++)
-    {
-        int maxv = 1;
-        for (int j = 1; j <= n; j++)
-        {
-            f[i][j] = f[i - 1][j];
-            if (a[i] == b[j])
-                f[i][j] = max(f[i][j], maxv);
-            if (a[i] > b[j])
-                maxv = max(maxv, f[i - 1][j] + 1);
-        }
-    }
-    int res = 0;
-    for (int i = 1; i <= n; i++)
-        res = max(res, f[n][i]);
-    cout << res;
+  cin >> n;
+  for (int i = 1; i <= n; i++)
+      cin >> a[i];
+  for (int i = 1; i <= n; i++)
+      cin >> b[i];
+  for (int i = 1; i <= n; i++)
+  {
+      int maxv = 1;
+      for (int j = 1; j <= n; j++)
+      {
+          f[i][j] = f[i - 1][j];
+          if (a[i] == b[j])
+              f[i][j] = max(f[i][j], maxv);
+          if (a[i] > b[j])
+              maxv = max(maxv, f[i - 1][j] + 1);
+      }
+  }
+  int res = 0;
+  for (int i = 1; i <= n; i++)
+      res = max(res, f[n][i]);
+  cout << res;
 }
 \end{lstlisting}
 \section{Knapsack Problem}
@@ -90,27 +115,27 @@ const int N = 20010;
 int n, m, f[N], g[N], q[N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 0; i < n; i++)
-    {
-        int v, w, s;
-        cin >> v >> w >> s;
-        memcpy(g, f, sizeof f);
-        for (int j = 0; j < v; j++)
-        {
-            int hh = 0, tt = -1;
-            for (int k = j; k <= m; k += v)
-            {
-                if (hh <= tt && q[hh] < k - s * v)
-                    hh++;
-                while (hh <= tt && g[q[tt]] - (q[tt] - j) / v * w <= g[k] - (k - j) / v * w)
-                    tt--;
-                q[++tt] = k;
-                f[k] = g[q[hh]] + (k - q[hh]) / v * w;
-            }
-        }
-    }
-    cout << f[m] << '\n';
+  cin >> n >> m;
+  for (int i = 0; i < n; i++)
+  {
+      int v, w, s;
+      cin >> v >> w >> s;
+      memcpy(g, f, sizeof f);
+      for (int j = 0; j < v; j++)
+      {
+          int hh = 0, tt = -1;
+          for (int k = j; k <= m; k += v)
+          {
+              if (hh <= tt && q[hh] < k - s * v)
+                  hh++;
+              while (hh <= tt && g[q[tt]] - (q[tt] - j) / v * w <= g[k] - (k - j) / v * w)
+                  tt--;
+              q[++tt] = k;
+              f[k] = g[q[hh]] + (k - q[hh]) / v * w;
+          }
+      }
+  }
+  cout << f[m] << '\n';
 }
 \end{lstlisting}
 \subsection{Two-Dimensional Cost Knapsack Problem}
@@ -119,16 +144,16 @@ const int N = 110;
 int n, V, M, f[N][N];
 int main()
 {
-    cin >> n >> V >> M;
-    for (int i = 0; i < n; i++)
-    {
-        int v, m, w;
-        cin >> v >> m >> w;
-        for (int j = V; j >= v; j--)
-            for (int k = M; k >= m; k--)
-                f[j][k] = max(f[j][k], f[j - v][k - m] + w);
-    }
-    cout << f[V][M] << '\n';
+  cin >> n >> V >> M;
+  for (int i = 0; i < n; i++)
+  {
+      int v, m, w;
+      cin >> v >> m >> w;
+      for (int j = V; j >= v; j--)
+          for (int k = M; k >= m; k--)
+              f[j][k] = max(f[j][k], f[j - v][k - m] + w);
+  }
+  cout << f[V][M] << '\n';
 }
 \end{lstlisting}
 \subsection{Finding the Actual Solution Set}
@@ -138,23 +163,23 @@ int n, m;
 int v[N], w[N], f[N][N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++)
-        cin >> v[i] >> w[i];
-    for (int i = n; i >= 1; i--)
-        for (int j = 0; j <= m; j++)
-        {
-            f[i][j] = f[i + 1][j];
-            if (j >= v[i])
-                f[i][j] = max(f[i][j], f[i + 1][j - v[i]] + w[i]);
-        }
-    int j = m;
-    for (int i = 1; i <= n; i++)
-        if (j >= v[i] && f[i][j] == f[i + 1][j - v[i]] + w[i])
-        {
-            cout << i << ' ';
-            j -= v[i];
-        }
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+      cin >> v[i] >> w[i];
+  for (int i = n; i >= 1; i--)
+      for (int j = 0; j <= m; j++)
+      {
+          f[i][j] = f[i + 1][j];
+          if (j >= v[i])
+              f[i][j] = max(f[i][j], f[i + 1][j - v[i]] + w[i]);
+      }
+  int j = m;
+  for (int i = 1; i <= n; i++)
+      if (j >= v[i] && f[i][j] == f[i + 1][j - v[i]] + w[i])
+      {
+          cout << i << ' ';
+          j -= v[i];
+      }
 }
 \end{lstlisting}
 \subsection{Maximum Linearly Independent Subset}
@@ -164,25 +189,25 @@ int n, v[N];
 bool f[M];
 int main()
 {
-    int T; cin >> T;
-    while (T--)
-    {
-        cin >> n;
-        for (int i = 1; i <= n; ++i)
-            cin >> v[i];
-        sort(v + 1, v + n + 1);
-        int m = v[n], res = 0;
-        memset(f, 0, sizeof f);
-        f[0] = true; // 状态的初值
-        for (int i = 1; i <= n; ++i)
-        {
-            if (f[v[i]]) continue;
-            res++;
-            for (int j = v[i]; j <= m; ++j)
-                f[j] |= f[j - v[i]];
-        }
-        cout << res << '\n';
-    }
+  int T; cin >> T;
+  while (T--)
+  {
+      cin >> n;
+      for (int i = 1; i <= n; ++i)
+          cin >> v[i];
+      sort(v + 1, v + n + 1);
+      int m = v[n], res = 0;
+      memset(f, 0, sizeof f);
+      f[0] = true; // 状态的初值
+      for (int i = 1; i <= n; ++i)
+      {
+          if (f[v[i]]) continue;
+          res++;
+          for (int j = v[i]; j <= m; ++j)
+              f[j] |= f[j - v[i]];
+      }
+      cout << res << '\n';
+  }
 }
 \end{lstlisting}
 \subsection{Mixed Knapsack Problem}
@@ -191,34 +216,34 @@ const int N = 1010;
 int n, m, f[N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 0; i < n; i++)
-    {
-        int v, w, s;
-        cin >> v >> w >> s;
-        if (!s)
-        {
-            for (int j = v; j <= m; j++)
-                f[j] = max(f[j], f[j - v] + w);
-        }
-        else
-        {
-            if (s == -1)
-                s = 1;
-            for (int k = 1; k <= s; k *= 2)
-            {
-                for (int j = m; j >= k * v; j--)
-                    f[j] = max(f[j], f[j - k * v] + k * w);
-                s -= k;
-            }
-            if (s)
-            {
-                for (int j = m; j >= s * v; j--)
-                    f[j] = max(f[j], f[j - s * v] + s * w);
-            }
-        }
-    }
-    cout << f[m] << '\n';
+  cin >> n >> m;
+  for (int i = 0; i < n; i++)
+  {
+      int v, w, s;
+      cin >> v >> w >> s;
+      if (!s)
+      {
+          for (int j = v; j <= m; j++)
+              f[j] = max(f[j], f[j - v] + w);
+      }
+      else
+      {
+          if (s == -1)
+              s = 1;
+          for (int k = 1; k <= s; k *= 2)
+          {
+              for (int j = m; j >= k * v; j--)
+                  f[j] = max(f[j], f[j - k * v] + k * w);
+              s -= k;
+          }
+          if (s)
+          {
+              for (int j = m; j >= s * v; j--)
+                  f[j] = max(f[j], f[j - s * v] + s * w);
+          }
+      }
+  }
+  cout << f[m] << '\n';
 }
 \end{lstlisting}
 \subsection{Dependent Knapsack Problem}
@@ -229,36 +254,36 @@ int h[N], e[N], ne[N], idx;
 int v[N], w[N], [N][N];
 void add(int a, int b)
 {
-    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+  e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 void dfs(int u)
 {
-    for (int i = h[u]; ~i; i = ne[i])
-    {
-        int son = e[i];
-        dfs(son);
-        for (int j = m - v[u]; j >= 0; --j)
-            for (int k = 0; k <= j; ++k)
-                f[u][j] = max(f[u][j], f[u][j - k] + f[son][k]);
-    }
-    for (int j = m; j >= v[u]; --j)
-        f[u][j] = f[u][j - v[u]] + w[u];
-    for (int j = 0; j < v[u]; ++j)
-        f[u][j] = 0;
+  for (int i = h[u]; ~i; i = ne[i])
+  {
+      int son = e[i];
+      dfs(son);
+      for (int j = m - v[u]; j >= 0; --j)
+          for (int k = 0; k <= j; ++k)
+              f[u][j] = max(f[u][j], f[u][j - k] + f[son][k]);
+  }
+  for (int j = m; j >= v[u]; --j)
+      f[u][j] = f[u][j - v[u]] + w[u];
+  for (int j = 0; j < v[u]; ++j)
+      f[u][j] = 0;
 }
 int main()
 {
-    memset(h, -1, sizeof h);
-    cin >> n >> m;
-    for (int i = 1; i <= n; ++i)
-    {
-        int p;
-        cin >> v[i] >> w[i] >> p;
-        if (p == -1) root = i;
-        else add(p, i);
-    }
-    dfs(root);
-    cout << f[root][m] << '\n';
+  memset(h, -1, sizeof h);
+  cin >> n >> m;
+  for (int i = 1; i <= n; ++i)
+  {
+      int p;
+      cin >> v[i] >> w[i] >> p;
+      if (p == -1) root = i;
+      else add(p, i);
+  }
+  dfs(root);
+  cout << f[root][m] << '\n';
 }
 \end{lstlisting}
 \subsection{Number of Solutions}
@@ -268,27 +293,27 @@ int n, m;
 int w[N], v[N], f[N], g[N];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; ++i)
-        cin >> v[i] >> w[i];
-    g[0] = 1;
-    for (int i = 1; i <= n; ++i)
-    {
-        for (int j = m; j >= v[i]; --j)
-        {
-            int temp = max(f[j], f[j - v[i]] + w[i]), c = 0;
-            if (temp == f[j])
-                c = (c + g[j]) % mod;
-            if (temp == f[j - v[i]] + w[i])
-                c = (c + g[j - v[i]]) % mod;
-            f[j] = temp, g[j] = c;
-        }
-    }
-    int res = 0;
-    for (int j = 0; j <= m; ++j)
-        if (f[j] == f[m])
-            res = (res + g[j]) % mod;
-    cout << res << '\n';
+  cin >> n >> m;
+  for (int i = 1; i <= n; ++i)
+      cin >> v[i] >> w[i];
+  g[0] = 1;
+  for (int i = 1; i <= n; ++i)
+  {
+      for (int j = m; j >= v[i]; --j)
+      {
+          int temp = max(f[j], f[j - v[i]] + w[i]), c = 0;
+          if (temp == f[j])
+              c = (c + g[j]) % mod;
+          if (temp == f[j - v[i]] + w[i])
+              c = (c + g[j - v[i]]) % mod;
+          f[j] = temp, g[j] = c;
+      }
+  }
+  int res = 0;
+  for (int j = 0; j <= m; ++j)
+      if (f[j] == f[m])
+          res = (res + g[j]) % mod;
+  cout << res << '\n';
 }
 \end{lstlisting}
 \section{FSM}
@@ -297,20 +322,20 @@ const int N = 100010;
 int n, w[N], f[N][2];
 int main()
 {
-    int T; cin >> T;
-    while (T--)
-    {
-        cin >> n;
-        for (int i = 1; i <= n; i++)
-            cin >> w[i];
-        for (int i = 1; i <= n; i++)
-        {
-            // YOUR_FSM_RULES
-            // f[i][0] =
-            // f[i][1] =
-        }
-        cout << max(f[n][0], f[n][1]) << '\n';
-    }
+  int T; cin >> T;
+  while (T--)
+  {
+      cin >> n;
+      for (int i = 1; i <= n; i++)
+          cin >> w[i];
+      for (int i = 1; i <= n; i++)
+      {
+          // YOUR_FSM_RULES
+          // f[i][0] =
+          // f[i][1] =
+      }
+      cout << max(f[n][0], f[n][1]) << '\n';
+  }
 }
 \end{lstlisting}
 \section{Digit DP}
@@ -319,28 +344,28 @@ const int N = 35;
 int l, r, k, b, a[N], al, f[N][N];
 int dp(int pos, int st, int op)
 {
-    if (!pos) return st == k;
-    if (!op && ~f[pos][st])
-        return f[pos][st];
-    int res = 0, maxx = op ? min(a[pos], 1) : 1;
-    for (int i = 0; i <= maxx; i++)
-    {
-        if (st + i > k) continue;
-        res += dp(pos - 1, st + i, op && i == a[pos]);
-    }
-    return op ? res : f[pos][st] = res;
+  if (!pos) return st == k;
+  if (!op && ~f[pos][st])
+      return f[pos][st];
+  int res = 0, maxx = op ? min(a[pos], 1) : 1;
+  for (int i = 0; i <= maxx; i++)
+  {
+      if (st + i > k) continue;
+      res += dp(pos - 1, st + i, op && i == a[pos]);
+  }
+  return op ? res : f[pos][st] = res;
 }
 int calc(int x)
 {
-    al = 0;
-    memset(f, -1, sizeof f);
-    while (x) a[++al] = x % b, x /= b;
-    return dp(al, 0, 1);
+  al = 0;
+  memset(f, -1, sizeof f);
+  while (x) a[++al] = x % b, x /= b;
+  return dp(al, 0, 1);
 }
 int main()
 {
-    cin >> l >> r >> k >> b;
-    cout << calc(r) - calc(l - 1) << '\n';
+  cin >> l >> r >> k >> b;
+  cout << calc(r) - calc(l - 1) << '\n';
 }
 \end{lstlisting}
 \section{Queue Optimization for DP}
@@ -348,16 +373,16 @@ int main()
 int n, m, s[300010], q[300010];
 int main()
 {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++)
-        cin >> s[i], s[i] += s[i - 1];
-    int res = INT_MIN, hh = 0, tt = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        if (q[hh] < i - m) hh++;
-        res = max(res, s[i] - s[q[hh]]);
-        while (hh <= tt && s[q[tt]] >= s[i]) tt--;
-        q[++tt] = i;
-    }
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+      cin >> s[i], s[i] += s[i - 1];
+  int res = INT_MIN, hh = 0, tt = 0;
+  for (int i = 1; i <= n; i++)
+  {
+      if (q[hh] < i - m) hh++;
+      res = max(res, s[i] - s[q[hh]]);
+      while (hh <= tt && s[q[tt]] >= s[i]) tt--;
+      q[++tt] = i;
+  }
 }
 \end{lstlisting}

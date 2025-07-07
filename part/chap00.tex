@@ -10,8 +10,8 @@
 #define reutrn return
 #define rutren return
 #define fastin                    \
-    ios_base::sync_with_stdio(0); \
-    cin.tie(0), cout.tie(0);
+  ios_base::sync_with_stdio(0); \
+  cin.tie(0), cout.tie(0);
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long LL;
@@ -22,11 +22,11 @@ typedef pair<double, double> PDD;
 typedef vector<int> VI;
 #ifndef ONLINE_JUDGE
 #define dbg(args...)    \
-    do                  \
-    {                   \
-        cout << "\033[32;1m" << #args << " -> "; \
-        err(args);      \
-    } while (0)
+  do                  \
+  {                   \
+      cout << "\033[32;1m" << #args << " -> "; \
+      err(args);      \
+  } while (0)
 #else
 #define dbg(...)
 #endif
@@ -35,8 +35,8 @@ void err()
 template <template <typename...> class T, typename t, typename... Args>
 void err(T<t> a, Args... args)
 {
-    for (auto x : a) cout << x << ' ';
-    err(args...);
+  for (auto x : a) cout << x << ' ';
+  err(args...);
 }
 template <typename T, typename... Args>
 void err(T a, Args... args)
@@ -47,22 +47,22 @@ const double eps = 1e-6;
 int main()
 {
 #ifndef ONLINE_JUDGE
-    freopen("test.in", "r", stdin);
-    freopen("test.out", "w", stdout);
+  freopen("test.in", "r", stdin);
+  freopen("test.out", "w", stdout);
 #endif
-    fastin;
+  fastin;
 
-    return 0;
+  return 0;
 }
 \end{lstlisting}
 
 \section{Operator Precedence}
 \begin{itemize}
-    \item \textbf{括号成员排第一；全体单目排第二；}
-    \item \textbf{乘除余三加减四；移位五，关系六；}
-    \item \textbf{等于不等排第七；位与异或和位或；}
-    \item \textbf{三分天下八九十；逻辑与或十一二；}
-    \item \textbf{条件赋值十三四；逗号十五最末尾。}
+  \item \textbf{括号成员排第一；全体单目排第二；}
+  \item \textbf{乘除余三加减四；移位五，关系六；}
+  \item \textbf{等于不等排第七；位与异或和位或；}
+  \item \textbf{三分天下八九十；逻辑与或十一二；}
+  \item \textbf{条件赋值十三四；逗号十五最末尾。}
 \end{itemize}
 
 \section{Time Complexity}
@@ -72,17 +72,17 @@ int main()
   \item Below is a guide on how to choose algorithms based on different input size ranges:
 
   \begin{enumerate}
-    \item $\mathbf{n \leq 30}$ → Exponential complexity: DFS with pruning, State Compression DP
-    \item $\mathbf{n \leq 100}$ → $\mathbf{O(n^3)}$: Floyd, DP, Gaussian Elimination
-    \item $\mathbf{n \leq 1000}$ → $\mathbf{O(n^2)}$, $\mathbf{O(n^2 \log n)}$: DP, Binary Search, Naive Dijkstra, Naive Prim, Bellman-Ford
-    \item $\mathbf{n \leq 10000}$ → $\mathbf{O(n^{\frac{3}{2}})}$: Block Linked List, Mo's Algorithm
-    \item $\mathbf{n \leq 100000}$ → $\mathbf{O(n \log n)}$: sort, Segment Tree, Fenwick Tree (BIT), set/map, Heap, Topological Sort, Dijkstra (heap optimized), Prim (heap optimized), Kruskal, SPFA, Convex Hull, Half Plane Intersection, Binary Search, CDQ Divide and Conquer, Overall Binary Search, Suffix Array, Heavy-Light Decomposition, Dynamic Trees
-    \item $\mathbf{n \leq 1000000}$ → $\mathbf{O(n)}$, or small-constant $\mathbf{O(n \log n)}$: Monotonic Queue, Hashing, Two Pointers, BFS, Union Find, KMP, Aho-Corasick Automaton
-    \item $\mathbf{n \leq 10000000}$ → $\mathbf{O(n)}$: Two Pointers, KMP, Aho-Corasick Automaton, Linear Sieve for Primes
-    \item $\mathbf{n \leq 10^9}$ → $\mathbf{O(\sqrt{n})}$: Primality Testing
-    \item $\mathbf{n \leq 10^{18}}$ → $\mathbf{O(\log n)}$: GCD, Fast Exponentiation, Digit DP
-    \item $\mathbf{n \leq 10^{1000}}$ → $\mathbf{O((\log n)^2)}$: Big Integer Arithmetic (Add/Subtract/Multiply/Divide)
-    \item $\mathbf{n \leq 10^{100000}}$ → $\mathbf{O(\log k \cdot \log \log k)}$, where $k$ is the number of digits: Big Integer Add/Subtract, FFT/NTT
+  \item $\mathbf{n \leq 30}$ → Exponential complexity: DFS with pruning, State Compression DP
+  \item $\mathbf{n \leq 100}$ → $\mathbf{O(n^3)}$: Floyd, DP, Gaussian Elimination
+  \item $\mathbf{n \leq 1000}$ → $\mathbf{O(n^2)}$, $\mathbf{O(n^2 \log n)}$: DP, Binary Search, Naive Dijkstra, Naive Prim, Bellman-Ford
+  \item $\mathbf{n \leq 10000}$ → $\mathbf{O(n^{\frac{3}{2}})}$: Block Linked List, Mo's Algorithm
+  \item $\mathbf{n \leq 100000}$ → $\mathbf{O(n \log n)}$: sort, Segment Tree, Fenwick Tree (BIT), set/map, Heap, Topological Sort, Dijkstra (heap optimized), Prim (heap optimized), Kruskal, SPFA, Convex Hull, Half Plane Intersection, Binary Search, CDQ Divide and Conquer, Overall Binary Search, Suffix Array, Heavy-Light Decomposition, Dynamic Trees
+  \item $\mathbf{n \leq 1000000}$ → $\mathbf{O(n)}$, or small-constant $\mathbf{O(n \log n)}$: Monotonic Queue, Hashing, Two Pointers, BFS, Union Find, KMP, Aho-Corasick Automaton
+  \item $\mathbf{n \leq 10000000}$ → $\mathbf{O(n)}$: Two Pointers, KMP, Aho-Corasick Automaton, Linear Sieve for Primes
+  \item $\mathbf{n \leq 10^9}$ → $\mathbf{O(\sqrt{n})}$: Primality Testing
+  \item $\mathbf{n \leq 10^{18}}$ → $\mathbf{O(\log n)}$: GCD, Fast Exponentiation, Digit DP
+  \item $\mathbf{n \leq 10^{1000}}$ → $\mathbf{O((\log n)^2)}$: Big Integer Arithmetic (Add/Subtract/Multiply/Divide)
+  \item $\mathbf{n \leq 10^{100000}}$ → $\mathbf{O(\log k \cdot \log \log k)}$, where $k$ is the number of digits: Big Integer Add/Subtract, FFT/NTT
   \end{enumerate}
 \end{itemize}
 \newpage

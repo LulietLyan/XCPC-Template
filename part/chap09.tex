@@ -13,30 +13,30 @@ bool spfa()
   int hh = 0, tt = 0;
   for (int i = 1; i <= n; i++)
   {
-    q[tt++] = i;
-    st[i] = true;
+  q[tt++] = i;
+  st[i] = true;
   }
   while (hh != tt)
   {
-    int t = q[hh++];
-    if (hh == N) hh = 0;
-    st[t] = false;
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[hh++];
+  if (hh == N) hh = 0;
+  st[t] = false;
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (dist[j] > dist[t] + w[i])
     {
-      int j = e[i];
-      if (dist[j] > dist[t] + w[i])
+      dist[j] = dist[t] + w[i];
+      cnt[j] = cnt[t] + 1;
+      if (cnt[j] >= n) return true;
+      if (!st[j])
       {
-        dist[j] = dist[t] + w[i];
-        cnt[j] = cnt[t] + 1;
-        if (cnt[j] >= n) return true;
-        if (!st[j])
-        {
-          q[tt++] = j;
-          if (tt == N) tt = 0;
-          st[j] = true;
-        }
+        q[tt++] = j;
+        if (tt == N) tt = 0;
+        st[j] = true;
       }
     }
+  }
   }
   return false;
 }
@@ -53,25 +53,25 @@ void spfa()
   st[s] = 1, dist[s] = 0;
   while (q.size())
   {
-    int t = q.front();
-    q.pop_front();
-    st[t] = 0;
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q.front();
+  q.pop_front();
+  st[t] = 0;
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (dist[j] > dist[t] + w[i])
     {
-      int j = e[i];
-      if (dist[j] > dist[t] + w[i])
+      dist[j] = dist[t] + w[i];
+      if (!st[j])
       {
-        dist[j] = dist[t] + w[i];
-        if (!st[j])
-        {
-          st[j] = true;
-          if (q.size() && dist[j] < dist[q.front()])
-            q.push_front(j);
-          else
-            q.push_back(j);
-        }
+        st[j] = true;
+        if (q.size() && dist[j] < dist[q.front()])
+          q.push_front(j);
+        else
+          q.push_back(j);
       }
     }
+  }
   }
 }
 \end{lstlisting}
@@ -85,23 +85,23 @@ bool spfa()
   q[0] = 0;
   while (hh != tt)
   {
-    int t = q[--tt];
-    st[t] = false;
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[--tt];
+  st[t] = false;
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (dist[j] < dist[t] + w[i])
     {
-      int j = e[i];
-      if (dist[j] < dist[t] + w[i])
+      dist[j] = dist[t] + w[i];
+      cnt[j] = cnt[t] + 1;
+      if (cnt[j] >= n + 1) return true;
+      if (!st[j])
       {
-        dist[j] = dist[t] + w[i];
-        cnt[j] = cnt[t] + 1;
-        if (cnt[j] >= n + 1) return true;
-        if (!st[j])
-        {
-          st[j] = true;
-          q[tt++] = j;
-        }
+        st[j] = true;
+        q[tt++] = j;
       }
     }
+  }
   }
   return false;
 }
@@ -115,38 +115,38 @@ void spfa(int h[], int dist[], int type)
   int hh = 0, tt = 1;
   if (type == 0)
   {
-    memset(dist, 0x3f, sizeof dmin);
-    dist[1] = w[1];
-    q[0] = 1;
+  memset(dist, 0x3f, sizeof dmin);
+  dist[1] = w[1];
+  q[0] = 1;
   }
   else
   {
-    memset(dist, -0x3f, sizeof dmax);
-    dist[n] = w[n];
-    q[0] = n;
+  memset(dist, -0x3f, sizeof dmax);
+  dist[n] = w[n];
+  q[0] = n;
   }
   while (hh != tt)
   {
-    int t = q[hh++];
-    if (hh == N) hh = 0;
-    st[t] = false;
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[hh++];
+  if (hh == N) hh = 0;
+  st[t] = false;
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (type == 0 && dist[j] > min(dist[t], w[j]) || type == 1 && dist[j] < max(dist[t], w[j]))
     {
-      int j = e[i];
-      if (type == 0 && dist[j] > min(dist[t], w[j]) || type == 1 && dist[j] < max(dist[t], w[j]))
+      if (type == 0)
+        dist[j] = min(dist[t], w[j]);
+      else
+        dist[j] = max(dist[t], w[j]);
+      if (!st[j])
       {
-        if (type == 0)
-          dist[j] = min(dist[t], w[j]);
-        else
-          dist[j] = max(dist[t], w[j]);
-        if (!st[j])
-        {
-          q[tt++] = j;
-          if (tt == N) tt = 0;
-          st[j] = true;
-        }
+        q[tt++] = j;
+        if (tt == N) tt = 0;
+        st[j] = true;
       }
     }
+  }
   }
 }
 \end{lstlisting}
@@ -158,7 +158,7 @@ struct Ver
   int id, type, dist;
   bool operator>(const Ver &W) const
   {
-    return dist > W.dist;
+  return dist > W.dist;
   }
 };
 int n, m, S, T, dist[N][2], cnt[N][2];
@@ -178,36 +178,36 @@ int dijkstra()
   heap.push({S, 0, 0});
   while (heap.size())
   {
-    Ver t = heap.top();
-    heap.pop();
-    int ver = t.id, type = t.type, distance = t.dist, count = cnt[ver][type];
-    if (st[ver][type])
-      continue;
-    st[ver][type] = true;
-    for (int i = h[ver]; ~i; i = ne[i])
+  Ver t = heap.top();
+  heap.pop();
+  int ver = t.id, type = t.type, distance = t.dist, count = cnt[ver][type];
+  if (st[ver][type])
+    continue;
+  st[ver][type] = true;
+  for (int i = h[ver]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (dist[j][0] > distance + w[i])
     {
-      int j = e[i];
-      if (dist[j][0] > distance + w[i])
-      {
-        dist[j][1] = dist[j][0], cnt[j][1] = cnt[j][0];
-        heap.push({j, 1, dist[j][1]});
-        dist[j][0] = distance + w[i], cnt[j][0] = count;
-        heap.push({j, 0, dist[j][0]});
-      }
-      else if (dist[j][0] == distance + w[i])
-        cnt[j][0] += count;
-      else if (dist[j][1] > distance + w[i])
-      {
-        dist[j][1] = distance + w[i], cnt[j][1] = count;
-        heap.push({j, 1, dist[j][1]});
-      }
-      else if (dist[j][1] == distance + w[i])
-        cnt[j][1] += count;
+      dist[j][1] = dist[j][0], cnt[j][1] = cnt[j][0];
+      heap.push({j, 1, dist[j][1]});
+      dist[j][0] = distance + w[i], cnt[j][0] = count;
+      heap.push({j, 0, dist[j][0]});
     }
+    else if (dist[j][0] == distance + w[i])
+      cnt[j][0] += count;
+    else if (dist[j][1] > distance + w[i])
+    {
+      dist[j][1] = distance + w[i], cnt[j][1] = count;
+      heap.push({j, 1, dist[j][1]});
+    }
+    else if (dist[j][1] == distance + w[i])
+      cnt[j][1] += count;
+  }
   }
   int res = cnt[T][0];
   if (dist[T][0] + 1 == dist[T][1])
-    res += cnt[T][1];
+  res += cnt[T][1];
   return res;
 }
 \end{lstlisting}
@@ -238,16 +238,16 @@ void dfs(int u, int fa, int maxd1, int maxd2, int d1[], int d2[])
   d1[u] = maxd1, d2[u] = maxd2;
   for (int i = h[u]; ~i; i = ne[i])
   {
-    int j = e[i];
-    if (j != fa)
-    {
-      int td1 = maxd1, td2 = maxd2;
-      if (w[i] > td1)
-        td2 = td1, td1 = w[i];
-      else if (w[i] < td1 && w[i] > td2)
-        td2 = w[i];
-      dfs(j, u, td1, td2, d1, d2);
-    }
+  int j = e[i];
+  if (j != fa)
+  {
+    int td1 = maxd1, td2 = maxd2;
+    if (w[i] > td1)
+      td2 = td1, td1 = w[i];
+    else if (w[i] < td1 && w[i] > td2)
+      td2 = w[i];
+    dfs(j, u, td1, td2, d1, d2);
+  }
   }
 }
 int main()
@@ -255,36 +255,36 @@ int main()
   cin >> n >> m;
   memset(h, -1, sizeof h);
   for (int i = 0; i < m; i++)
-    cin >> edge[i].a >> edge[i].b >> edge[i].w;
+  cin >> edge[i].a >> edge[i].b >> edge[i].w;
   sort(edge, edge + m);
   for (int i = 1; i <= n; i++) p[i] = i;
   LL sum = 0;
   for (int i = 0; i < m; i++)
   {
-    int a = edge[i].a, b = edge[i].b, w = edge[i].w;
-    int pa = find(a), pb = find(b);
-    if (pa != pb)
-    {
-      p[pa] = pb;
-      sum += w;
-      add(a, b, w), add(b, a, w);
-      edge[i].f = true;
-    }
+  int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+  int pa = find(a), pb = find(b);
+  if (pa != pb)
+  {
+    p[pa] = pb;
+    sum += w;
+    add(a, b, w), add(b, a, w);
+    edge[i].f = true;
+  }
   }
   for (int i = 1; i <= n; i++)
-    dfs(i, -1, -1e9, -1e9, dist1[i], dist2[i]);
+  dfs(i, -1, -1e9, -1e9, dist1[i], dist2[i]);
   LL res = 1e18;
   for (int i = 0; i < m; i++)
-    if (!edge[i].f)
-    {
-      int a = edge[i].a, b = edge[i].b, w = edge[i].w;
-      LL t;
-      if (w > dist1[a][b])
-        t = sum + w - dist1[a][b];
-      else if (w > dist2[a][b])
-        t = sum + w - dist2[a][b];
-      res = min(res, t);
-    }
+  if (!edge[i].f)
+  {
+    int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+    LL t;
+    if (w > dist1[a][b])
+      t = sum + w - dist1[a][b];
+    else if (w > dist2[a][b])
+      t = sum + w - dist2[a][b];
+    res = min(res, t);
+  }
 }
 \end{lstlisting}
 \subsection{LCA}
@@ -314,12 +314,12 @@ LL kruskal()
   LL res = 0;
   for (int i = 0; i < m; i++)
   {
-    int a = find(edge[i].a), b = find(edge[i].b), w = edge[i].w;
-    if (a != b)
-    {
-      p[a] = b; res += w;
-      edge[i].used = true;
-    }
+  int a = find(edge[i].a), b = find(edge[i].b), w = edge[i].w;
+  if (a != b)
+  {
+    p[a] = b; res += w;
+    edge[i].used = true;
+  }
   }
   return res;
 }
@@ -327,11 +327,11 @@ void build()
 {
   memset(h, -1, sizeof h);
   for (int i = 0; i < m; i++)
-    if (edge[i].used)
-    {
-      int a = edge[i].a, b = edge[i].b, w = edge[i].w;
-      add(a, b, w), add(b, a, w);
-    }
+  if (edge[i].used)
+  {
+    int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+    add(a, b, w), add(b, a, w);
+  }
 }
 void bfs()
 {
@@ -340,36 +340,36 @@ void bfs()
   int hh = 0, tt = 0;
   while (hh <= tt)
   {
-    int t = q[hh++];
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[hh++];
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (depth[j] > depth[t] + 1)
     {
-      int j = e[i];
-      if (depth[j] > depth[t] + 1)
+      depth[j] = depth[t] + 1;
+      q[++tt] = j;
+      fa[j][0] = t;
+      d1[j][0] = w[i], d2[j][0] = -INF;
+      for (int k = 1; k <= 16; k++)
       {
-        depth[j] = depth[t] + 1;
-        q[++tt] = j;
-        fa[j][0] = t;
-        d1[j][0] = w[i], d2[j][0] = -INF;
-        for (int k = 1; k <= 16; k++)
+        int anc = fa[j][k - 1];
+        fa[j][k] = fa[anc][k - 1];
+        int distance[4] = {d1[j][k - 1],
+                           d2[j][k - 1],
+                           d1[anc][k - 1],
+                           d2[anc][k - 1]};
+        d1[j][k] = d2[j][k] = -INF;
+        for (int u = 0; u < 4; u++)
         {
-          int anc = fa[j][k - 1];
-          fa[j][k] = fa[anc][k - 1];
-          int distance[4] = {d1[j][k - 1],
-                             d2[j][k - 1],
-                             d1[anc][k - 1],
-                             d2[anc][k - 1]};
-          d1[j][k] = d2[j][k] = -INF;
-          for (int u = 0; u < 4; u++)
-          {
-            int d = distance[u];
-            if (d > d1[j][k])
-              d2[j][k] = d1[j][k], d1[j][k] = d;
-            else if (d != d1[j][k] && d > d2[j][k])
-              d2[j][k] = d;
-          }
+          int d = distance[u];
+          if (d > d1[j][k])
+            d2[j][k] = d1[j][k], d1[j][k] = d;
+          else if (d != d1[j][k] && d > d2[j][k])
+            d2[j][k] = d;
         }
       }
     }
+  }
   }
 }
 int lca(int a, int b, int w)
@@ -377,36 +377,36 @@ int lca(int a, int b, int w)
   static int distance[N * 2];
   int cnt = 0;
   if (depth[a] < depth[b])
-    swap(a, b);
+  swap(a, b);
   for (int k = 16; k >= 0; k--)
-    if (depth[fa[a][k]] >= depth[b])
+  if (depth[fa[a][k]] >= depth[b])
+  {
+    distance[cnt++] = d1[a][k];
+    distance[cnt++] = d2[a][k];
+    a = fa[a][k];
+  }
+  if (a != b)
+  {
+  for (int k = 16; k >= 0; k--)
+    if (fa[a][k] != fa[b][k])
     {
       distance[cnt++] = d1[a][k];
       distance[cnt++] = d2[a][k];
-      a = fa[a][k];
+      distance[cnt++] = d1[b][k];
+      distance[cnt++] = d2[b][k];
+      a = fa[a][k], b = fa[b][k];
     }
-  if (a != b)
-  {
-    for (int k = 16; k >= 0; k--)
-      if (fa[a][k] != fa[b][k])
-      {
-        distance[cnt++] = d1[a][k];
-        distance[cnt++] = d2[a][k];
-        distance[cnt++] = d1[b][k];
-        distance[cnt++] = d2[b][k];
-        a = fa[a][k], b = fa[b][k];
-      }
-    distance[cnt++] = d1[a][0];
-    distance[cnt++] = d1[b][0];
+  distance[cnt++] = d1[a][0];
+  distance[cnt++] = d1[b][0];
   }
   int dist1 = -INF, dist2 = -INF;
   for (int i = 0; i < cnt; i++)
   {
-    int d = distance[i];
-    if (d > dist1)
-      dist2 = dist1, dist1 = d;
-    else if (d != dist1 && d > dist2)
-      dist2 = d;
+  int d = distance[i];
+  if (d > dist1)
+    dist2 = dist1, dist1 = d;
+  else if (d != dist1 && d > dist2)
+    dist2 = d;
   }
   if (w > dist1) return w - dist1;
   if (w > dist2) return w - dist2;
@@ -417,29 +417,29 @@ int main()
   cin >> n >> m;
   for (int i = 0; i < m; i++)
   {
-    int a, b, c;
-    cin >> a >> b >> c;
-    edge[i] = {a, b, c};
+  int a, b, c;
+  cin >> a >> b >> c;
+  edge[i] = {a, b, c};
   }
   LL sum = kruskal();
   build();
   bfs();
   LL res = 1e18;
   for (int i = 0; i < m; i++)
-    if (!edge[i].used)
-    {
-      int a = edge[i].a, b = edge[i].b, w = edge[i].w;
-      res = min(res, sum + lca(a, b, w));
-    }
+  if (!edge[i].used)
+  {
+    int a = edge[i].a, b = edge[i].b, w = edge[i].w;
+    res = min(res, sum + lca(a, b, w));
+  }
   cout << res;
 }
 \end{lstlisting}
 \section{Difference Constraints}
 \begin{itemize}
-    \item \textbf{size == N}: Feasible Solution
-    \item \textbf{size == 1}: Maximum/Minimum
-    \item \textbf{Maximum}: Shortest Path
-    \item \textbf{Minimum}: Longest Path
+  \item \textbf{size == N}: Feasible Solution
+  \item \textbf{size == 1}: Maximum/Minimum
+  \item \textbf{Maximum}: Shortest Path
+  \item \textbf{Minimum}: Longest Path
 \end{itemize}
 \subsection{Maximum-Shortest Path}
 \begin{lstlisting}
@@ -451,31 +451,31 @@ bool spfa(int size)
   memset(cnt, 0, sizeof cnt);
   for (int i = 1; i <= size; i++)
   {
-    q[tt++] = i;
-    dist[i] = 0;
-    st[i] = true;
+  q[tt++] = i;
+  dist[i] = 0;
+  st[i] = true;
   }
   while (hh != tt)
   {
-    int t = q[hh++];
-    if (hh == N) hh = 0;
-    st[t] = false;
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[hh++];
+  if (hh == N) hh = 0;
+  st[t] = false;
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (dist[j] > dist[t] + w[i])
     {
-      int j = e[i];
-      if (dist[j] > dist[t] + w[i])
+      dist[j] = dist[t] + w[i];
+      cnt[j] = cnt[t] + 1;
+      if (cnt[j] >= n) return true;
+      if (!st[j])
       {
-        dist[j] = dist[t] + w[i];
-        cnt[j] = cnt[t] + 1;
-        if (cnt[j] >= n) return true;
-        if (!st[j])
-        {
-          st[j] = true;
-          q[tt++] = j;
-          if (tt == N) tt = 0;
-        }
+        st[j] = true;
+        q[tt++] = j;
+        if (tt == N) tt = 0;
       }
     }
+  }
   }
   return false;
 }
@@ -495,31 +495,31 @@ bool spfa(int size)
   memset(cnt, 0, sizeof cnt);
   for (int i = 1; i <= size; i++)
   {
-    q[tt++] = i;
-    dist[i] = 0;
-    st[i] = true;
+  q[tt++] = i;
+  dist[i] = 0;
+  st[i] = true;
   }
   while (hh != tt)
   {
-    int t = q[hh++];
-    if (hh == N) hh = 0;
-    st[t] = false;
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[hh++];
+  if (hh == N) hh = 0;
+  st[t] = false;
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (dist[j] < dist[t] + w[i])
     {
-      int j = e[i];
-      if (dist[j] < dist[t] + w[i])
+      dist[j] = dist[t] + w[i];
+      cnt[j] = cnt[t] + 1;
+      if (cnt[j] >= n) return false;
+      if (!st[j])
       {
-        dist[j] = dist[t] + w[i];
-        cnt[j] = cnt[t] + 1;
-        if (cnt[j] >= n) return false;
-        if (!st[j])
-        {
-          st[j] = true;
-          q[tt++] = j;
-          if (tt == N) tt = 0;
-        }
+        st[j] = true;
+        q[tt++] = j;
+        if (tt == N) tt = 0;
       }
     }
+  }
   }
   return ture;
 }
@@ -542,34 +542,34 @@ void bfs(int root)
   q[0] = root;
   while (hh <= tt)
   {
-    int t = q[hh++];
-    for (int i = h[t]; ~i; i = ne[i])
+  int t = q[hh++];
+  for (int i = h[t]; ~i; i = ne[i])
+  {
+    int j = e[i];
+    if (depth[j] > depth[t] + 1)
     {
-      int j = e[i];
-      if (depth[j] > depth[t] + 1)
-      {
-        depth[j] = depth[t] + 1;
-        q[++tt] = j;
-        fa[j][0] = t;
-        for (int k = 1; k <= 15; k++)
-          fa[j][k] = fa[fa[j][k - 1]][k - 1];
-      }
+      depth[j] = depth[t] + 1;
+      q[++tt] = j;
+      fa[j][0] = t;
+      for (int k = 1; k <= 15; k++)
+        fa[j][k] = fa[fa[j][k - 1]][k - 1];
     }
+  }
   }
 }
 int lca(int a, int b)
 {
   if (depth[a] < depth[b]) swap(a, b);
   for (int k = 15; k >= 0; k--)
-    if (depth[fa[a][k]] >= depth[b])
-      a = fa[a][k];
+  if (depth[fa[a][k]] >= depth[b])
+    a = fa[a][k];
   if (a == b) return a;
   for (int k = 15; k >= 0; k--)
-    if (fa[a][k] != fa[b][k])
-    {
-      a = fa[a][k];
-      b = fa[b][k];
-    }
+  if (fa[a][k] != fa[b][k])
+  {
+    a = fa[a][k];
+    b = fa[b][k];
+  }
   return fa[a][0];
 }
 \end{lstlisting}
@@ -581,25 +581,25 @@ void tarjan(int u)
   stack[++top] = u, in_stk[u] = true;
   for (int i = h[u]; ~i; i = ne[i])
   {
-    int j = e[i];
-    if (!dfn[j])
-    {
-      tarjan(j);
-      low[u] = min(low[u], low[j]);
-    }
-    else if (in_stk[j])
-      low[u] = min(low[u], dfn[j]);
+  int j = e[i];
+  if (!dfn[j])
+  {
+    tarjan(j);
+    low[u] = min(low[u], low[j]);
+  }
+  else if (in_stk[j])
+    low[u] = min(low[u], dfn[j]);
   }
   if (dfn[u] == low[u])
   {
-    int y;
-    ++scc_cnt;
-    do
-    {
-      y = stk[top--];
-      in_stk[y] = false;
-      id[y] = scc_cnt;
-    } while (y != u);
+  int y;
+  ++scc_cnt;
+  do
+  {
+    y = stk[top--];
+    in_stk[y] = false;
+    id[y] = scc_cnt;
+  } while (y != u);
   }
 }
 \end{lstlisting}
@@ -617,26 +617,26 @@ void tarjan(int u, int from)
   stk[++top] = u;
   for (int i = h[u]; ~i; i = ne[i])
   {
-    int j = e[i];
-    if (!dfn[j])
-    {
-      tarjan(j, i);
-      low[u] = min(low[u], low[j]);
-      if (dfn[u] < low[j])
-        is_bridge[i] = is_bridge[i ^ 1] = true;
-    }
-    else if (i != (from ^ 1))
-      low[u] = min(low[u], dfn[j]);
+  int j = e[i];
+  if (!dfn[j])
+  {
+    tarjan(j, i);
+    low[u] = min(low[u], low[j]);
+    if (dfn[u] < low[j])
+      is_bridge[i] = is_bridge[i ^ 1] = true;
+  }
+  else if (i != (from ^ 1))
+    low[u] = min(low[u], dfn[j]);
   }
   if (dfn[u] == low[u])
   {
-    ++dcc_cnt;
-    int y;
-    do
-    {
-      y = stk[top--];
-      id[y] = dcc_cnt;
-    } while (y != u);
+  ++dcc_cnt;
+  int y;
+  do
+  {
+    y = stk[top--];
+    id[y] = dcc_cnt;
+  } while (y != u);
   }
 }
 \end{lstlisting}
@@ -651,7 +651,7 @@ bool cut[N];
 void init()
 {
   for (int i = 1; i <= dcc_cnt; i++)
-    dcc[i].clear();
+  dcc[i].clear();
   idx = n = timestamp = top = dcc_cnt = 0;
   memset(h, -1, sizeof h);
   memset(dfn, 0, sizeof dfn);
@@ -663,35 +663,35 @@ void tarjan(int u)
   stk[++top] = u;
   if (u == root && h[u] == -1)
   {
-    dcc_cnt++;
-    dcc[dcc_cnt].push_back(u);
-    return;
+  dcc_cnt++;
+  dcc[dcc_cnt].push_back(u);
+  return;
   }
   int cnt = 0;
   for (int i = h[u]; ~i; i = ne[i])
   {
-    int j = e[i];
-    if (!dfn[j])
+  int j = e[i];
+  if (!dfn[j])
+  {
+    tarjan(j);
+    low[u] = min(low[u], low[j]);
+    if (dfn[u] <= low[j])
     {
-      tarjan(j);
-      low[u] = min(low[u], low[j]);
-      if (dfn[u] <= low[j])
+      cnt++;
+      if (u != root || cnt > 1)
+        cut[u] = true;
+      ++dcc_cnt;
+      int y;
+      do
       {
-        cnt++;
-        if (u != root || cnt > 1)
-          cut[u] = true;
-        ++dcc_cnt;
-        int y;
-        do
-        {
-          y = stk[top--];
-          dcc[dcc_cnt].push_back(y);
-        } while (y != j);
-        dcc[dcc_cnt].push_back(u);
-      }
+        y = stk[top--];
+        dcc[dcc_cnt].push_back(y);
+      } while (y != j);
+      dcc[dcc_cnt].push_back(u);
     }
-    else
-      low[u] = min(low[u], dfn[j]);
+  }
+  else
+    low[u] = min(low[u], dfn[j]);
   }
 }
 \end{lstlisting}
@@ -714,17 +714,17 @@ bool find(int x, int y)
 {
   for (int i = 0; i < 4; i++)
   {
-    int a = x + dx[i], b = y + dy[i];
-    if (a && a <= n && b && b <= n && !g[a][b] && !st[a][b])
+  int a = x + dx[i], b = y + dy[i];
+  if (a && a <= n && b && b <= n && !g[a][b] && !st[a][b])
+  {
+    st[a][b] = true;
+    PII t = match[a][b];
+    if (t.x == -1 || find(t.x, t.y))
     {
-      st[a][b] = true;
-      PII t = match[a][b];
-      if (t.x == -1 || find(t.x, t.y))
-      {
-        match[a][b] = {x, y};
-        return true;
-      }
+      match[a][b] = {x, y};
+      return true;
     }
+  }
   }
   return false;
 }
@@ -734,13 +734,13 @@ int main()
   memset(match, -1, sizeof match);
   int res = 0;
   for (int i = 1; i <= n; i++)
-    for (int j = 1; j <= n; j++)
-      if ((i + j) % 2 && !g[i][j])
-      {
-        memset(st, 0, sizeof st);
-        if (find(i, j))
-          res++;
-      }
+  for (int j = 1; j <= n; j++)
+    if ((i + j) % 2 && !g[i][j])
+    {
+      memset(st, 0, sizeof st);
+      if (find(i, j))
+        res++;
+    }
   // PROCESS
 }
 \end{lstlisting}
@@ -752,38 +752,38 @@ bool g[N][N], st[N];
 bool find(int x)
 {
   for (int i = 0; i < m; i++)
-    if (!st[i] && g[x][i])
+  if (!st[i] && g[x][i])
+  {
+    st[i] = true;
+    if (match[i] == -1 || find(match[i]))
     {
-      st[i] = true;
-      if (match[i] == -1 || find(match[i]))
-      {
-        match[i] = x;
-        return true;
-      }
+      match[i] = x;
+      return true;
     }
+  }
   return false;
 }
 int main()
 {
   while (cin >> n, n)
   {
-    cin >> m >> k;
-    memset(g, 0, sizeof g);
-    memset(match, -1, sizeof match);
-    while (k--)
-    {
-      int t, a, b;
-      cin >> t >> a >> b;
-      if (!a || !b) continue;
-      g[a][b] = true;
-    }
-    int res = 0;
-    for (int i = 0; i < n; i++)
-    {
-      memset(st, 0, sizeof st);
-      if (find(i)) res++;
-    }
-    cout << res << '\n';
+  cin >> m >> k;
+  memset(g, 0, sizeof g);
+  memset(match, -1, sizeof match);
+  while (k--)
+  {
+    int t, a, b;
+    cin >> t >> a >> b;
+    if (!a || !b) continue;
+    g[a][b] = true;
+  }
+  int res = 0;
+  for (int i = 0; i < n; i++)
+  {
+    memset(st, 0, sizeof st);
+    if (find(i)) res++;
+  }
+  cout << res << '\n';
   }
 }
 \end{lstlisting}
@@ -797,42 +797,42 @@ int dx[8] = {-2, -1, 1, 2, 2, 1, -1, -2};
 int dy[8] = {1, 2, 2, 1, -1, -2, -2, -1};
 bool find(int x, int y)
 {
-    for (int i = 0; i < 8; i++)
-    {
-        int a = x + dx[i], b = y + dy[i];
-        if (a < 1 || a > n || b < 1 || b > m)
-            continue;
-        if (g[a][b]) continue;
-        if (st[a][b]) continue;
-        st[a][b] = true;
-        PII t = match[a][b];
-        if (t.x == 0 || find(t.x, t.y))
-        {
-            match[a][b] = {x, y};
-            return true;
-        }
-    }
-    return false;
+  for (int i = 0; i < 8; i++)
+  {
+      int a = x + dx[i], b = y + dy[i];
+      if (a < 1 || a > n || b < 1 || b > m)
+          continue;
+      if (g[a][b]) continue;
+      if (st[a][b]) continue;
+      st[a][b] = true;
+      PII t = match[a][b];
+      if (t.x == 0 || find(t.x, t.y))
+      {
+          match[a][b] = {x, y};
+          return true;
+      }
+  }
+  return false;
 }
 int main()
 {
-    // PROCESS
-    int res = 0;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= m; j++)
-        {
-            if (g[i][j] || (i + j) % 2)
-                continue;
-            memset(st, 0, sizeof st);
-            if (find(i, j)) res++;
-        }
-    cout << n * m - k - res << '\n';
+  // PROCESS
+  int res = 0;
+  for (int i = 1; i <= n; i++)
+      for (int j = 1; j <= m; j++)
+      {
+          if (g[i][j] || (i + j) % 2)
+              continue;
+          memset(st, 0, sizeof st);
+          if (find(i, j)) res++;
+      }
+  cout << n * m - k - res << '\n';
 }
 \end{lstlisting}
 \subsection{minimum path cover}
 \begin{itemize}
-    \item \textbf{Only for DAG.}
-    \item If you need to compute the \textbf{minimum path cover with repeated nodes}, you need to perform transitive closure as shown in the following code.
+  \item \textbf{Only for DAG.}
+  \item If you need to compute the \textbf{minimum path cover with repeated nodes}, you need to perform transitive closure as shown in the following code.
 \end{itemize}
 \begin{lstlisting}
 const int N = 210, M = 30010;
@@ -841,30 +841,30 @@ bool d[N][N], st[N];
 bool find(int x)
 {
   for (int i = 1; i <= n; i++)
-    if (d[x][i] && !st[i])
+  if (d[x][i] && !st[i])
+  {
+    st[i] = true;
+    int t = match[i];
+    if (t == 0 || find(t))
     {
-      st[i] = true;
-      int t = match[i];
-      if (t == 0 || find(t))
-      {
-        match[i] = x;
-        return true;
-      }
+      match[i] = x;
+      return true;
     }
+  }
   return false;
 }
 int main()
 {
   // 传递闭包
   for (int k = 1; k <= n; k++)
-    for (int i = 1; i <= n; i++)
-      for (int j = 1; j <= n; j++)
-        d[i][j] |= d[i][k] & d[k][j];
+  for (int i = 1; i <= n; i++)
+    for (int j = 1; j <= n; j++)
+      d[i][j] |= d[i][k] & d[k][j];
   int res = 0;
   for (int i = 1; i <= n; i++)
   {
-    memset(st, 0, sizeof st);
-    if (find(i)) res++;
+  memset(st, 0, sizeof st);
+  if (find(i)) res++;
   }
   cout << n - res;
 }
@@ -886,24 +886,24 @@ void dfs(int u)
 {
   for (int &i = h[u]; ~i;)
   {
-    if (used[i])
-    {
-      i = ne[i];
-      continue;
-    }
-    used[i] = true;
-    if (type == 1) used[i ^ 1] = true;
-    int t;
-    if (type == 1)
-    {
-      t = i / 2 + 1;
-      if (i & 1) t = -t;
-    }
-    else t = i + 1;
-    int j = e[i];
+  if (used[i])
+  {
     i = ne[i];
-    dfs(j);
-    ans[++cnt] = t;
+    continue;
+  }
+  used[i] = true;
+  if (type == 1) used[i ^ 1] = true;
+  int t;
+  if (type == 1)
+  {
+    t = i / 2 + 1;
+    if (i & 1) t = -t;
+  }
+  else t = i + 1;
+  int j = e[i];
+  i = ne[i];
+  dfs(j);
+  ans[++cnt] = t;
   }
 }
 int main()
@@ -912,36 +912,36 @@ int main()
   memset(h, -1, sizeof h);
   for (int i = 0; i < m; i++)
   {
-    int a, b;
-    cin >> a >> b;
-    add(a, b);
-    if (type == 1) add(b, a);
-    din[b]++, dout[a]++;
+  int a, b;
+  cin >> a >> b;
+  add(a, b);
+  if (type == 1) add(b, a);
+  din[b]++, dout[a]++;
   }
   if (type == 1)
   {
-    for (int i = 1; i <= n; i++)
-      if (din[i] + dout[i] & 1)
-      {
-        cout << "NO\n";
-        return 0;
-      }
+  for (int i = 1; i <= n; i++)
+    if (din[i] + dout[i] & 1)
+    {
+      cout << "NO\n";
+      return 0;
+    }
   }
   else
   {
-    for (int i = 1; i <= n; i++)
-      if (din[i] != dout[i])
-      {
-        cout << "NO\n";
-        return 0;
-      }
+  for (int i = 1; i <= n; i++)
+    if (din[i] != dout[i])
+    {
+      cout << "NO\n";
+      return 0;
+    }
   }
   for (int i = 1; i <= n; i++)
-    if (h[i] != -1)
-    {
-      dfs(i);
-      break;
-    }
+  if (h[i] != -1)
+  {
+    dfs(i);
+    break;
+  }
 }
 \end{lstlisting}
 \subsection{Eulerian Path}
@@ -954,11 +954,11 @@ int ans[1100], cnt, d[N];
 void dfs(int u)
 {
   for (int i = 1; i <= n; i++)
-    if (g[u][i])
-    {
-      g[u][i]--, g[i][u]--;
-      dfs(i);
-    }
+  if (g[u][i])
+  {
+    g[u][i]--, g[i][u]--;
+    dfs(i);
+  }
   ans[++cnt] = u;
 }
 int main()
@@ -966,20 +966,20 @@ int main()
   cin >> m;
   while (m--)
   {
-    int a, b;
-    cin >> a >> b;
-    g[a][b]++, g[b][a]++;
-    d[a]++, d[b]++;
+  int a, b;
+  cin >> a >> b;
+  g[a][b]++, g[b][a]++;
+  d[a]++, d[b]++;
   }
   int start = 1;
   while (!d[start])
-    ++start;
+  ++start;
   for (int i = 1; i <= 500; i++)
-    if (d[i] % 2)
-    {
-      start = i;
-      break;
-    }
+  if (d[i] % 2)
+  {
+    start = i;
+    break;
+  }
   dfs(start);
 }
 \end{lstlisting}
@@ -1006,47 +1006,47 @@ int main()
   cin >> T;
   while (T--)
   {
-    cin >> n;
-    memset(din, 0, sizeof din);
-    memset(dout, 0, sizeof dout);
-    memset(st, 0, sizeof st);
-    for (int i = 0; i < 26; i++) p[i] = i;
-    for (int i = 0; i < n; i++)
+  cin >> n;
+  memset(din, 0, sizeof din);
+  memset(dout, 0, sizeof dout);
+  memset(st, 0, sizeof st);
+  for (int i = 0; i < 26; i++) p[i] = i;
+  for (int i = 0; i < n; i++)
+  {
+    cin >> str;
+    int a = str[0] - 'a', 
+        b = str[strlen(str) - 1] - 'a';
+    st[a] = st[b] = true;
+    dout[a]++, din[b]++;
+    p[find(a)] = find(b);
+  }
+  int start = 0, end = 0;
+  bool success = true;
+  for (int i = 0; i < 26; i++)
+    if (din[i] != dout[i])
     {
-      cin >> str;
-      int a = str[0] - 'a', 
-          b = str[strlen(str) - 1] - 'a';
-      st[a] = st[b] = true;
-      dout[a]++, din[b]++;
-      p[find(a)] = find(b);
+      if (din[i] == dout[i] + 1) end++;
+      else if (din[i] + 1 == dout[i])
+        start++;
+      else
+      {
+        success = false;
+        break;
+      }
     }
-    int start = 0, end = 0;
-    bool success = true;
-    for (int i = 0; i < 26; i++)
-      if (din[i] != dout[i])
+  if (success && !(!start && !end || start == 1 && end == 1))
+    success = false;
+  int rep = -1;
+  for (int i = 0; i < 26; i++)
+    if (st[i])
+    {
+      if (rep == -1) rep = find(i);
+      else if (rep != find(i))
       {
-        if (din[i] == dout[i] + 1) end++;
-        else if (din[i] + 1 == dout[i])
-          start++;
-        else
-        {
-          success = false;
-          break;
-        }
+        success = false;
+        break;
       }
-    if (success && !(!start && !end || start == 1 && end == 1))
-      success = false;
-    int rep = -1;
-    for (int i = 0; i < 26; i++)
-      if (st[i])
-      {
-        if (rep == -1) rep = find(i);
-        else if (rep != find(i))
-        {
-          success = false;
-          break;
-        }
-      }
+    }
   }
   return 0;
 }
