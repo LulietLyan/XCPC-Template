@@ -109,33 +109,79 @@ int main()
 }
 \end{lstlisting}
 \section{Knapsack Problem}
+\subsection{How To Initialize}
+
+Initialization for Counting the Number of Solutions:
+
+\begin{itemize}
+    \item \textbf{2D Case}:
+    \begin{itemize}
+      \item When volume is at most $j$: \texttt{f[0][i] = 1} for $0 \leq i \leq m$, others are 0
+      \item When volume is exactly $j$: \texttt{f[0][0] = 1}, others are 0
+      \item When volume is at least $j$: \texttt{f[0][0] = 1}, others are 0
+    \end{itemize}
+    
+    \item \textbf{1D Case}:
+    \begin{itemize}
+      \item When volume is at most $j$: \texttt{f[i] = 1} for $0 \leq i \leq m$
+      \item When volume is exactly $j$: \texttt{f[0] = 1}, others are 0
+      \item When volume is at least $j$: \texttt{f[0] = 1}, others are 0
+    \end{itemize}
+\end{itemize}
+
+Initialization for Finding Maximum or Minimum Value:
+
+\begin{itemize}
+    \item \textbf{2D Case}:
+    \begin{itemize}
+      \item When volume is at most $j$: \texttt{f[i][k] = 0} for $0 \leq i \leq n$, $0 \leq k \leq m$ (only for maximizing value)
+      \item When volume is exactly $j$:
+      \begin{itemize}
+        \item For minimizing value: \texttt{f[0][0] = 0}, others are \texttt{INF}
+        \item For maximizing value: \texttt{f[0][0] = 0}, others are \texttt{-INF}
+      \end{itemize}
+      \item When volume is at least $j$: \texttt{f[0][0] = 0}, others are \texttt{INF} (only for minimizing value)
+    \end{itemize}
+
+    \item \textbf{1D Case}:
+    \begin{itemize}
+      \item When volume is at most $j$: \texttt{f[i] = 0} for $0 \leq i \leq m$ (only for maximizing value)
+      \item When volume is exactly $j$:
+      \begin{itemize}
+        \item For minimizing value: \texttt{f[0] = 0}, others are \texttt{INF}
+        \item For maximizing value: \texttt{f[0] = 0}, others are \texttt{-INF}
+      \end{itemize}
+      \item When volume is at least $j$: \texttt{f[0] = 0}, others are \texttt{INF} (only for minimizing value)
+    \end{itemize}
+\end{itemize}
+
 \subsection{Multiple Knapsack Problem}
 \begin{lstlisting}
-const int N = 20010;
-int n, m, f[N], g[N], q[N];
+const int M = 20010;
+int n, m, v, w, s;
+int f[M], g[M], q[M];
 int main()
 {
   cin >> n >> m;
-  for (int i = 0; i < n; i++)
+  for (int i = 1; i <= n; i++)
   {
-      int v, w, s;
-      cin >> v >> w >> s;
-      memcpy(g, f, sizeof f);
-      for (int j = 0; j < v; j++)
+    cin >> v >> w >> s;
+    memcpy(g, f, sizeof g);
+    for (int r = 0; r < v; r++)
+    {
+      int hh = 0, tt = -1;
+      for (int j = r; j <= m; j += v)
       {
-          int hh = 0, tt = -1;
-          for (int k = j; k <= m; k += v)
-          {
-              if (hh <= tt && q[hh] < k - s * v)
-                  hh++;
-              while (hh <= tt && g[q[tt]] - (q[tt] - j) / v * w <= g[k] - (k - j) / v * w)
-                  tt--;
-              q[++tt] = k;
-              f[k] = g[q[hh]] + (k - q[hh]) / v * w;
-          }
+        while (hh <= tt && j - s * v > q[hh])
+          hh++;
+        while (hh <= tt && g[q[tt]] + (j - q[tt]) / v * w <= g[j])
+          tt--;
+        q[++tt] = j;
+        f[j] = g[q[hh]] + (j - q[hh]) / v * w;
       }
+    }
   }
-  cout << f[m] << '\n';
+  cout << f[m];
 }
 \end{lstlisting}
 \subsection{Two-Dimensional Cost Knapsack Problem}
@@ -198,7 +244,7 @@ int main()
       sort(v + 1, v + n + 1);
       int m = v[n], res = 0;
       memset(f, 0, sizeof f);
-      f[0] = true; // 状态的初值
+      f[0] = true;
       for (int i = 1; i <= n; ++i)
       {
           if (f[v[i]]) continue;
@@ -228,8 +274,7 @@ int main()
       }
       else
       {
-          if (s == -1)
-              s = 1;
+          if (s == -1) s = 1;
           for (int k = 1; k <= s; k *= 2)
           {
               for (int j = m; j >= k * v; j--)

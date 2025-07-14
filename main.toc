@@ -163,13 +163,14 @@
 \contentsline {subsection}{\numberline {11.2.2}MSIS}{47}{subsection.11.2.2}%
 \contentsline {subsection}{\numberline {11.2.3}LCIS}{47}{subsection.11.2.3}%
 \contentsline {section}{\numberline {11.3}Knapsack Problem}{47}{section.11.3}%
-\contentsline {subsection}{\numberline {11.3.1}Multiple Knapsack Problem}{47}{subsection.11.3.1}%
-\contentsline {subsection}{\numberline {11.3.2}Two-Dimensional Cost Knapsack Problem}{48}{subsection.11.3.2}%
-\contentsline {subsection}{\numberline {11.3.3}Finding the Actual Solution Set}{48}{subsection.11.3.3}%
-\contentsline {subsection}{\numberline {11.3.4}Maximum Linearly Independent Subset}{48}{subsection.11.3.4}%
-\contentsline {subsection}{\numberline {11.3.5}Mixed Knapsack Problem}{48}{subsection.11.3.5}%
-\contentsline {subsection}{\numberline {11.3.6}Dependent Knapsack Problem}{49}{subsection.11.3.6}%
-\contentsline {subsection}{\numberline {11.3.7}Number of Solutions}{49}{subsection.11.3.7}%
-\contentsline {section}{\numberline {11.4}FSM}{49}{section.11.4}%
-\contentsline {section}{\numberline {11.5}Digit DP}{49}{section.11.5}%
+\contentsline {subsection}{\numberline {11.3.1}How To Initialize}{47}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Multiple Knapsack Problem}{48}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}Two-Dimensional Cost Knapsack Problem}{48}{subsection.11.3.3}%
+\contentsline {subsection}{\numberline {11.3.4}Finding the Actual Solution Set}{48}{subsection.11.3.4}%
+\contentsline {subsection}{\numberline {11.3.5}Maximum Linearly Independent Subset}{49}{subsection.11.3.5}%
+\contentsline {subsection}{\numberline {11.3.6}Mixed Knapsack Problem}{49}{subsection.11.3.6}%
+\contentsline {subsection}{\numberline {11.3.7}Dependent Knapsack Problem}{49}{subsection.11.3.7}%
+\contentsline {subsection}{\numberline {11.3.8}Number of Solutions}{49}{subsection.11.3.8}%
+\contentsline {section}{\numberline {11.4}FSM}{50}{section.11.4}%
+\contentsline {section}{\numberline {11.5}Digit DP}{50}{section.11.5}%
 \contentsline {section}{\numberline {11.6}Queue Optimization for DP}{50}{section.11.6}%
