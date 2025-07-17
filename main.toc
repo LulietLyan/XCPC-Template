@@ -172,5 +172,8 @@
 \contentsline {subsection}{\numberline {11.3.7}Dependent Knapsack Problem}{49}{subsection.11.3.7}%
 \contentsline {subsection}{\numberline {11.3.8}Number of Solutions}{49}{subsection.11.3.8}%
 \contentsline {section}{\numberline {11.4}FSM}{50}{section.11.4}%
-\contentsline {section}{\numberline {11.5}Digit DP}{50}{section.11.5}%
-\contentsline {section}{\numberline {11.6}Queue Optimization for DP}{50}{section.11.6}%
+\contentsline {subsection}{\numberline {11.4.1}Common FSM}{50}{subsection.11.4.1}%
+\contentsline {subsection}{\numberline {11.4.2}Linear DP + KMP}{50}{subsection.11.4.2}%
+\contentsline {subsection}{\numberline {11.4.3}Linear DP + AC Automaton}{50}{subsection.11.4.3}%
+\contentsline {section}{\numberline {11.5}Digit DP}{51}{section.11.5}%
+\contentsline {section}{\numberline {11.6}Queue Optimization for DP}{51}{section.11.6}%

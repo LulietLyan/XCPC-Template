@@ -362,6 +362,7 @@ int main()
 }
 \end{lstlisting}
 \section{FSM}
+\subsection{Common FSM}
 \begin{lstlisting}
 const int N = 100010;
 int n, w[N], f[N][2];
@@ -380,6 +381,125 @@ int main()
           // f[i][1] =
       }
       cout << max(f[n][0], f[n][1]) << '\n';
+  }
+}
+\end{lstlisting}
+\subsection{Linear DP + KMP}
+\begin{lstlisting}
+const int N = 55, mod = 1e9 + 7
+int n, m, f[N][N], ne[N];
+char s[N];
+int main()
+{
+  cin >> n >> s + 1;
+  m = strlen(s + 1);
+  for (int i = 2, j = 0; i <= m; i++)
+  {
+    while (j && s[i] != s[j + 1])
+      j = ne[j];
+    if (s[j + 1] == s[i]) j++;
+    ne[i] = j;
+  }
+  f[0][0] = 1;
+  for (int i = 0; i < n; i++)
+    for (int j = 0; j < m; j++)
+      for (char ch = 'a'; ch <= 'z'; ch++)
+      {
+        int ptr = j;
+        while (ptr && s[ptr + 1] != ch)
+          ptr = ne[ptr];
+        if (s[ptr + 1] == ch) ptr++;
+        f[i + 1][ptr] = (f[i + 1][ptr] + f[i][j]) % mod;
+      }
+  int res = 0;
+  for (int j = 0; j < m; j++)
+    res = (res + f[n][j]) % mod;
+  cout << res;
+}
+\end{lstlisting}
+\subsection{Linear DP + AC Automaton}
+\begin{lstlisting}
+const int N = 1010, INF = 0x3f3f3f3f;
+int n, m, T = 1, f[N][N];
+int tr[N][4], dar[N], idx;
+int q[N], ne[N];
+char str[N];
+int get(char c)
+{
+  if (c == 'A') return 0;
+  if (c == 'T') return 1;
+  if (c == 'G') return 2;
+  return 3;
+}
+void insert()
+{
+  int p = 0;
+  for (int i = 0; str[i]; i++)
+  {
+    int t = get(str[i]);
+    if (tr[p][t] == 0)
+      tr[p][t] = ++idx;
+    p = tr[p][t];
+  }
+  dar[p] = 1;
+}
+void build()
+{
+  int hh = 0, tt = -1;
+  for (int i = 0; i < 4; i++)
+    if (tr[0][i])
+      q[++tt] = tr[0][i];
+  while (hh <= tt)
+  {
+    int t = q[hh++];
+    for (int i = 0; i < 4; i++)
+    {
+      int p = tr[t][i];
+      if (!p)
+        tr[t][i] = tr[ne[t]][i];
+      else
+      {
+        ne[p] = tr[ne[t]][i];
+        q[++tt] = p;
+        dar[p] |= dar[ne[p]];
+      }
+    }
+  }
+}
+int main()
+{
+  int T = 1;
+  while (cin >> n, n)
+  {
+    memset(tr, 0, sizeof tr);
+    memset(dar, 0, sizeof dar);
+    memset(ne, 0, sizeof ne);
+    idx = 0;
+    for (int i = 0; i < n; i++)
+    {
+      cin >> str;
+      insert();
+    }
+    build();
+    cin >> (str + 1);
+    m = strlen(str + 1);
+    memset(f, 0x3f, sizeof f);
+    f[0][0] = 0;
+    for (int i = 0; i < m; i++)
+      for (int j = 0; j <= idx; j++)
+        for (int k = 0; k < 4; k++)
+        {
+          int t = get(str[i + 1]) != k;
+          int p = tr[j][k];
+          if (!dar[p])
+            f[i + 1][p] = min(f[i + 1][p], f[i][j] + t);
+        }
+    int res = INF;
+    for (int i = 0; i <= idx; i++)
+      res = min(res, f[m][i]);
+    if (res == INF) res = -1;
+    cout << "Case " << T++ 
+    << ": " << res << '\n';
   }
 }
 \end{lstlisting}
