@@ -175,5 +175,10 @@
 \contentsline {subsection}{\numberline {11.4.1}Common FSM}{50}{subsection.11.4.1}%
 \contentsline {subsection}{\numberline {11.4.2}Linear DP + KMP}{50}{subsection.11.4.2}%
 \contentsline {subsection}{\numberline {11.4.3}Linear DP + AC Automaton}{50}{subsection.11.4.3}%
-\contentsline {section}{\numberline {11.5}Digit DP}{51}{section.11.5}%
-\contentsline {section}{\numberline {11.6}Queue Optimization for DP}{51}{section.11.6}%
+\contentsline {section}{\numberline {11.5}State Compression DP}{51}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}Bitmask DP \& Rolling Array \& Target-State Optimization}{51}{subsection.11.5.1}%
+\contentsline {subsection}{\numberline {11.5.2}Bitmask DP \& Transfer Optimization}{51}{subsection.11.5.2}%
+\contentsline {subsection}{\numberline {11.5.3}Bitmask DP \& Repeated Coverage Problem}{52}{subsection.11.5.3}%
+\contentsline {subsection}{\numberline {11.5.4}Bitmask DP \& MST}{52}{subsection.11.5.4}%
+\contentsline {section}{\numberline {11.6}Digit DP}{53}{section.11.6}%
+\contentsline {section}{\numberline {11.7}Queue Optimization for DP}{53}{section.11.7}%

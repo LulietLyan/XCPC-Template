@@ -110,9 +110,7 @@ int main()
 \end{lstlisting}
 \section{Knapsack Problem}
 \subsection{How To Initialize}
-
 Initialization for Counting the Number of Solutions:
-
 \begin{itemize}
     \item \textbf{2D Case}:
     \begin{itemize}
@@ -128,9 +126,7 @@ Initialization for Counting the Number of Solutions:
       \item When volume is at least $j$: \texttt{f[0] = 1}, others are 0
     \end{itemize}
 \end{itemize}
-
 Initialization for Finding Maximum or Minimum Value:
-
 \begin{itemize}
     \item \textbf{2D Case}:
     \begin{itemize}
@@ -154,7 +150,6 @@ Initialization for Finding Maximum or Minimum Value:
       \item When volume is at least $j$: \texttt{f[0] = 0}, others are \texttt{INF} (only for minimizing value)
     \end{itemize}
 \end{itemize}
-
 \subsection{Multiple Knapsack Problem}
 \begin{lstlisting}
 const int M = 20010;
@@ -501,6 +496,224 @@ int main()
     cout << "Case " << T++ 
     << ": " << res << '\n';
   }
+}
+\end{lstlisting}
+\section{State Compression DP}
+\subsection{Bitmask DP \& Rolling Array \& Target-State Optimization}
+\begin{lstlisting}
+const int N = 12, M = 1 << 10, K = 110;
+int n, m, cnt[M];
+vector<int> state, head[M];
+LL f[N][K][M];
+bool check(int state)
+{
+  for (int i = 0; i < n; i++)
+    if ((state >> i & 1) && (state >> i + 1 & 1))
+      return false;
+  return true;
+}
+int count(int state)
+{
+  int res = 0;
+  for (int i = 0; i < n; i++)
+    res += state >> i & 1;
+  return res;
+}
+int main()
+{
+  cin >> n >> m;
+  for (int i = 0; i < 1 << n; i++)
+    if (check(i))
+    {
+      state.push_back(i);
+      cnt[i] = count(i);
+    }
+  for (int i = 0; i < state.size(); i++)
+    for (int j = 0; j < state.size(); j++)
+    {
+      int a = state[i], b = state[j];
+      if ((a & b) == 0 && check(a | b))
+        head[i].push_back(j);
+    }
+  f[0][0][0] = 1;
+  for (int i = 1; i <= n + 1; i++)
+    for (int j = 0; j <= m; j++)
+      for (int a = 0; a < state.size(); a++)
+        for (int b : head[a])
+        {
+          int c = cnt[state[a]];
+          if (j >= c)
+            f[i][j][a] += f[i - 1][j - c][b];
+        }
+  cout << f[n + 1][m][0];
+}
+\end{lstlisting}
+\subsection{Bitmask DP \& Transfer Optimization}
+\begin{lstlisting}
+const int N = 10, M = 1 << 10;
+int n, m, g[1010], cnt[M];
+int f[2][M][M];
+vector<int> state;
+bool check(int state)
+{
+  for (int i = 0; i < m; i++)
+    if ((state >> i & 1) && ((state >> i + 1 & 1) || (state >> i + 2 & 1)))
+      return false;
+  return true;
+}
+int count(int state)
+{
+  int res = 0;
+  for (int i = 0; i < m; i++)
+    if (state >> i & 1) res++;
+  return res;
+}
+int main()
+{
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+    for (int j = 0; j < m; j++)
+    {
+      char c;
+      cin >> c;
+      g[i] += (c == 'H') << j;
+    }
+  for (int i = 0; i < 1 << m; i++)
+    if (check(i))
+    {
+      state.push_back(i);
+      cnt[i] = count(i);
+    }
+  for (int i = 1; i <= n; i++)
+    for (int j = 0; j < state.size(); j++)
+      for (int k = 0; k < state.size(); k++)
+        for (int u = 0; u < state.size(); u++)
+        {
+          int a = state[j], b = state[k], c = state[u];
+          if (a & b | a & c | b & c)
+            continue;
+          if (g[i] & b | g[i - 1] & a)
+            continue;
+          f[i & 1][j][k] = max(f[i & 1][j][k], f[i - 1 & 1][u][j] + cnt[b]);
+        }
+  int res = 0;
+  for (int i = 0; i < state.size(); i++)
+    for (int j = 0; j < state.size(); j++)
+      res = max(res, f[n & 1][i][j]);
+  cout << res;
+}
+\end{lstlisting}
+\subsection{Bitmask DP \& Repeated Coverage Problem}
+\begin{lstlisting}
+const double eps = 1e-8;
+const int N = 20, M = 1 << N;
+int n, m, T, path[N][N], f[M]
+PDD ver[N];
+int cmp_lf(double a, double b)
+{
+  if (fabs(a - b) < eps) return 0;
+  if (a > b) return 1;
+  return -1;
+}
+void init_path()
+{
+  memset(path, 0, sizeof path);
+  for (int i = 0; i < n; i++)
+  {
+    path[i][i] = 1 << i;
+    for (int j = 0; j < n; j++)
+    {
+      double x1 = ver[i].x, y1 = ver[i].y;
+      double x2 = ver[j].x, y2 = ver[j].y;
+      if (!cmp_lf(x1, x2)) continue;
+      double a = (y1 / x1 - y2 / x2) / (x1 - x2);
+      double b = (y1 / x1) - a * x1;
+      if (cmp_lf(a, 0.0) >= 0)
+        continue;
+      for (int k = 0; k < n; k++)
+      {
+        double x = ver[k].x, y = ver[k].y;
+        if (!cmp_lf(y, a * x * x + b * x))
+          path[i][j] += 1 << k;
+      }
+    }
+  }
+}
+void solve()
+{
+  cin >> n >> m;
+  for (int i = 0; i < n; i++)
+    cin >> ver[i].x >> ver[i].y;
+  init_path();
+  memset(f, 0x3f, sizeof f);
+  f[0] = 0;
+  for (int cur_st = 0; cur_st + 1 < 1 << n; cur_st++)
+  {
+    int t = -1;
+    for (int i = 0; i < n; i++)
+      if (!(cur_st >> i & 1)) t = i;
+    for (int i = 0; i < n; i++)
+    {
+      int ne_st = path[t][i] | cur_st;
+      f[ne_st] = min(f[ne_st], f[cur_st] + 1);
+    }
+  }
+  cout << f[(1 << n) - 1] << '\n';
+}
+int main()
+{
+  cin >> T;
+  while (T--) solve();
+}
+\end{lstlisting}
+\subsection{Bitmask DP \& MST}
+\begin{lstlisting}
+const int N = 12, M = 1 << N;
+int n, m, d[N][N], f[M][N], g[M];
+int main()
+{
+  cin >> n >> m;
+  memset(d, 0x3f, sizeof d);
+  for (int i = 0; i < n; i++)
+    d[i][i] = 0;
+  while (m--)
+  {
+    int a, b, c;
+    cin >> a >> b >> c;
+    a--, b--;
+    d[a][b] = d[b][a] = min(d[a][b], c);
+  }
+  for (int i = 1; i < 1 << n; i++)
+    for (int j = 0; j < n; j++)
+      if (i >> j & 1)
+        for (int k = 0; k < n; k++)
+          if (d[j][k] != INF)
+            g[i] |= 1 << k;
+  memset(f, 0x3f, sizeof f);
+  for (int i = 0; i < n; i++)
+    f[1 << i][0] = 0;
+  for (int i = 1; i < 1 << n; i++)
+    for (int j = (i - 1); j; j = (j - 1) & i)
+      if ((g[j] & i) == i)
+      {
+        int remain = i ^ j;
+        int cost = 0;
+        for (int k = 0; k < n; k++)
+          if (remain >> k & 1)
+          {
+            int t = INF;
+            for (int u = 0; u < n; u++)
+              if (j >> u & 1)
+                t = min(t, d[k][u]);
+            cost += t;
+          }
+        for (int k = 1; k < n; k++)
+          f[i][k] = min(f[i][k], f[j][k - 1] + cost * k);
+      }
+  int res = INF;
+  for (int i = 0; i < n; i++)
+    res = min(res, f[(1 << n) - 1][i]);
+  cout << res;
 }
 \end{lstlisting}
 \section{Digit DP}
