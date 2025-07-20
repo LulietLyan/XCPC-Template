@@ -1050,14 +1050,14 @@ int main()
 }
 \end{lstlisting}
 \section{Digit DP}
+\subsection{Common Digit DP}
 \begin{lstlisting}
 const int N = 35;
 int l, r, k, b, a[N], al, f[N][N];
 int dp(int pos, int st, int op)
 {
   if (!pos) return st == k;
-  if (!op && ~f[pos][st])
-      return f[pos][st];
+  if (!op && ~f[pos][st]) return f[pos][st];
   int res = 0, maxx = op ? min(a[pos], 1) : 1;
   for (int i = 0; i <= maxx; i++)
   {
@@ -1068,8 +1068,7 @@ int dp(int pos, int st, int op)
 }
 int calc(int x)
 {
-  al = 0;
-  memset(f, -1, sizeof f);
+  al = 0, memset(f, -1, sizeof f);
   while (x) a[++al] = x % b, x /= b;
   return dp(al, 0, 1);
 }
@@ -1077,6 +1076,67 @@ int main()
 {
   cin >> l >> r >> k >> b;
   cout << calc(r) - calc(l - 1) << '\n';
+}
+\end{lstlisting}
+\subsection{Digit DP \& Divide and Conquer \& Merging}
+\begin{lstlisting}
+const int N = 20, MOD = 1e9 + 7;
+LL T, l, r;
+int a[N], al, Pow10[N];
+struct F
+{
+  LL s0, s1, s2;
+  F() : s0(0ll), s1(0ll), s2(0ll) {}
+  F(LL _0, LL _1, LL _2) : s0(_0), s1(_1), s2(_2) {};
+  void operator+=(const F &t)
+  {
+    s2 = (s2 + t.s2) % MOD;
+    s1 = (s1 + t.s1) % MOD;
+    s0 = (s0 + t.s0) % MOD;
+  }
+} f[N][N][N];
+F dp(int pos, int val, int sum, int op)
+{
+  if (!pos)
+  {
+    if (val && sum) return {1, 0, 0};
+    else return {0, 0, 0};
+  }
+  if (!op && ~f[pos][val][sum].s0)
+    return f[pos][val][sum];
+  F res(0, 0, 0);
+  int maxx = op ? a[pos] : 9;
+  for (int i = 0; i <= maxx; i++)
+  {
+    if (i != 7)
+    {
+      F t = dp(pos - 1, (val * 10 + i) % 7, (sum + i) % 7, op && i == a[pos]);
+      LL k = (LL)i * Pow10[pos - 1] % MOD;
+      t.s2 = (t.s2 + 2ll * k % MOD * t.s1 % MOD) % MOD;
+      t.s2 = (t.s2 + k * k % MOD * t.s0 % MOD) % MOD;
+      t.s1 = (t.s1 + k * t.s0 % MOD) % MOD;
+      res += t;
+    }
+  }
+  return op ? res : f[pos][val][sum] = res;
+}
+LL calc(LL x)
+{
+  memset(f, -1, sizeof f), al = 0;
+  for (; x; x /= 10) a[++al] = x % 10;
+  return dp(al, 0, 0, 1).s2;
+}
+int main()
+{
+  Pow10[0] = 1;
+  for (int i = 1; i < 20; i++)
+    Pow10[i] = 10ll * Pow10[i - 1] % MOD;
+  cin >> T;
+  while (T--)
+  {
+    cin >> l >> r;
+    cout << ((calc(r) - calc(l - 1)) % MOD + MOD) % MOD << '\n';
+  }
 }
 \end{lstlisting}
 \section{Queue Optimization for DP}
