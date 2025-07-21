@@ -1140,6 +1140,11 @@ int main()
 }
 \end{lstlisting}
 \section{Queue Optimization for DP}
+\subsection{Simple Queue Optimization}
+\begin{itemize}
+  \item f[i] = min/max(f[j] + cost(j, i)),
+  \item where j satisfies certain constraints.
+\end{itemize}
 \begin{lstlisting}
 int n, m, s[300010], q[300010];
 int main()
@@ -1155,5 +1160,91 @@ int main()
       while (hh <= tt && s[q[tt]] >= s[i]) tt--;
       q[++tt] = i;
   }
+}
+\end{lstlisting}
+\subsection{Queue Optimization \& Binary Search}
+\begin{lstlisting}
+const int N = 50010;
+int n, m, w[N], q[N], f[N];
+bool check(int limit)
+{
+  int hh = 0, tt = 0;
+  for (int i = 1; i <= n; i++)
+  {
+    while (hh <= tt && i - q[hh] > limit + 1)
+      hh++;
+    f[i] = f[q[hh]] + w[i];
+    while (hh <= tt & f[q[tt]] >= f[i])
+      tt--;
+    q[++tt] = i;
+  }
+  if (n + 1 - q[hh] > limit + 1) hh++;
+  return f[q[hh]] <= m;
+}
+int main()
+{
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++)
+    cin >> w[i];
+  int l = 0, r = n;
+  while (l < r)
+  {
+    int mid = l + r >> 1;
+    if (check(mid)) r = mid;
+    else l = mid + 1;
+  }
+  cout << r;
+}
+\end{lstlisting}
+\subsection{2D Queue Optimization}
+\begin{lstlisting}
+const int N = 1010;
+int n, m, k, res = 1e9;
+int w[N][N], minv[N][N], maxv[N][N], q[N];
+int a[N], b[N], c[N], d[N];
+void get_max(int a[], int f[], int m)
+{
+  int hh = 0, tt = -1;
+  for (int i = 1; i <= m; i++)
+  {
+    while (hh <= tt && i - q[hh] >= k)
+      hh++;
+    while (hh <= tt && a[i] >= a[q[tt]])
+      tt--;
+    q[++tt] = i;
+    f[i] = a[q[hh]];
+  }
+}
+void get_min(int a[], int f[], int m)
+{
+  int hh = 0, tt = -1;
+  for (int i = 1; i <= m; i++)
+  {
+    while (hh <= tt && i - q[hh] >= k)
+      hh++;
+    while (hh <= tt && a[i] <= a[q[tt]])
+      tt--;
+    q[++tt] = i;
+    f[i] = a[q[hh]];
+  }
+}
+int main()
+{
+  cin >> n >> m >> k;
+  for (int i = 1; i <= n; i++)
+    for (int j = 1; j <= m; j++)
+      cin >> w[i][j];
+  for (int i = 1; i <= n; i++)
+    get_min(w[i], minv[i], m), get_max(w[i], maxv[i], m);
+  for (int i = k; i <= m; i++)
+  {
+    for (int j = 1; j <= n; j++)
+      a[j] = maxv[j][i], b[j] = minv[j][i];
+    get_max(a, c, n);
+    get_min(b, d, n);
+    for (int j = k; j <= n; j++)
+      res = min(res, c[j] - d[j]);
+  }
+  cout << res;
 }
 \end{lstlisting}
