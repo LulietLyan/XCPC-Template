@@ -196,3 +196,6 @@
 \contentsline {subsection}{\numberline {11.9.1}Simple Queue Optimization}{56}{subsection.11.9.1}%
 \contentsline {subsection}{\numberline {11.9.2}Queue Optimization \& Binary Search}{57}{subsection.11.9.2}%
 \contentsline {subsection}{\numberline {11.9.3}2D Queue Optimization}{57}{subsection.11.9.3}%
+\contentsline {section}{\numberline {11.10}CHT-Optimized DP}{57}{section.11.10}%
+\contentsline {subsection}{\numberline {11.10.1}Common CHT-Optimized DP}{57}{subsection.11.10.1}%
+\contentsline {subsection}{\numberline {11.10.2}CHT-Optimized DP \& Binary Search}{58}{subsection.11.10.2}%

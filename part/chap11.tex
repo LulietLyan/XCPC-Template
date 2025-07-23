@@ -1248,3 +1248,69 @@ int main()
   cout << res;
 }
 \end{lstlisting}
+\section{CHT-Optimized DP}
+\subsection{Common CHT-Optimized DP}
+\begin{lstlisting}
+const int N = 300010;
+int n, S, q[N];
+LL st[N], sc[N], f[N];
+int main()
+{
+  cin >> n >> S;
+  for (int i = 1; i <= n; i++)
+  {
+    cin >> st[i] >> sc[i];
+    st[i] += st[i - 1], sc[i] += sc[i - 1];
+  }
+  int hh = 0, tt = 0;
+  q[0] = 0;
+  for (int i = 1; i <= n; i++)
+  {
+    while (hh < tt && 
+    (f[q[hh + 1]] - f[q[hh]]) <= 
+    (sc[q[hh + 1]] - sc[q[hh]]) * (st[i] + S))
+      hh++;
+    f[i] = f[q[hh]] + S * (sc[n] - sc[q[hh]]) + st[i] * (sc[i] - sc[q[hh]]);
+    while (hh < tt && 
+    (f[q[tt]] - f[q[tt - 1]]) * (sc[i] - sc[q[tt]]) >= 
+    (f[i] - f[q[tt]]) * (sc[q[tt]] - sc[q[tt - 1]]))
+      tt--;
+    q[++tt] = i;
+  }
+  cout << f[n];
+}
+\end{lstlisting}
+\subsection{CHT-Optimized DP \& Binary Search}
+\begin{lstlisting}
+const int N = 300010;
+int n;
+LL S, sc[N], st[N], f[N], q[N];
+int main()
+{
+  cin >> n >> S;
+  for (int i = 1; i <= n; i++)
+  {
+    cin >> st[i] >> sc[i];
+    st[i] += st[i - 1], sc[i] += sc[i - 1];
+  }
+  int tt = 0;
+  for (int i = 1; i <= n; i++)
+  {
+    int l = 0, r = tt;
+    while (l < r)
+    {
+      int mid = (l + r) >> 1;
+      if (f[q[mid + 1]] - f[q[mid]] >
+          (S + st[i]) * (sc[q[mid + 1]] - sc[q[mid]]))
+        r = mid;
+      else l = mid + 1;
+    }
+    f[i] = f[q[r]] + S * (sc[n] - sc[q[r]]) + st[i] * (sc[i] - sc[q[r]]);
+    while (tt && (double)(f[q[tt]] - f[q[tt - 1]]) * (sc[i] - sc[q[tt]]) >=
+                     (double)(f[i] - f[q[tt]]) * (sc[q[tt]] - sc[q[tt - 1]]))
+      tt--;
+    q[++tt] = i;
+  }
+  cout << f[n];
+}
+\end{lstlisting}
