@@ -152,9 +152,10 @@
 \contentsline {subsubsection}{Undirected Graph}{44}{subsection.9.12.2}%
 \contentsline {subsubsection}{Directed Graph}{45}{lstnumber.-114.34}%
 \contentsline {chapter}{\numberline {10}Advanced Math}{46}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Euler's Totient Function}{46}{section.10.1}%
-\contentsline {subsection}{\numberline {10.1.1}GCD}{46}{subsection.10.1.1}%
-\contentsline {section}{\numberline {10.2}Matrix Multiplication}{46}{section.10.2}%
+\contentsline {section}{\numberline {10.1}Factorial Prime Factorization}{46}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Euler's Totient Function}{46}{section.10.2}%
+\contentsline {subsection}{\numberline {10.2.1}GCD}{46}{subsection.10.2.1}%
+\contentsline {section}{\numberline {10.3}Matrix Multiplication}{46}{section.10.3}%
 \contentsline {chapter}{\numberline {11}Advanced DP}{47}{chapter.11}%
 \contentsline {section}{\numberline {11.1}Advanced Linear DP}{47}{section.11.1}%
 \contentsline {subsection}{\numberline {11.1.1}Two-pass grid collection problem}{47}{subsection.11.1.1}%
