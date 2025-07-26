@@ -151,19 +151,15 @@ void mul(int c[][N], int a[][N], int b[][N])
 }
 int qmi(int k)
 {
-  // f[0][0]=1;
   int f0[N][N] = {1};
   while (k)
   {
-    if (k & 1)
-      mul(f0, f0, a);
+    if (k & 1) mul(f0, f0, a);
     mul(a, a, a);
     k >>= 1;
   }
   int res = 0;
-  // 此时的f[0][j]相当于f[n][j]
-  // 所有长度为n且不包含s串 且末尾部分与s的前缀匹配的最大长度是j的所有字符串的集合
-  // 把长度<m的所有情况(都满足最大长度j<m--都满足不出现s)求和
+  // 因为简化 f[0][j] 相当于 f[n][j]
   for (int j = 0; j < m; j++)
     res = (res + f0[0][j]) % mod;
   return res;
@@ -172,27 +168,21 @@ int main()
 {
   cin >> n >> m >> mod;
   cin >> str + 1;
-  // kmp
   for (int i = 2, j = 0; i <= m; i++)
   {
     while (j && str[j + 1] != str[i])
       j = ne[j];
-    if (str[j + 1] == str[i])
-      j++;
+    if (str[j + 1] == str[i]) j++;
     ne[i] = j;
   }
-  // A[j][k] = 在s后添加一个c后 前缀匹配长度k
   for (int j = 0; j < m; j++)
     for (int c = '0'; c <= '9'; c++)
     {
       int k = j;
       while (k && str[k + 1] != c)
         k = ne[k];
-      if (str[k + 1] == c)
-        k++;
-      // 从与前缀最大匹配长度j转移到到最大匹配长度k的方案数+1
-      if (k < m)
-        a[j][k]++;
+      if (str[k + 1] == c) k++;
+      if (k < m) a[j][k]++;
     }
   cout << qmi(n) << endl;
   return 0;
