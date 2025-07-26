@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.6)  23 JUL 2025 19:50
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.6)  26 JUL 2025 22:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1024,25 +1024,30 @@ Chapter 8.
 Chapter 9.
 [37] [38] [39] [40] [41] [42] [43] [44]) (./part/chap10.tex [45]
 Chapter 10.
-) (./part/chap11.tex [46]
-Chapter 11.
-[47] [48] [49] [50] [51] [52] [53] [54] [55] [56] [57])
 
-[58] (./main.aux)
+Overfull \hbox (1.04518pt too wide) detected at line 106
+[][] [] \OT1/cmr/m/n/10 = []
+ []
+
+[46]) (./part/chap11.tex [47]
+Chapter 11.
+[48] [49] [50] [51] [52] [53] [54] [55] [56] [57] [58])
+
+[59] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 4BFF941F7836100D340BA7277FDD2BF6;29457.
+(rerunfilecheck)             Checksum: 4084151E2D38C0DD56727A7BE01F8F9A;29880.
  ) 
 Here is how much of TeX's memory you used:
- 30832 strings out of 473832
- 630405 string characters out of 5722597
+ 30841 strings out of 473832
+ 630569 string characters out of 5722597
  2323659 words of memory out of 5000000
- 53352 multiletter control sequences out of 15000+600000
+ 53361 multiletter control sequences out of 15000+600000
  565044 words of font info for 93 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 102i,8n,117p,999b,2482s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,9n,117p,999b,2492s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (58 pages).
+Output written on main.pdf (59 pages).
