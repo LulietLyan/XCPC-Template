@@ -76,7 +76,7 @@
 \contentsline {subsection}{\numberline {4.8.3}Lucas Theorem}{20}{subsection.4.8.3}%
 \contentsline {subsection}{\numberline {4.8.4}Factorization Method}{20}{subsection.4.8.4}%
 \contentsline {subsection}{\numberline {4.8.5}Catalan Number}{20}{subsection.4.8.5}%
-\contentsline {section}{\numberline {4.9}Inclusion-Exclusion Principle}{20}{section.4.9}%
+\contentsline {section}{\numberline {4.9}Inclusion-Exclusion Principle}{21}{section.4.9}%
 \contentsline {section}{\numberline {4.10}Game Theory}{21}{section.4.10}%
 \contentsline {subsection}{\numberline {4.10.1}NIM Game}{21}{subsection.4.10.1}%
 \contentsline {chapter}{\numberline {5}Basic DP}{22}{chapter.5}%
@@ -150,7 +150,7 @@
 \contentsline {subsection}{\numberline {9.12.1}Eulerian Circuit}{44}{subsection.9.12.1}%
 \contentsline {subsection}{\numberline {9.12.2}Eulerian Path}{44}{subsection.9.12.2}%
 \contentsline {subsubsection}{Undirected Graph}{44}{subsection.9.12.2}%
-\contentsline {subsubsection}{Directed Graph}{45}{lstnumber.-114.34}%
+\contentsline {subsubsection}{Directed Graph}{45}{lstnumber.-115.34}%
 \contentsline {chapter}{\numberline {10}Advanced Math}{46}{chapter.10}%
 \contentsline {section}{\numberline {10.1}Factorial Prime Factorization}{46}{section.10.1}%
 \contentsline {section}{\numberline {10.2}Euler's Totient Function}{46}{section.10.2}%
