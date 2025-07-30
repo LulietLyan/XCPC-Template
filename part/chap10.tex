@@ -188,3 +188,54 @@ int main()
   return 0;
 }
 \end{lstlisting}
+\section{Inclusion-Exclusion Principle}
+\subsection{Mobius Function}
+\begin{lstlisting}
+const int N = 50010;
+int primes[N], cnt, T, mobius[N], sum[N];
+bool st[N];
+void init(int n)
+{
+  mobius[1] = 1;
+  for (int i = 2; i <= n; i++)
+  {
+    if (!st[i])
+    {
+      primes[cnt++] = i;
+      mobius[i] = -1;
+    }
+    for (int j = 0; primes[j] <= n / i; j++)
+    {
+      int t = primes[j] * i;
+      st[t] = true;
+      if (i % primes[j] == 0)
+      {
+        mobius[t] = 0; break;
+      }
+      mobius[t] = mobius[i] * -1;
+    }
+  }
+  for (int i = 1; i <= n; i++)
+    sum[i] = sum[i - 1] + mobius[i];
+}
+int main()
+{
+  init(N - 1);
+  cin >> T;
+  while (T--)
+  {
+    int a, b, d;
+    cin >> a >> b >> d;
+    a /= d, b /= d;
+    int n = min(a, b);
+    LL res = 0;
+    for (int l = 1, r; l <= n; l = r + 1)
+    {
+      r = min(n, min(a / (a / l), b / (b / l)));
+      res += (sum[r] - sum[l - 1]) * (LL)(a / l) * (b / l);
+    }
+    cout << res << '\n';
+  }
+}
+\end{lstlisting}
+\section{Probability and Expected Value}
